@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7B2302D4-D60F-40D1-BA6F-A970D3BAF9F7}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LambdastylePrototype</RootNamespace>
+    <AssemblyName>LambdastylePrototype</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\InsertModeFileStream\InsertModeFileStream.cs">
+      <Link>Utils\InsertModeFileStream.cs</Link>
+    </Compile>
+    <Compile Include="ApplyContext.cs" />
+    <Compile Include="Interpreter\Predicates\PredicateValue.cs" />
+    <Compile Include="Interpreter\Predicates\RegExpCapture.cs" />
+    <Compile Include="Interpreter\Predicates\OuterValue.cs" />
+    <Compile Include="Interpreter\Predicates\OuterId.cs" />
+    <Compile Include="Interpreter\Predicates\Raw.cs" />
+    <Compile Include="Interpreter\Predicates\PredicateElement.cs" />
+    <Compile Include="Interpreter\Predicates\InnerValue.cs" />
+    <Compile Include="Interpreter\Subjects\And.cs" />
+    <Compile Include="Interpreter\Subjects\Current.cs" />
+    <Compile Include="Interpreter\Subjects\Not.cs" />
+    <Compile Include="Interpreter\Subjects\ItemIndex.cs" />
+    <Compile Include="Interpreter\Subjects\Null.cs" />
+    <Compile Include="Interpreter\Subjects\RegExp.cs" />
+    <Compile Include="Interpreter\Subjects\Any.cs" />
+    <Compile Include="Processor.cs" />
+    <Compile Include="SentenceScratchpad.cs" />
+    <Compile Include="SubjectScratchpad.cs" />
+    <Compile Include="Interpreter\Subjects\Value.cs" />
+    <Compile Include="Interpreter\Subjects\Equals.cs" />
+    <Compile Include="Interpreter\Subjects\Id.cs" />
+    <Compile Include="Interpreter\Subjects\Item.cs" />
+    <Compile Include="Interpreter\Subjects\Literal.cs" />
+    <Compile Include="Interpreter\Subjects\Path.cs" />
+    <Compile Include="Interpreter\Subjects\Or.cs" />
+    <Compile Include="Interpreter\Subjects\ExpressionElement.cs" />
+    <Compile Include="Interpreter\Subjects\Parent.cs" />
+    <Compile Include="Interpreter\SyntaxElement.cs" />
+    <Compile Include="Interpreter\Predicates\Predicate.cs" />
+    <Compile Include="Interpreter\Sentence.cs" />
+    <Compile Include="Interpreter\Subjects\Subject.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PositionStep.cs" />
+    <Compile Include="Utils\Extension.cs" />
+    <Compile Include="Utils\PositionJsonReader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
