@@ -8,7 +8,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
 {
     class Any : Literal
     {
-        public override bool AppliesAt(PositionStep[] position)
+        public override bool AppliesAt(PositionStep[] position, bool strict)
         {
             return true;
         }

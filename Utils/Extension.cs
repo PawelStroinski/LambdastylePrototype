@@ -26,5 +26,15 @@ namespace LambdastylePrototype
             }
             return builder.ToString();
         }
+
+        public static T Penultimate<T>(this IEnumerable<T> items)
+        {
+            return items.ElementAt(items.Count() - 2);
+        }
+
+        public static bool HasPenultimate<T>(this IEnumerable<T> items)
+        {
+            return items.Count() >= 2;
+        }
     }
 }

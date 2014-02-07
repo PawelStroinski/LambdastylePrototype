@@ -15,9 +15,9 @@ namespace LambdastylePrototype.Interpreter.Subjects
             this.expression = expression;
         }
 
-        public virtual bool AppliesAt(PositionStep[] position)
+        public virtual bool AppliesAt(PositionStep[] position, bool strict)
         {
-            return expression.All(element => element.AppliesAt(position));
+            return expression.All(element => element.AppliesAt(position, strict));
         }
     }
 }

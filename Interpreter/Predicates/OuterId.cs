@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace LambdastylePrototype.Interpreter.Predicates
 {
@@ -10,7 +11,15 @@ namespace LambdastylePrototype.Interpreter.Predicates
     {
         public override string ToString(PositionStep[] position)
         {
-            throw new NotImplementedException();
+            PositionStep propertyName;
+            if (position.Last().TokenType == JsonToken.PropertyName)
+                propertyName = position.Last();
+            else
+                if (position.HasPenultimate() && position.Penultimate().TokenType == JsonToken.PropertyName)
+                    propertyName = position.Penultimate();
+                else
+                    return string.Empty;
+            return string.Format("\"{0}\": ", propertyName.Value);
         }
     }
 }

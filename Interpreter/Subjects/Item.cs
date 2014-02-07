@@ -9,7 +9,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
 {
     class Item : ExpressionElement
     {
-        public override bool AppliesAt(PositionStep[] position)
+        public override bool AppliesAt(PositionStep[] position, bool strict)
         {
             foreach (var step in position.Reverse().Skip(1))
             {

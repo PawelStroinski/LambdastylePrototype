@@ -10,14 +10,14 @@ namespace LambdastylePrototype.Interpreter.Subjects
     {
         public Path(params ExpressionElement[] expression) : base(expression) { }
 
-        public override bool AppliesAt(PositionStep[] position)
+        public override bool AppliesAt(PositionStep[] position, bool strict)
         {
             var positionLength = 1;
             var expressionIndex = 0;
             while (positionLength <= position.Length && expressionIndex < expression.Length)
             {
                 var currentPosition = position.Take(positionLength).ToArray();
-                if (expression[expressionIndex].AppliesAt(currentPosition))
+                if (expression[expressionIndex].AppliesAt(currentPosition, strict: false))
                 {
                     if (expressionIndex == expression.Length - 1)
                         return true;

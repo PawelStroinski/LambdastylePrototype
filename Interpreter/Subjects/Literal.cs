@@ -25,7 +25,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
             this.value = value;
         }
 
-        public override bool AppliesAt(PositionStep[] position)
+        public override bool AppliesAt(PositionStep[] position, bool strict)
         {
             return position.Any(step => value.Equals(step.Value));
         }

@@ -18,6 +18,7 @@ namespace LambdastylePrototype
         readonly IEnumerator<Sentence> styleEnumerator;
         readonly Dictionary<Sentence, long> startsAt = new Dictionary<Sentence, long>();
         StreamWriter writer;
+        bool EOF;
 
         public Processor(Stream input, Stream output, params Sentence[] style)
         {
@@ -41,8 +42,9 @@ namespace LambdastylePrototype
                         styleEnumerator.Current.Apply(CreateContext(reader.Position));
                     else
                     {
-                        RewindOutputToEOF();
+                        EOF = true;
                         styleEnumerator.Current.ApplyEOF(CreateContext());
+                        EOF = false;
                     }
                 }
                 while (readResult);
@@ -69,6 +71,9 @@ namespace LambdastylePrototype
         {
             if (sentence != null)
                 output.Position = startsAt[sentence];
+            else
+                if (EOF)
+                    RewindOutputToEOF();
         }
 
         void RewindOutputToEOF()

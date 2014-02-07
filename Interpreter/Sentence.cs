@@ -31,7 +31,7 @@ namespace LambdastylePrototype.Interpreter
         public void Apply(ApplyContext context)
         {
             this.context = context;
-            if (HasSubject && subject.AppliesAt(context.Position))
+            if (HasSubject && subject.AppliesAt(context.Position, strict: true))
             {
                 Console.WriteLine(context.Position.ToString(true));
                 if (predicate.AppliesAt(context.Position))
@@ -54,13 +54,13 @@ namespace LambdastylePrototype.Interpreter
 
         void WritePreviousUntilSubjectOnce()
         {
-            var previous = PreviousUntilSubject().ToArray();
+            var previous = PreviousUntilSubjectReversed().Reverse().ToArray();
             var previousNotWritten = previous.Where(sentence => !context.Written(sentence)).ToArray();
             foreach (var sentence in previousNotWritten)
                 context.Write(sentence.predicate.ToString(new PositionStep[0]) + Environment.NewLine, sentence);
         }
 
-        IEnumerable<Sentence> PreviousUntilSubject()
+        IEnumerable<Sentence> PreviousUntilSubjectReversed()
         {
             foreach (var sentence in context.Previous.Reverse())
                 if (sentence.HasSubject)
