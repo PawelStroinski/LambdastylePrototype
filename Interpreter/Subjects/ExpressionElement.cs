@@ -19,5 +19,10 @@ namespace LambdastylePrototype.Interpreter.Subjects
         {
             return expression.All(element => element.AppliesAt(position, strict));
         }
+
+        public virtual bool JustAny()
+        {
+            return expression.Any() && expression.All(element => element.JustAny());
+        }
     }
 }

@@ -30,41 +30,47 @@ namespace LambdastylePrototype
 
         public void Process()
         {
-            var readResult = false;
+            bool readResult;
+            EOF = false;
             using (writer = new StreamWriter(output))
-            using (var reader = new PositionJsonReader(new JsonTextReader(new StreamReader(input))))
+            using (var reader = new PositionJsonReader(new JsonTextReader(
+                    new StreamReader(input), grabDelimiters: true)))
                 do
                 {
                     styleEnumerator.Reset();
                     styleEnumerator.MoveNext();
                     readResult = reader.Read();
+                    var context = CreateContext(reader);
                     if (readResult)
-                        styleEnumerator.Current.Apply(CreateContext(reader.Position));
+                        styleEnumerator.Current.Apply(context);
                     else
                     {
                         EOF = true;
-                        styleEnumerator.Current.ApplyEOF(CreateContext());
-                        EOF = false;
+                        styleEnumerator.Current.ApplyEOF(context);
                     }
                 }
                 while (readResult);
         }
 
-        ApplyContext CreateContext(params PositionStep[] position)
+        ApplyContext CreateContext(PositionJsonReader reader)
         {
             return new ApplyContext(style: styleEnumerator,
-                                    position: position,
+                                    position: reader.Position,
                                     write: Write,
                                     written: Written);
         }
 
-        void Write(string value, Sentence sentence)
+        void Write(string value, Sentence sentence, bool rewind)
         {
-            RewindOutputTo(NextWrittenSentence(sentence));
-            startsAt[sentence] = output.Position;
+            if (rewind)
+            {
+                RewindOutputTo(NextWrittenSentence(sentence));
+                startsAt[sentence] = output.Position;
+            }
+            var position = output.Position;
             writer.Write(value);
             writer.Flush();
-            ShiftNextWrittenSentences(sentence, output.Position - startsAt[sentence]);
+            ShiftNextWrittenSentences(sentence, output.Position - position);
         }
 
         void RewindOutputTo(Sentence sentence)

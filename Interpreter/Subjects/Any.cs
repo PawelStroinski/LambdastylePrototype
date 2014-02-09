@@ -12,5 +12,10 @@ namespace LambdastylePrototype.Interpreter.Subjects
         {
             return true;
         }
+
+        public override bool JustAny()
+        {
+            return true;
+        }
     }
 }

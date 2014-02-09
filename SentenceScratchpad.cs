@@ -143,7 +143,7 @@ namespace LambdastylePrototype
                 new Sentence(new Predicate(new OuterValue())));
             //"label"=\^(\w*) (\w*)$\ -> #"\1\|\2"
             new Sentence(new Subject(new Equals(new Id("label"), new Value(new RegExp("^(\\w*) (\\w*)$")))),
-                new Predicate(new OuterId(), new Raw("\""), new RegExpCapture(1), new Raw("|"), new RegExpCapture(2),
+                new Predicate(new OuterId(), new Raw("\""), new RegExpGroup(1), new Raw("|"), new RegExpGroup(2),
                     new Raw("\"")));
         }
     }

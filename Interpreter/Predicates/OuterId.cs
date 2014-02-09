@@ -9,17 +9,24 @@ namespace LambdastylePrototype.Interpreter.Predicates
 {
     class OuterId : PredicateElement
     {
+        public override bool AppliesAt(PositionStep[] position)
+        {
+            var tokenType = position.Last().TokenType;
+            if (tokenType == JsonToken.EndObject)
+                return false;
+            if (position.HasPenultimate())
+            {
+                tokenType = position.Penultimate().TokenType;
+                return tokenType == JsonToken.PropertyName;
+            }
+            return false;
+        }
+
         public override string ToString(PositionStep[] position)
         {
-            PositionStep propertyName;
-            if (position.Last().TokenType == JsonToken.PropertyName)
-                propertyName = position.Last();
-            else
-                if (position.HasPenultimate() && position.Penultimate().TokenType == JsonToken.PropertyName)
-                    propertyName = position.Penultimate();
-                else
-                    return string.Empty;
-            return string.Format("\"{0}\": ", propertyName.Value);
+            var propertyName = position.Penultimate();
+            return string.Format("{0}\"{1}\"{2}", propertyName.DelimitersBefore, propertyName.Value,
+                propertyName.DelimitersAfter);
         }
     }
 }

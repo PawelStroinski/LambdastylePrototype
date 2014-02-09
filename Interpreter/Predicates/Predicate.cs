@@ -19,12 +19,22 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         public override bool AppliesAt(PositionStep[] position)
         {
-            return elements.All(element => element.AppliesAt(position));
+            return elements.Any(element => element.AppliesAt(position));
         }
 
         public override string ToString(PositionStep[] position)
         {
-            return string.Join(string.Empty, elements.Select(element => element.ToString(position)));
+            var result = string.Join(string.Empty, elements
+                .Where(element => element.AppliesAt(position))
+                .Select(element => element.ToString(position)));
+            if (!Has<OuterValue>() && !Has<OuterId>())
+                result += Environment.NewLine;
+            return result;
+        }
+
+        bool Has<T>()
+        {
+            return elements.Any(element => element is T);
         }
     }
 }

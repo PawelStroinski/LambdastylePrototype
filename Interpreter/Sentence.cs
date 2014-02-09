@@ -37,7 +37,8 @@ namespace LambdastylePrototype.Interpreter
                 if (predicate.AppliesAt(context.Position))
                 {
                     WritePreviousUntilSubjectOnce();
-                    context.Write(predicate.ToString(context.Position) + Environment.NewLine, this);
+                    context.Write(predicate.ToString(context.Position), this, !subject.JustAny());
+                    return;
                 }
             }
             if (context.Style.MoveNext())
@@ -47,9 +48,11 @@ namespace LambdastylePrototype.Interpreter
         public void ApplyEOF(ApplyContext context)
         {
             if (!HasSubject && !context.Written(this))
-                context.Write(predicate.ToString(context.Position) + Environment.NewLine, this);
+                context.Write(predicate.ToString(new PositionStep[0]), this, true);
             if (context.Style.MoveNext())
-                context.Style.Current.ApplyEOF(context);
+                context.Style.Current.ApplyEOF(context.CopyEOF());
+            if (context.Position.Any() && context.Position.Last().DelimitersAfter != string.Empty)
+                context.Write(context.Position.Last().DelimitersAfter, this, true);
         }
 
         void WritePreviousUntilSubjectOnce()
@@ -57,7 +60,7 @@ namespace LambdastylePrototype.Interpreter
             var previous = PreviousUntilSubjectReversed().Reverse().ToArray();
             var previousNotWritten = previous.Where(sentence => !context.Written(sentence)).ToArray();
             foreach (var sentence in previousNotWritten)
-                context.Write(sentence.predicate.ToString(new PositionStep[0]) + Environment.NewLine, sentence);
+                context.Write(sentence.predicate.ToString(new PositionStep[0]), sentence, true);
         }
 
         IEnumerable<Sentence> PreviousUntilSubjectReversed()

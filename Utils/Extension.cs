@@ -36,5 +36,10 @@ namespace LambdastylePrototype
         {
             return items.Count() >= 2;
         }
+
+        public static bool IsValue(this JsonToken tokenType)
+        {
+            return Consts.ValueTokenTypes.Contains(tokenType);
+        }
     }
 }

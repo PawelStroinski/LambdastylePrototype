@@ -7,17 +7,8 @@ using Newtonsoft.Json;
 
 namespace LambdastylePrototype.Interpreter.Predicates
 {
-    abstract class PredicateValue : PredicateElement
+    abstract class ValueBase : PredicateElement
     {
-        static JsonToken[] valueTokenTypes = { JsonToken.Boolean, JsonToken.Float, JsonToken.Integer,
-                                                 JsonToken.Null, JsonToken.String, JsonToken.Undefined };
-
-        public override bool AppliesAt(PositionStep[] position)
-        {
-            var tokenType = position.Last().TokenType;
-            return valueTokenTypes.Contains(tokenType);
-        }
-
         public override string ToString(PositionStep[] position)
         {
             var tokenType = position.Last().TokenType;
@@ -26,6 +17,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 return "null";
             if (tokenType == JsonToken.Undefined)
                 return "undefined";
+            if (tokenType == JsonToken.Boolean)
+                return value.ToString().ToLowerInvariant();
             return value.ToString();
         }
     }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace LambdastylePrototype.Interpreter.Predicates
 {
-    class RegExpCapture : PredicateValue
+    class RegExpGroup : ValueBase
     {
         readonly int groupNumber;
 
-        public RegExpCapture(int groupNumber)
+        public RegExpGroup(int groupNumber)
         {
             this.groupNumber = groupNumber;
         }

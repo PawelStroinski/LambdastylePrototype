@@ -93,7 +93,11 @@ namespace LambdastylePrototype.Utils
 
         void Push()
         {
-            position.Push(new PositionStep(reader.TokenType, reader.Value));
+            position.Push(new PositionStep(
+                tokenType: reader.TokenType,
+                value: reader.Value,
+                delimitersBefore: reader.DelimitersBefore,
+                delimitersAfter: reader.DelimitersAfter));
         }
     }
 }

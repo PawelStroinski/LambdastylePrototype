@@ -11,11 +11,15 @@ namespace LambdastylePrototype
     {
         public readonly JsonToken TokenType;
         public readonly object Value;
+        public readonly string DelimitersBefore;
+        public readonly string DelimitersAfter;
 
-        public PositionStep(JsonToken tokenType, object value)
+        public PositionStep(JsonToken tokenType, object value, string delimitersBefore, string delimitersAfter)
         {
             TokenType = tokenType;
             Value = value;
+            DelimitersBefore = delimitersBefore;
+            DelimitersAfter = delimitersAfter;
         }
     }
 }
