@@ -15,9 +15,9 @@ namespace LambdastylePrototype
         {
             // "singleRun" -> #true
             new Sentence(new Subject(new Id("singleRun")), new Predicate(new OuterId(), new Raw("true")));
-            // step="commonjs" ->
+            // item="commonjs" ->
             new Sentence(new Subject(new Equals(new Item(), new Value("commonjs"))), new Predicate());
-            // "frameworks".step="commonjs" -> #"amd"
+            // "frameworks".item="commonjs" -> #"amd"
             new Sentence(new Subject(new Equals(new Path(new Id("frameworks"), new Item()), new Value("commonjs"))),
                 new Predicate(new OuterId(), new Raw("\"amd\"")));
             // "key": "value"
@@ -28,14 +28,14 @@ namespace LambdastylePrototype
             new Sentence(new Subject(new Any()), new Predicate());
             //"plugins" -> &
             new Sentence(new Subject(new Id("plugins")), new Predicate(new OuterValue()));
-            // "plugins".step -> |,
+            // "plugins".item -> |,
             new Sentence(new Subject(new Path(new Id("plugins"), new Item())),
                 new Predicate(new InnerValue(), new Raw(", ")));
             //Reporters:
-            //"reporters".step -> |
+            //"reporters".item -> |
             //
             //Plugins:
-            //"plugins".step -> |
+            //"plugins".item -> |
             new Sentence(new Predicate("Reporters:"));
             new Sentence(new Subject(new Path(new Id("reporters"), new Item())), new Predicate(new InnerValue()));
             new Sentence(new Predicate());
@@ -44,12 +44,12 @@ namespace LambdastylePrototype
             // "reporters" -> #[|, "custom"]
             new Sentence(new Subject(new Id("reporters")),
                 new Predicate(new OuterId(), new Raw("["), new InnerValue(), new Raw(", \"custom\"]")));
-            // step -> [&]
+            // item -> [&]
             new Sentence(new Subject(new Item()),
                 new Predicate(new Raw("["), new OuterValue(), new Raw("]")));
             //<config>
             //  <plugins>
-            //    "plugins".step -> <step>|</step>
+            //    "plugins".item -> <item>|</item>
             //  </plugins>
             //  <basePath>"basePath" -> |</basePath>
             //</config>
@@ -107,10 +107,10 @@ namespace LambdastylePrototype
                 new Predicate(new OuterId(), new Raw("\""), new InnerValue(), new Raw("...\"")));
             //<menu>
             //  <header>"header" -> |</header>
-            //  "items".step!=null -> <step 
+            //  "items".item!=null -> <item 
             //    ."id" -> action="|" id="|">
-            //    ."label"|."id" -> |</step>
-            //  "items".step=null -> <separator/>
+            //    ."label"|."id" -> |</item>
+            //  "items".item=null -> <separator/>
             //</menu>
             new Sentence(new Predicate("<menu>"));
             new Sentence(new Subject(new Id("header")),
@@ -122,7 +122,7 @@ namespace LambdastylePrototype
                 new Sentence(new Subject(new Or(new Path(new Current(), new Id("label")), new Path(new Current(),
                     new Id("id")))), new Predicate(new InnerValue(), new Raw("</item>"))));
             //"items" -> #{
-            //  .step ->
+            //  .item ->
             //    ."id" -> &:
             //    &,
             //  }

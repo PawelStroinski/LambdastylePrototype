@@ -28,6 +28,8 @@ namespace LambdastylePrototype.Utils
                 Pop();
                 Push();
             }
+            else
+                AppendDelimitersAfter();
             return result;
         }
 
@@ -98,6 +100,16 @@ namespace LambdastylePrototype.Utils
                 value: reader.Value,
                 delimitersBefore: reader.DelimitersBefore,
                 delimitersAfter: reader.DelimitersAfter));
+        }
+
+        void AppendDelimitersAfter()
+        {
+            var last = position.Pop();
+            position.Push(new PositionStep(
+                tokenType: last.TokenType,
+                value: last.Value,
+                delimitersBefore: last.DelimitersBefore,
+                delimitersAfter: last.DelimitersAfter + reader.DelimitersAfter));
         }
     }
 }

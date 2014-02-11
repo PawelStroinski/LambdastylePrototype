@@ -15,7 +15,8 @@ namespace LambdastylePrototype
         public static readonly JsonToken[] ValueTokenTypes = { JsonToken.Boolean, JsonToken.Float, JsonToken.Integer,
                                                                JsonToken.Null, JsonToken.String, JsonToken.Undefined };
 
-        public static readonly Sentence CopyAny = new Sentence(new Subject(new Any()),
-            new Predicate(new OuterId(), new OuterValue()));
+        public static readonly Predicate Copy = new Predicate(new OuterId(), new OuterValue());
+
+        public static readonly Sentence CopyAny = new Sentence(new Subject(new Any()), Copy);
     }
 }

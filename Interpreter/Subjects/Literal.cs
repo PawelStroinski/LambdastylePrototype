@@ -15,7 +15,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
             this.value = value;
         }
 
-        public Literal(int value)
+        public Literal(Int64 value)
         {
             this.value = value;
         }
