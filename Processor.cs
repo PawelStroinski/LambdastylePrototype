@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ namespace LambdastylePrototype
         readonly Dictionary<Sentence, long> startsAt = new Dictionary<Sentence, long>();
         StreamWriter writer;
         bool EOF;
+        GlobalState state;
 
         public Processor(Stream input, Stream output, params Sentence[] style)
         {
@@ -32,24 +34,28 @@ namespace LambdastylePrototype
         {
             bool readResult;
             EOF = false;
+            state = new GlobalState();
             using (writer = new StreamWriter(output))
             using (var reader = new PositionJsonReader(new JsonTextReader(
                     new StreamReader(input), grabDelimiters: true)))
+            {
+                if (!style.Any())
+                    return;
+                styleEnumerator.Reset();
+                styleEnumerator.MoveNext();
+                styleEnumerator.Current.ApplyBOF(CreateContext(reader));
                 do
                 {
                     styleEnumerator.Reset();
                     styleEnumerator.MoveNext();
                     readResult = reader.Read();
-                    var context = CreateContext(reader);
                     if (readResult)
-                        styleEnumerator.Current.Apply(context);
-                    else
-                    {
-                        EOF = true;
-                        styleEnumerator.Current.ApplyEOF(context);
-                    }
+                        styleEnumerator.Current.Apply(CreateContext(reader));
                 }
                 while (readResult);
+                EOF = true;
+                styleEnumerator.Current.ApplyEOF(CreateContext(reader));
+            }
         }
 
         ApplyContext CreateContext(PositionJsonReader reader)
@@ -57,7 +63,8 @@ namespace LambdastylePrototype
             return new ApplyContext(style: styleEnumerator,
                                     position: reader.Position,
                                     write: Write,
-                                    written: Written);
+                                    written: Written,
+                                    state: state);
         }
 
         void Write(string value, Sentence sentence, bool rewind)

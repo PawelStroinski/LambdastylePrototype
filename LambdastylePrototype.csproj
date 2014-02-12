@@ -50,6 +50,7 @@
       <Link>Utils\InsertModeFileStream.cs</Link>
     </Compile>
     <Compile Include="ApplyContext.cs" />
+    <Compile Include="GlobalState.cs" />
     <Compile Include="Interpreter\Predicates\ValueBase.cs" />
     <Compile Include="Interpreter\Predicates\RegExpGroup.cs" />
     <Compile Include="Interpreter\Predicates\OuterValue.cs" />

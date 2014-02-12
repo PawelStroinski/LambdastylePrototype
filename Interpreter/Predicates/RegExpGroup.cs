@@ -15,7 +15,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             this.groupNumber = groupNumber;
         }
 
-        public override string ToString(PositionStep[] position)
+        public override string ToString(PositionStep[] position, GlobalState state)
         {
             throw new NotImplementedException();
         }

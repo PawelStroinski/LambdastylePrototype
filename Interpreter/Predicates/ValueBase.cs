@@ -9,7 +9,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
 {
     abstract class ValueBase : PredicateElement
     {
-        public override string ToString(PositionStep[] position)
+        public override string ToString(PositionStep[] position, GlobalState state)
         {
             var tokenType = position.Last().TokenType;
             var value = position.Last().Value;

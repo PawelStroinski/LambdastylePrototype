@@ -26,7 +26,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return true;
         }
 
-        public override string ToString(PositionStep[] position)
+        public override string ToString(PositionStep[] position, GlobalState state)
         {
             return raw;
         }
