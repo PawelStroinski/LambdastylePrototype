@@ -15,18 +15,18 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return tokenType != JsonToken.PropertyName;
         }
 
-        public override string ToString(PositionStep[] position, GlobalState state)
+        public override string ToString(ToStringContext context)
         {
-            var delimitersBefore = position.Last().DelimitersBefore;
-            state.WrittenOuter = true;
-            return delimitersBefore + ToStringInternal(position, state);
+            var delimitersBefore = context.Position.Last().DelimitersBefore;
+            context.GlobalState.WrittenOuter = true;
+            return delimitersBefore + ToStringInternal(context);
         }
 
-        string ToStringInternal(PositionStep[] position, GlobalState state)
+        string ToStringInternal(ToStringContext context)
         {
-            var tokenType = position.Last().TokenType;
+            var tokenType = context.Position.Last().TokenType;
             if (tokenType == JsonToken.String)
-                return "\"" + base.ToString(position, state) + "\"";
+                return "\"" + base.ToString(context) + "\"";
             if (tokenType == JsonToken.EndArray)
                 return "]";
             if (tokenType == JsonToken.EndObject)
@@ -35,7 +35,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 return "[";
             if (tokenType == JsonToken.StartObject)
                 return "{";
-            return base.ToString(position, state);
+            return base.ToString(context);
         }
     }
 }

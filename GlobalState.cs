@@ -9,7 +9,7 @@ namespace LambdastylePrototype
 {
     class GlobalState
     {
-        public bool? ProtectSyntax;
+        public bool? ForceSyntax;
         public bool Written;
         public bool WrittenOuter;
         public JsonToken? InsertedStartToken;

@@ -24,16 +24,17 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return elements.Any(element => element.AppliesAt(position));
         }
 
-        public override string ToString(PositionStep[] position, GlobalState state)
+        public override string ToString(ToStringContext context)
         {
+            context = context.Copy(HasOuter());
             var result = string.Join(string.Empty, elements
-                .Where(element => element.AppliesAt(position))
-                .Select(element => element.ToString(position, state)));
-            if (!HasOuterValue() && !HasOuterId())
+                .Where(element => element.AppliesAt(context.Position))
+                .Select(element => element.ToString(context)));
+            if (!HasOuter())
                 result += Environment.NewLine;
-            if (state.ProtectSyntax.Value && !state.Written)
-                result = InsertStartToken(position: position, state: state, result: result);
-            state.Written = true;
+            if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.Written)
+                result = InsertStartToken(context, result);
+            context.GlobalState.Written = true;
             return result;
         }
 
@@ -47,16 +48,21 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return elements.Any(element => element is OuterId);
         }
 
-        string InsertStartToken(PositionStep[] position, GlobalState state, string result)
+        bool HasOuter()
         {
-            var tokenType = position.Last(step => step.TokenType == JsonToken.StartObject 
+            return HasOuterValue() || HasOuterId();
+        }
+
+        string InsertStartToken(ToStringContext context, string result)
+        {
+            var tokenType = context.Position.Last(step => step.TokenType == JsonToken.StartObject 
                 || step.TokenType == JsonToken.StartArray).TokenType;
             var startToken = tokenType == JsonToken.StartObject ? "{" : "[";
             var resultStartsWithStartToken = Regex.IsMatch(input: result, pattern: @"\s*\" + startToken);
             if (!resultStartsWithStartToken)
             {
                 result = startToken + " " + result;
-                state.InsertedStartToken = tokenType;
+                context.GlobalState.InsertedStartToken = tokenType;
             }
             return result;
         }

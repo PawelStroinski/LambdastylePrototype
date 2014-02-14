@@ -26,9 +26,11 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return true;
         }
 
-        public override string ToString(PositionStep[] position, GlobalState state)
+        public override string ToString(ToStringContext context)
         {
-            return raw;
+            var delimitersBefore = context.Position.Any() && context.HasOuter
+                ? context.Position.Last().DelimitersBefore : string.Empty;
+            return delimitersBefore + raw;
         }
     }
 }

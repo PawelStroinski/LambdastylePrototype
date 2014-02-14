@@ -13,6 +13,6 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return true;
         }
 
-        public abstract string ToString(PositionStep[] position, GlobalState state);
+        public abstract string ToString(ToStringContext context);
     }
 }

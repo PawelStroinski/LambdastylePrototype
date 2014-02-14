@@ -91,6 +91,9 @@ namespace LambdastylePrototype.Utils
                         break;
                     else
                         position.Pop();
+            if (currentTokenType.IsValue())
+                while (position.Any() && position.Peek().TokenType.IsValue())
+                    position.Pop();
         }
 
         void Push()

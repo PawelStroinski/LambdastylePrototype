@@ -9,10 +9,10 @@ namespace LambdastylePrototype.Interpreter.Predicates
 {
     abstract class ValueBase : PredicateElement
     {
-        public override string ToString(PositionStep[] position, GlobalState state)
+        public override string ToString(ToStringContext context)
         {
-            var tokenType = position.Last().TokenType;
-            var value = position.Last().Value;
+            var tokenType = context.Position.Last().TokenType;
+            var value = context.Position.Last().Value;
             if (tokenType == JsonToken.Null)
                 return "null";
             if (tokenType == JsonToken.Undefined)

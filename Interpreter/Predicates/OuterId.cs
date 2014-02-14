@@ -22,13 +22,13 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return false;
         }
 
-        public override string ToString(PositionStep[] position, GlobalState state)
+        public override string ToString(ToStringContext context)
         {
-            var propertyName = position.Penultimate();
+            var propertyName = context.Position.Penultimate();
             var delimitersBefore = propertyName.DelimitersBefore;
-            if (state.ProtectSyntax.Value && !state.WrittenOuter)
+            if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.WrittenOuter)
                 delimitersBefore = string.Empty;
-            state.WrittenOuter = true;
+            context.GlobalState.WrittenOuter = true;
             return string.Format("{0}\"{1}\"{2}", delimitersBefore, propertyName.Value, propertyName.DelimitersAfter);
         }
     }

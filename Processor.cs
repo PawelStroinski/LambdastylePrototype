@@ -20,7 +20,7 @@ namespace LambdastylePrototype
         readonly Dictionary<Sentence, long> startsAt = new Dictionary<Sentence, long>();
         StreamWriter writer;
         bool EOF;
-        GlobalState state;
+        GlobalState globalState;
 
         public Processor(Stream input, Stream output, params Sentence[] style)
         {
@@ -34,7 +34,7 @@ namespace LambdastylePrototype
         {
             bool readResult;
             EOF = false;
-            state = new GlobalState();
+            globalState = new GlobalState();
             using (writer = new StreamWriter(output))
             using (var reader = new PositionJsonReader(new JsonTextReader(
                     new StreamReader(input), grabDelimiters: true)))
@@ -64,7 +64,7 @@ namespace LambdastylePrototype
                                     position: reader.Position,
                                     write: Write,
                                     written: Written,
-                                    state: state);
+                                    globalState: globalState);
         }
 
         void Write(string value, Sentence sentence, bool rewind)

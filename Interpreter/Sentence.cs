@@ -39,9 +39,10 @@ namespace LambdastylePrototype.Interpreter
                 if (predicate.AppliesAt(context.Position))
                 {
                     WritePreviousUntilSubjectOnce();
-                    context.Write(predicate.ToString(context.Position, context.State), this, !subject.JustAny());
-                    return;
+                    var toStringContext = new ToStringContext(context.Position, context.GlobalState);
+                    context.Write(predicate.ToString(toStringContext), this, !subject.JustAny());
                 }
+                return;
             }
             if (context.Style.MoveNext())
                 context.Style.Current.Apply(context.Copy(this));
@@ -50,26 +51,26 @@ namespace LambdastylePrototype.Interpreter
         public void ApplyBOF(ApplyContext context)
         {
             if (predicate.HasOuterId() || predicate.HasOuterValue())
-                context.State.ProtectSyntax = !context.State.ProtectSyntax.HasValue;
+                context.GlobalState.ForceSyntax = !context.GlobalState.ForceSyntax.HasValue;
             if (subject != null && subject.JustAny() && predicate.HasOuterValue())
-                context.State.ProtectSyntax = false;
+                context.GlobalState.ForceSyntax = false;
             if (context.Style.MoveNext())
                 context.Style.Current.ApplyBOF(context);
             else
-                if (!context.State.ProtectSyntax.HasValue)
-                    context.State.ProtectSyntax = false;
+                if (!context.GlobalState.ForceSyntax.HasValue)
+                    context.GlobalState.ForceSyntax = false;
         }
 
         public void ApplyEOF(ApplyContext context)
         {
             if (!HasSubject && !context.Written(this))
-                context.Write(predicate.ToString(new PositionStep[0], context.State), this, true);
+                context.Write(predicate.ToString(new ToStringContext(context.GlobalState)), this, true);
             if (context.Style.MoveNext())
                 context.Style.Current.ApplyEOF(context);
             else
-                if (context.State.InsertedStartToken.HasValue)
+                if (context.GlobalState.InsertedStartToken.HasValue)
                 {
-                    var endToken = context.State.InsertedStartToken == JsonToken.StartObject ? "}" : "]";
+                    var endToken = context.GlobalState.InsertedStartToken == JsonToken.StartObject ? "}" : "]";
                     context.Write(" " + endToken, this, true);
                 }
                 else
@@ -82,7 +83,7 @@ namespace LambdastylePrototype.Interpreter
             var previous = PreviousUntilSubjectReversed().Reverse().ToArray();
             var previousNotWritten = previous.Where(sentence => !context.Written(sentence)).ToArray();
             foreach (var sentence in previousNotWritten)
-                context.Write(sentence.predicate.ToString(new PositionStep[0], context.State), sentence, true);
+                context.Write(sentence.predicate.ToString(new ToStringContext(context.GlobalState)), sentence, true);
         }
 
         IEnumerable<Sentence> PreviousUntilSubjectReversed()
