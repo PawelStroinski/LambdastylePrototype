@@ -1,0 +1,10 @@
+<config>
+  <plugins>
+    <item>karma-jasmine</item>
+    <item>karma-chrome-launcher</item>
+    <item>karma-firefox-launcher</item>
+    <item>karma-junit-reporter</item>
+    <item>karma-commonjs</item>
+  </plugins>
+  <basePath>../..</basePath>
+</config>

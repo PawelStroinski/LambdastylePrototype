@@ -41,5 +41,12 @@ namespace LambdastylePrototype
         {
             return Consts.ValueTokenTypes.Contains(tokenType);
         }
+
+        public static void WriteLine(string value)
+        {
+#if !NCRUNCH
+            Console.WriteLine(value);
+#endif
+        }
     }
 }

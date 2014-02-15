@@ -35,7 +35,7 @@ namespace LambdastylePrototype.Interpreter
             this.context = context;
             if (HasSubject && subject.AppliesAt(context.Position, strict: true))
             {
-                Console.WriteLine(context.Position.ToString(true));
+                Extension.WriteLine(context.Position.ToString(true));
                 if (predicate.AppliesAt(context.Position))
                 {
                     WritePreviousUntilSubjectOnce();
