@@ -26,7 +26,7 @@ namespace Test
                 var actualOutputFile = Path.GetTempFileName();
                 var builtStyle = BuiltStyle(style);
                 using (var input = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
-                using (var output = new InsertModeFileStream(actualOutputFile, FileMode.Create))
+                using (var output = new EditableFileStream(actualOutputFile, FileMode.Create))
                 {
                     var processor = new Processor(input, output, builtStyle);
                     processor.Process();

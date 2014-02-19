@@ -9,9 +9,9 @@ namespace LambdastylePrototype.Interpreter.Subjects
 {
     class Item : ExpressionElement
     {
-        public override bool AppliesAt(PositionStep[] position, bool strict)
+        public override bool AppliesAt(AppliesAtContext context)
         {
-            foreach (var step in position.Reverse().Skip(1))
+            foreach (var step in context.Position.Reverse().Skip(1))
             {
                 if (step.TokenType == JsonToken.EndArray)
                     return false;

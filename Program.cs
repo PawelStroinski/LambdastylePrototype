@@ -17,7 +17,7 @@ namespace LambdastylePrototype
             var inputPath = @"C:\nodejs\jsonslt\input1.json";
             var outputPath = @"T:\output.txt";
             var input = new System.IO.FileStream(inputPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
-            var output = new InsertModeFileStream(outputPath, System.IO.FileMode.Create);
+            var output = new EditableFileStream(outputPath, System.IO.FileMode.Create);
             var processor = new Processor(input, output,
                 new Sentence(new Predicate("<config>")),
                 new Sentence(new Predicate("  <plugins>")),

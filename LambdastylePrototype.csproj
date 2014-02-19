@@ -46,8 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\InsertModeFileStream\InsertModeFileStream.cs">
-      <Link>Utils\InsertModeFileStream.cs</Link>
+    <Compile Include="..\..\InsertModeFileStream\EditableFileStream.cs">
+      <Link>Utils\EditableFileStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InsertModeFileStream\EditableStream.cs">
+      <Link>Utils\EditableStream.cs</Link>
     </Compile>
     <Compile Include="ApplyContext.cs" />
     <Compile Include="GlobalState.cs" />
@@ -60,6 +63,7 @@
     <Compile Include="Interpreter\Predicates\PredicateElement.cs" />
     <Compile Include="Interpreter\Predicates\InnerValue.cs" />
     <Compile Include="Interpreter\Subjects\And.cs" />
+    <Compile Include="Interpreter\Subjects\AppliesAtContext.cs" />
     <Compile Include="Interpreter\Subjects\Current.cs" />
     <Compile Include="Interpreter\Subjects\Not.cs" />
     <Compile Include="Interpreter\Subjects\ItemIndex.cs" />
@@ -67,6 +71,7 @@
     <Compile Include="Interpreter\Subjects\RegExp.cs" />
     <Compile Include="Interpreter\Subjects\Any.cs" />
     <Compile Include="Processor.cs" />
+    <Compile Include="ParentScope.cs" />
     <Compile Include="SentenceScratchpad.cs" />
     <Compile Include="SubjectScratchpad.cs" />
     <Compile Include="Interpreter\Subjects\Value.cs" />

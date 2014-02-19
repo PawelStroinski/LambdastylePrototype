@@ -45,6 +45,7 @@
     <Compile Include="input1.json\1 singlerun true\Style.cs" />
     <Compile Include="input1.json\1_1 only keys with value 500\Style.cs" />
     <Compile Include="input1.json\1_1 remove commonjs from all arrays\Style.cs" />
+    <Compile Include="input1.json\1_1 remove every array containing commonjs\Style.cs" />
     <Compile Include="input1.json\1_1 replace commonjs with amd only in frameworks\Style.cs" />
     <Compile Include="input1.json\1_2 config\Style.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +68,7 @@
     <Content Include="input1.json\1_1 remove commonjs from all arrays\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="input1.json\1_1 remove every array containing commonjs\output.txt" />
     <Content Include="input1.json\1_1 replace commonjs with amd only in frameworks\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

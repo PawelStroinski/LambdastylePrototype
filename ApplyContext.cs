@@ -14,16 +14,18 @@ namespace LambdastylePrototype
         public readonly Action<string, Sentence, bool> Write;
         public readonly Func<Sentence, bool> Written;
         public readonly GlobalState GlobalState;
+        public readonly ParentScope ParentScope;
         public readonly Sentence[] Previous;
 
         public ApplyContext(IEnumerator<Sentence> style, PositionStep[] position, Action<string, Sentence, bool> write,
-            Func<Sentence, bool> written, GlobalState globalState, params Sentence[] previous)
+            Func<Sentence, bool> written, GlobalState globalState, ParentScope parentScope, params Sentence[] previous)
         {
             Style = style;
             Position = position;
             Write = write;
             Written = written;
             GlobalState = globalState;
+            ParentScope = parentScope;
             Previous = previous;
         }
 
@@ -35,6 +37,7 @@ namespace LambdastylePrototype
                 write: Write,
                 written: Written,
                 globalState: GlobalState,
+                parentScope: ParentScope,
                 previous: Previous.Concat(new Sentence[] { caller }).ToArray());
         }
     }

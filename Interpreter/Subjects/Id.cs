@@ -13,12 +13,13 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         public Id(string id) : base(new Literal(id)) { }
 
-        public override bool AppliesAt(PositionStep[] position, bool strict)
+        public override bool AppliesAt(AppliesAtContext context)
         {
-            if (strict)
+            var position = context.Position;
+            if (context.Strict)
                 position = position.Take(position.Count() - 1).ToArray();
             position = position.Where(item => item.TokenType == JsonToken.PropertyName).ToArray();
-            return expression.Any(element => element.AppliesAt(position, strict));
+            return expression.Any(element => element.AppliesAt(new AppliesAtContext(position, context.Strict)));
         }
     }
 }

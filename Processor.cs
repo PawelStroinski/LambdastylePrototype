@@ -14,15 +14,16 @@ namespace LambdastylePrototype
     class Processor
     {
         readonly Stream input;
-        readonly Stream output;
+        readonly EditableStream output;
         readonly Sentence[] style;
         readonly IEnumerator<Sentence> styleEnumerator;
         readonly Dictionary<Sentence, long> startsAt = new Dictionary<Sentence, long>();
         StreamWriter writer;
         bool EOF;
         GlobalState globalState;
+        ParentScope parentScope;
 
-        public Processor(Stream input, Stream output, params Sentence[] style)
+        public Processor(Stream input, EditableStream output, params Sentence[] style)
         {
             this.input = input;
             this.output = output;
@@ -35,6 +36,8 @@ namespace LambdastylePrototype
             bool readResult;
             EOF = false;
             globalState = new GlobalState();
+            parentScope = new ParentScope(input, output, globalState);
+            output.InsertMode = true;
             using (writer = new StreamWriter(output))
             using (var reader = new PositionJsonReader(new JsonTextReader(
                     new StreamReader(input), grabDelimiters: true)))
@@ -49,6 +52,7 @@ namespace LambdastylePrototype
                     styleEnumerator.Reset();
                     styleEnumerator.MoveNext();
                     readResult = reader.Read();
+                    parentScope.PositionChanged(reader.Position);
                     if (readResult)
                         styleEnumerator.Current.Apply(CreateContext(reader));
                 }
@@ -64,7 +68,8 @@ namespace LambdastylePrototype
                                     position: reader.Position,
                                     write: Write,
                                     written: Written,
-                                    globalState: globalState);
+                                    globalState: globalState,
+                                    parentScope: parentScope);
         }
 
         void Write(string value, Sentence sentence, bool rewind)

@@ -42,6 +42,16 @@ namespace LambdastylePrototype
             return Consts.ValueTokenTypes.Contains(tokenType);
         }
 
+        public static bool IsStart(this JsonToken tokenType)
+        {
+            return Consts.StartTokenTypes.Contains(tokenType);
+        }
+
+        public static bool IsEnd(this JsonToken tokenType)
+        {
+            return Consts.EndTokenTypes.Contains(tokenType);
+        }
+
         public static void WriteLine(string value)
         {
 #if !NCRUNCH

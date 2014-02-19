@@ -33,9 +33,17 @@ namespace LambdastylePrototype.Interpreter
         public void Apply(ApplyContext context)
         {
             this.context = context;
-            if (HasSubject && subject.AppliesAt(context.Position, strict: true))
+            var appliesAtContext = new AppliesAtContext(context.Position, strict: true);
+            var appliesAt = HasSubject && subject.AppliesAt(appliesAtContext);
+            var isParent = context.ParentScope.IsParent(this);
+            if (appliesAt || isParent)
             {
                 Extension.WriteLine(context.Position.ToString(true));
+                if (!isParent && subject.AppliesAt(appliesAtContext.CopyAsInParentOnly()))
+                {
+                    context.ParentScope.ParentFound(this);
+                    return;
+                }
                 if (predicate.AppliesAt(context.Position))
                 {
                     WritePreviousUntilSubjectOnce();

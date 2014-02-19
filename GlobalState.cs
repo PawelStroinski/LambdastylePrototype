@@ -12,6 +12,7 @@ namespace LambdastylePrototype
         public bool? ForceSyntax;
         public bool Written;
         public bool WrittenOuter;
+        public bool WrittenInThisObject;
         public JsonToken? InsertedStartToken;
     }
 }

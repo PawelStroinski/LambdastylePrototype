@@ -25,6 +25,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
         string ToStringInternal(ToStringContext context)
         {
             var tokenType = context.Position.Last().TokenType;
+            context.GlobalState.WrittenInThisObject = tokenType != JsonToken.StartObject;
             if (tokenType == JsonToken.String)
                 return "\"" + base.ToString(context) + "\"";
             if (tokenType == JsonToken.EndArray)

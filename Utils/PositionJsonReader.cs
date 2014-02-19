@@ -70,19 +70,10 @@ namespace LambdastylePrototype.Utils
 
         void Pop()
         {
-            if (position.Any() && position.Peek().TokenType == JsonToken.EndObject)
+            if (position.Any() && position.Peek().TokenType.IsEnd())
             {
                 position.Pop();
-                while (position.Any())
-                    if (position.Pop().TokenType == JsonToken.StartObject)
-                        break;
-            }
-            if (position.Any() && position.Peek().TokenType == JsonToken.EndArray)
-            {
                 position.Pop();
-                while (position.Any())
-                    if (position.Pop().TokenType == JsonToken.StartArray)
-                        break;
             }
             var currentTokenType = reader.TokenType;
             if (currentTokenType == JsonToken.PropertyName)
@@ -93,6 +84,9 @@ namespace LambdastylePrototype.Utils
                         position.Pop();
             if (currentTokenType.IsValue())
                 while (position.Any() && position.Peek().TokenType.IsValue())
+                    position.Pop();
+            if (currentTokenType.IsEnd())
+                while (position.Any() && !position.Peek().TokenType.IsStart())
                     position.Pop();
         }
 
