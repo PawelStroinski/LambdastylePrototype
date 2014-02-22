@@ -26,11 +26,11 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         public override string ToString(ToStringContext context)
         {
-            context = context.Copy(HasOuter());
+            context = context.Copy(hasOuter: HasOuter());
             var result = string.Join(string.Empty, elements
                 .Where(element => element.AppliesAt(context.Position))
                 .Select(element => element.ToString(context)));
-            if (!HasOuter())
+            if (!context.HasOuter && context.AllowNewLine)
                 result += Environment.NewLine;
             if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.Written)
                 result = InsertStartToken(context, result);
@@ -55,16 +55,24 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         string InsertStartToken(ToStringContext context, string result)
         {
-            var tokenType = context.Position.Last(step => step.TokenType == JsonToken.StartObject 
+            var tokenType = context.Position.Last(step => step.TokenType == JsonToken.StartObject
                 || step.TokenType == JsonToken.StartArray).TokenType;
+            if (HasApplicableOuterId(context))
+                tokenType = JsonToken.StartObject;
             var startToken = tokenType == JsonToken.StartObject ? "{" : "[";
-            var resultStartsWithStartToken = Regex.IsMatch(input: result, pattern: @"\s*\" + startToken);
+            var resultStartsWithStartToken = Regex.IsMatch(input: result, pattern: @"^\s*\" + startToken);
             if (!resultStartsWithStartToken)
             {
                 result = startToken + " " + result;
                 context.GlobalState.InsertedStartToken = tokenType;
             }
             return result;
+        }
+
+        bool HasApplicableOuterId(ToStringContext context)
+        {
+            return elements.Any(element => element is OuterId
+                && element.AppliesAt(context.Position));
         }
     }
 }

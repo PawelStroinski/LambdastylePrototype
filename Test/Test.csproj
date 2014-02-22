@@ -43,11 +43,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="input1.json\1 singlerun true\Style.cs" />
+    <Compile Include="input1.json\1_1 add key at the end of file\Style.cs" />
     <Compile Include="input1.json\1_1 only keys with value 500\Style.cs" />
+    <Compile Include="input1.json\1_1 output plugins with key\Style.cs" />
+    <Compile Include="input1.json\1_1 output plugins without key\Style.cs" />
     <Compile Include="input1.json\1_1 remove commonjs from all arrays\Style.cs" />
     <Compile Include="input1.json\1_1 remove every array containing commonjs\Style.cs" />
     <Compile Include="input1.json\1_1 replace commonjs with amd only in frameworks\Style.cs" />
     <Compile Include="input1.json\1_2 config\Style.cs" />
+    <Compile Include="input1.json\1_1 add key at the end of file 2\Style.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Builder.cs" />
     <Compile Include="Runner.cs" />
@@ -62,9 +66,13 @@
     <Content Include="input1.json\1 singlerun true\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="input1.json\1_1 add key at the end of file 2\output.txt" />
+    <Content Include="input1.json\1_1 add key at the end of file\output.txt" />
     <Content Include="input1.json\1_1 only keys with value 500\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="input1.json\1_1 output plugins with key\output.txt" />
+    <Content Include="input1.json\1_1 output plugins without key\output.txt" />
     <Content Include="input1.json\1_1 remove commonjs from all arrays\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -46,7 +46,7 @@ namespace Test
             Assert.AreEqual("input1.json", foldersFirst.Item1);
             Assert.AreEqual("input1.json", foldersNext.Item1);
             Assert.AreEqual("1 singlerun true", foldersFirst.Item2);
-            Assert.AreEqual("1_1 only keys with value 500", foldersNext.Item2);
+            Assert.IsTrue(foldersNext.Item2.StartsWith("1_1 "));
             var inputFile = InputFileFullPath(foldersFirst);
             Assert.IsTrue(File.Exists(inputFile), "was " + inputFile);
             var outputFile = OutputFileFullPath(foldersFirst);

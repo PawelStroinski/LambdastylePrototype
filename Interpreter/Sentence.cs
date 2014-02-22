@@ -47,6 +47,7 @@ namespace LambdastylePrototype.Interpreter
                 if (predicate.AppliesAt(context.Position))
                 {
                     WritePreviousUntilSubjectOnce();
+                    WriteSubjectlessSkippedUntilEnd();
                     var toStringContext = new ToStringContext(context.Position, context.GlobalState);
                     context.Write(predicate.ToString(toStringContext), this, !subject.JustAny());
                 }
@@ -60,13 +61,21 @@ namespace LambdastylePrototype.Interpreter
         {
             if (predicate.HasOuterId() || predicate.HasOuterValue())
                 context.GlobalState.ForceSyntax = !context.GlobalState.ForceSyntax.HasValue;
-            if (subject != null && subject.JustAny() && predicate.HasOuterValue())
+            if (HasSubject && subject.JustAny() && predicate.HasOuterValue())
                 context.GlobalState.ForceSyntax = false;
+            if (!HasSubject && !context.Previous.Any(sentence => sentence.HasSubject))
+                context.GlobalState.SubjectlessSkippedUntilEnd.Add(this);
+            if (HasSubject && subject.JustAny() && predicate.HasOuterId() && predicate.HasOuterValue())
+                context.GlobalState.HasCopyAny = true;
             if (context.Style.MoveNext())
-                context.Style.Current.ApplyBOF(context);
+                context.Style.Current.ApplyBOF(context.Copy(this));
             else
+            {
                 if (!context.GlobalState.ForceSyntax.HasValue)
                     context.GlobalState.ForceSyntax = false;
+                if (!context.GlobalState.HasCopyAny)
+                    context.GlobalState.SubjectlessSkippedUntilEnd.Clear();
+            }
         }
 
         public void ApplyEOF(ApplyContext context)
@@ -90,8 +99,31 @@ namespace LambdastylePrototype.Interpreter
         {
             var previous = PreviousUntilSubjectReversed().Reverse().ToArray();
             var previousNotWritten = previous.Where(sentence => !context.Written(sentence)).ToArray();
-            foreach (var sentence in previousNotWritten)
+            var toWrite = previousNotWritten.Except(context.GlobalState.SubjectlessSkippedUntilEnd);
+            foreach (var sentence in toWrite)
                 context.Write(sentence.predicate.ToString(new ToStringContext(context.GlobalState)), sentence, true);
+        }
+
+        void WriteSubjectlessSkippedUntilEnd()
+        {
+            var toWrite = context.GlobalState.SubjectlessSkippedUntilEnd;
+            var isAtEnd = context.Position.Length == 2 && context.Position.Last().TokenType.IsEnd();
+            if (context.Position.Length >= 2 && !isAtEnd)
+                context.GlobalState.Last2ndLevelDelimitersBefore = context.Position[1].DelimitersBefore;
+            if (!toWrite.Any() || !isAtEnd)
+                return;
+            var delimitersBefore = context.GlobalState.Last2ndLevelDelimitersBefore;
+            if (delimitersBefore == null)
+                delimitersBefore = context.Position.Last().DelimitersBefore;
+            foreach (var sentence in toWrite)
+            {
+                if (context.GlobalState.WrittenInThisObject && !delimitersBefore.Contains(","))
+                    delimitersBefore = "," + delimitersBefore;
+                var value = delimitersBefore
+                    + sentence.predicate.ToString(new ToStringContext(context.GlobalState, allowNewLine: false));
+                context.Write(value, sentence, true);
+                context.GlobalState.WrittenInThisObject = true;
+            }
         }
 
         IEnumerable<Sentence> PreviousUntilSubjectReversed()

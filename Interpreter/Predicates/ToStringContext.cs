@@ -11,12 +11,19 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public readonly PositionStep[] Position;
         public readonly GlobalState GlobalState;
         public readonly bool HasOuter;
+        public readonly bool AllowNewLine;
 
-        public ToStringContext(PositionStep[] position, GlobalState globalState)
+        public ToStringContext(PositionStep[] position, GlobalState globalState, bool hasOuter, bool allowNewLine)
         {
             Position = position;
             GlobalState = globalState;
-            HasOuter = false;
+            HasOuter = hasOuter;
+            AllowNewLine = allowNewLine;
+        }
+
+        public ToStringContext(PositionStep[] position, GlobalState globalState)
+            : this(position, globalState, hasOuter: false, allowNewLine: true)
+        {
         }
 
         public ToStringContext(GlobalState globalState)
@@ -24,18 +31,19 @@ namespace LambdastylePrototype.Interpreter.Predicates
         {
         }
 
+        public ToStringContext(GlobalState globalState, bool allowNewLine)
+            : this(globalState)
+        {
+            AllowNewLine = allowNewLine;
+        }
+
         public ToStringContext Copy(bool hasOuter)
         {
             return new ToStringContext(
                 position: Position,
                 globalState: GlobalState,
-                hasOuter: hasOuter);
-        }
-
-        ToStringContext(PositionStep[] position, GlobalState globalState, bool hasOuter)
-            : this(position, globalState)
-        {
-            HasOuter = hasOuter;
+                hasOuter: hasOuter,
+                allowNewLine: AllowNewLine);
         }
     }
 }
