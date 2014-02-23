@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="ApplyContext.cs" />
     <Compile Include="GlobalState.cs" />
+    <Compile Include="Interpreter\Predicates\Joining.cs" />
     <Compile Include="Interpreter\Predicates\ToStringContext.cs" />
     <Compile Include="Interpreter\Predicates\ValueBase.cs" />
     <Compile Include="Interpreter\Predicates\RegExpGroup.cs" />

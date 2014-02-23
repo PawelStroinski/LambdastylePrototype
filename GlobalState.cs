@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LambdastylePrototype.Interpreter;
+using LambdastylePrototype.Interpreter.Predicates;
 using Newtonsoft.Json;
 
 namespace LambdastylePrototype
@@ -18,5 +19,6 @@ namespace LambdastylePrototype
         public List<Sentence> SubjectlessSkippedUntilEnd = new List<Sentence>();
         public bool HasCopyAny;
         public string Last2ndLevelDelimitersBefore;
+        public Raw Joining;
     }
 }

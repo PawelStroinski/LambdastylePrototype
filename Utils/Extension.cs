@@ -58,5 +58,15 @@ namespace LambdastylePrototype
             Console.WriteLine(value);
 #endif
         }
+
+        public static bool AreOfTypes<T>(this IEnumerable<T> values, params Type[] types)
+        {
+            return values.Select(item => item.GetType()).SequenceEqual(types);
+        }
+
+        public static IEnumerable<T> Enclose<T>(this T item)
+        {
+            return new List<T> { item };
+        }
     }
 }
