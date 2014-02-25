@@ -25,10 +25,11 @@ namespace LambdastylePrototype.Interpreter.Subjects
             this.value = value;
         }
 
-        public override bool AppliesAt(AppliesAtContext context)
+        public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
             var position = context.Position;
-            return position.Any() && value.Equals(position.Last().Value);
+            var result = position.Any() && value.Equals(position.Last().Value);
+            return Result(result);
         }
 
         protected Literal() { }

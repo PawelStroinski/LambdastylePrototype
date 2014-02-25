@@ -9,16 +9,16 @@ namespace LambdastylePrototype.Interpreter.Subjects
 {
     class Item : ExpressionElement
     {
-        public override bool AppliesAt(AppliesAtContext context)
+        public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
             foreach (var step in context.Position.Reverse().Skip(1))
             {
                 if (step.TokenType == JsonToken.EndArray)
-                    return false;
+                    return Result(false);
                 if (step.TokenType == JsonToken.StartArray)
-                    return true;
+                    return Result(true);
             }
-            return false;
+            return Result(false);
         }
     }
 }

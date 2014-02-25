@@ -9,10 +9,5 @@ namespace LambdastylePrototype.Interpreter.Subjects
     class Parent : ExpressionElement
     {
         public Parent(params ExpressionElement[] expression) : base(expression) { }
-
-        public override bool HasParent()
-        {
-            return true;
-        }
     }
 }

@@ -15,9 +15,9 @@ namespace LambdastylePrototype.Interpreter.Subjects
             this.expression = expression;
         }
 
-        public virtual bool AppliesAt(AppliesAtContext context)
+        public virtual AppliesAtResult AppliesAt(AppliesAtContext context)
         {
-            return expression.All(element => element.AppliesAt(context));
+            return AllAppliesAt(context);
         }
 
         public virtual bool JustAny()
@@ -25,9 +25,33 @@ namespace LambdastylePrototype.Interpreter.Subjects
             return expression.Any() && expression.All(element => element.JustAny());
         }
 
-        public virtual bool HasParent()
+        protected AppliesAtResult AllAppliesAt(AppliesAtContext context)
         {
-            return expression.Any(element => element.HasParent());
+            var results = expression.Select(element => element.AppliesAt(context));
+            return Result(results.All(result => result.Result),
+                results
+                .SelectMany(result => result.PositiveLog)
+                .ToArray());
+        }
+
+        protected AppliesAtResult AnyAppliesAt(AppliesAtContext context)
+        {
+            var results = expression.Select(element => element.AppliesAt(context));
+            return Result(results.Any(result => result.Result),
+                results
+                .SelectMany(result => result.PositiveLog)
+                .ToArray());
+        }
+
+        protected AppliesAtResult Result(bool result, params Type[] positiveLog)
+        {
+            if (result)
+                return new AppliesAtResult(true,
+                    GetType().Enclose()
+                    .Concat(positiveLog)
+                    .ToArray());
+            else
+                return new AppliesAtResult(false);
         }
     }
 }

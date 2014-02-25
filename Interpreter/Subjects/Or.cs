@@ -10,13 +10,9 @@ namespace LambdastylePrototype.Interpreter.Subjects
     {
         public Or(ExpressionElement left, ExpressionElement right) : base(left, right) { }
 
-        public override bool AppliesAt(AppliesAtContext context)
+        public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
-            foreach (var element in expression)
-                if (!context.InParentOnly || element.HasParent())
-                    if (element.AppliesAt(context))
-                        return true;
-            return false;
+            return AnyAppliesAt(context);
         }
     }
 }

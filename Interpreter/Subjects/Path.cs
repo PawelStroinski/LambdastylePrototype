@@ -10,18 +10,21 @@ namespace LambdastylePrototype.Interpreter.Subjects
     {
         public Path(params ExpressionElement[] expression) : base(expression) { }
 
-        public override bool AppliesAt(AppliesAtContext context)
+        public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
             var positionLength = 1;
             var expressionIndex = 0;
             var position = context.Position;
+            var positiveLog = new List<Type>();
             while (positionLength <= position.Length && expressionIndex < expression.Length)
             {
                 var currentPosition = position.Take(positionLength).ToArray();
-                if (expression[expressionIndex].AppliesAt(new AppliesAtContext(currentPosition, strict: false)))
+                var result = expression[expressionIndex].AppliesAt(new AppliesAtContext(currentPosition, strict: false));
+                if (result.Result)
                 {
+                    positiveLog.AddRange(result.PositiveLog);
                     if (expressionIndex == expression.Length - 1)
-                        return true;
+                        return Result(true, positiveLog.ToArray());
                     expressionIndex++;
                     position = position.Skip(positionLength).ToArray();
                     positionLength = 1;
@@ -29,7 +32,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
                 else
                     positionLength++;
             }
-            return false;
+            return Result(false);
         }
     }
 }

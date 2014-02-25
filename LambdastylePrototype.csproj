@@ -65,6 +65,7 @@
     <Compile Include="Interpreter\Predicates\InnerValue.cs" />
     <Compile Include="Interpreter\Subjects\And.cs" />
     <Compile Include="Interpreter\Subjects\AppliesAtContext.cs" />
+    <Compile Include="Interpreter\Subjects\AppliesAtResult.cs" />
     <Compile Include="Interpreter\Subjects\Current.cs" />
     <Compile Include="Interpreter\Subjects\Not.cs" />
     <Compile Include="Interpreter\Subjects\ItemIndex.cs" />

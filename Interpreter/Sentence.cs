@@ -34,12 +34,12 @@ namespace LambdastylePrototype.Interpreter
         {
             this.context = context;
             var appliesAtContext = new AppliesAtContext(context.Position, strict: true);
-            var appliesAt = HasSubject && subject.AppliesAt(appliesAtContext);
+            var appliesAtResult = HasSubject ? subject.AppliesAt(appliesAtContext) : new AppliesAtResult(false);
             var isParent = context.ParentScope.IsParent(this);
-            if (appliesAt || isParent)
+            if (appliesAtResult.Result || isParent)
             {
                 Extension.WriteLine(context.Position.ToString(true));
-                if (!isParent && subject.AppliesAt(appliesAtContext.CopyAsInParentOnly()))
+                if (!isParent && appliesAtResult.PositiveLog.Contains(typeof(Parent)))
                 {
                     context.ParentScope.ParentFound(this);
                     return;

@@ -8,9 +8,9 @@ namespace LambdastylePrototype.Interpreter.Subjects
 {
     class Any : Literal
     {
-        public override bool AppliesAt(AppliesAtContext context)
+        public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
-            return true;
+            return Result(true);
         }
 
         public override bool JustAny()
