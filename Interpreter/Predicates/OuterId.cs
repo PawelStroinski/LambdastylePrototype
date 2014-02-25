@@ -9,8 +9,9 @@ namespace LambdastylePrototype.Interpreter.Predicates
 {
     class OuterId : PredicateElement
     {
-        public override bool AppliesAt(PositionStep[] position)
+        public override bool AppliesAt(PredicateContext context)
         {
+            var position = context.Position;
             var tokenType = position.Last().TokenType;
             if (tokenType == JsonToken.EndObject)
                 return false;
@@ -22,7 +23,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return false;
         }
 
-        public override string ToString(ToStringContext context)
+        public override string ToString(PredicateContext context)
         {
             var propertyName = context.Position.Penultimate();
             var delimitersBefore = propertyName.DelimitersBefore;

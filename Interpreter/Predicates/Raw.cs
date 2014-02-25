@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -16,20 +17,37 @@ namespace LambdastylePrototype.Interpreter.Predicates
             this.raw = raw;
         }
 
-        public override bool AppliesAt(PositionStep[] position)
+        public override bool AppliesAt(PredicateContext context)
         {
+            var position = context.Position;
             if (position.Any())
             {
                 var tokenType = position.Last().TokenType;
-                return tokenType != JsonToken.EndObject && tokenType != JsonToken.EndArray;
+                if (tokenType == JsonToken.EndObject || tokenType == JsonToken.EndArray)
+                    return false;
+                var inItem = position.Take(position.Length - 1).Any(step => step.TokenType == JsonToken.StartArray);
+                if (inItem && !context.ApplyingItem)
+                    return false;
             }
             return true;
         }
 
-        public override string ToString(ToStringContext context)
+        public override string ToString(PredicateContext context)
         {
-            var delimitersBefore = context.Position.Any() && context.HasOuter
-                ? context.Position.Last().DelimitersBefore : string.Empty;
+            var position = context.Position;
+            var delimitersBefore = string.Empty;
+            if (context.HasOuter)
+            {
+                if (position.Any())
+                    delimitersBefore = position.Last().DelimitersBefore;
+                if (Regex.IsMatch(raw, Consts.PropertyNameRegExp)
+                    && position.HasPenultimate()
+                    && position.Penultimate().TokenType == JsonToken.PropertyName)
+                {
+                    delimitersBefore = position.Penultimate().DelimitersBefore;
+                    context.GlobalState.SkipDelimitersBeforeInOuterValue = true;
+                }
+            }
             return delimitersBefore + raw;
         }
     }

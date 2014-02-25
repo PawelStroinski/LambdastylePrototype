@@ -68,5 +68,10 @@ namespace LambdastylePrototype
         {
             return new List<T> { item };
         }
+
+        public static bool Contains<T>(this IEnumerable<Type> values)
+        {
+            return values.Contains(typeof(T));
+        }
     }
 }

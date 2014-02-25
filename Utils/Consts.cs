@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LambdastylePrototype.Interpreter;
 using LambdastylePrototype.Interpreter.Predicates;
@@ -22,5 +23,9 @@ namespace LambdastylePrototype
         public static readonly Predicate Copy = new Predicate(new OuterId(), new OuterValue());
 
         public static readonly Sentence CopyAny = new Sentence(new Subject(new Any()), Copy);
+
+        public static readonly string StringRegExp = @"""(?:\\.|[^\\""])*""";
+
+        public static readonly string PropertyNameRegExp = @"^\s*" + StringRegExp + @"\s*:\s*$";
     }
 }

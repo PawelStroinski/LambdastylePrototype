@@ -9,20 +9,22 @@ namespace LambdastylePrototype.Interpreter.Predicates
 {
     class OuterValue : ValueBase
     {
-        public override bool AppliesAt(PositionStep[] position)
+        public override bool AppliesAt(PredicateContext context)
         {
-            var tokenType = position.Last().TokenType;
+            var tokenType = context.Position.Last().TokenType;
             return tokenType != JsonToken.PropertyName;
         }
 
-        public override string ToString(ToStringContext context)
+        public override string ToString(PredicateContext context)
         {
             var delimitersBefore = context.Position.Last().DelimitersBefore;
             context.GlobalState.WrittenOuter = true;
+            if (context.GlobalState.SkipDelimitersBeforeInOuterValue)
+                delimitersBefore = string.Empty;
             return delimitersBefore + ToStringInternal(context);
         }
 
-        string ToStringInternal(ToStringContext context)
+        string ToStringInternal(PredicateContext context)
         {
             var tokenType = context.Position.Last().TokenType;
             context.GlobalState.WrittenInThisObject = tokenType != JsonToken.StartObject;

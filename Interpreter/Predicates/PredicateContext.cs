@@ -6,40 +6,43 @@ using System.Threading.Tasks;
 
 namespace LambdastylePrototype.Interpreter.Predicates
 {
-    struct ToStringContext
+    struct PredicateContext
     {
         public readonly PositionStep[] Position;
         public readonly GlobalState GlobalState;
         public readonly bool HasOuter;
         public readonly bool AllowNewLine;
+        public readonly bool ApplyingItem;
 
-        public ToStringContext(PositionStep[] position, GlobalState globalState,
-            bool hasOuter = false, bool allowNewLine = true)
+        public PredicateContext(PositionStep[] position, GlobalState globalState,
+            bool hasOuter = false, bool allowNewLine = true, bool applyingItem = false)
         {
             Position = position;
             GlobalState = globalState;
             HasOuter = hasOuter;
             AllowNewLine = allowNewLine;
+            ApplyingItem = applyingItem;
         }
 
-        public ToStringContext(GlobalState globalState)
+        public PredicateContext(GlobalState globalState)
             : this(new PositionStep[0], globalState)
         {
         }
 
-        public ToStringContext(GlobalState globalState, bool allowNewLine)
+        public PredicateContext(GlobalState globalState, bool allowNewLine)
             : this(globalState)
         {
             AllowNewLine = allowNewLine;
         }
 
-        public ToStringContext Copy(bool hasOuter)
+        public PredicateContext Copy(bool hasOuter)
         {
-            return new ToStringContext(
+            return new PredicateContext(
                 position: Position,
                 globalState: GlobalState,
                 hasOuter: hasOuter,
-                allowNewLine: AllowNewLine);
+                allowNewLine: AllowNewLine,
+                applyingItem: ApplyingItem);
         }
     }
 }

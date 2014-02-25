@@ -11,7 +11,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
     class Predicate : PredicateElement
     {
         readonly PredicateElement[] elements;
-        ToStringContext context;
+        PredicateContext context;
 
         public Predicate(params PredicateElement[] elements)
         {
@@ -20,17 +20,18 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         public Predicate(string raw) : this(new Raw(raw)) { }
 
-        public override bool AppliesAt(PositionStep[] position)
+        public override bool AppliesAt(PredicateContext context)
         {
-            return elements.Any(element => element.AppliesAt(position));
+            return elements.Any(element => element.AppliesAt(context));
         }
 
-        public override string ToString(ToStringContext context)
+        public override string ToString(PredicateContext context)
         {
             this.context = context = context.Copy(hasOuter: HasOuter());
+            context.GlobalState.SkipDelimitersBeforeInOuterValue = false;
             var joining = new Joining(context, elements);
             var result = string.Join(string.Empty, joining.JoinElements()
-                .Where(element => element.AppliesAt(context.Position))
+                .Where(element => element.AppliesAt(context))
                 .Select(element => element.ToString(context)));
             if (!context.HasOuter && context.AllowNewLine && !joining.IsJoining)
                 result += Environment.NewLine;
@@ -74,7 +75,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
         bool HasApplicableOuterId()
         {
             return elements.Any(element => element is OuterId
-                && element.AppliesAt(context.Position));
+                && element.AppliesAt(context));
         }
     }
 }

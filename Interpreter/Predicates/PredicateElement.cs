@@ -8,11 +8,11 @@ namespace LambdastylePrototype.Interpreter.Predicates
 {
     abstract class PredicateElement : SyntaxElement
     {
-        public virtual bool AppliesAt(PositionStep[] position)
+        public virtual bool AppliesAt(PredicateContext context)
         {
             return true;
         }
 
-        public abstract string ToString(ToStringContext context);
+        public abstract string ToString(PredicateContext context);
     }
 }

@@ -39,17 +39,18 @@ namespace LambdastylePrototype.Interpreter
             if (appliesAtResult.Result || isParent)
             {
                 Extension.WriteLine(context.Position.ToString(true));
-                if (!isParent && appliesAtResult.PositiveLog.Contains(typeof(Parent)))
+                if (!isParent && appliesAtResult.PositiveLog.Contains<Parent>())
                 {
                     context.ParentScope.ParentFound(this);
                     return;
                 }
-                if (predicate.AppliesAt(context.Position))
+                var predicateContext = new PredicateContext(context.Position, context.GlobalState,
+                    applyingItem: appliesAtResult.PositiveLog.Contains<Item>());
+                if (predicate.AppliesAt(predicateContext))
                 {
                     WritePreviousUntilSubjectOnce();
                     WriteSubjectlessSkippedUntilEnd();
-                    var toStringContext = new ToStringContext(context.Position, context.GlobalState);
-                    context.Write(predicate.ToString(toStringContext), this, !subject.JustAny());
+                    context.Write(predicate.ToString(predicateContext), this, !subject.JustAny());
                 }
                 return;
             }
@@ -81,7 +82,7 @@ namespace LambdastylePrototype.Interpreter
         public void ApplyEOF(ApplyContext context)
         {
             if (!HasSubject && !context.Written(this))
-                context.Write(predicate.ToString(new ToStringContext(context.GlobalState)), this, true);
+                context.Write(predicate.ToString(new PredicateContext(context.GlobalState)), this, true);
             if (context.Style.MoveNext())
                 context.Style.Current.ApplyEOF(context);
             else
@@ -101,7 +102,7 @@ namespace LambdastylePrototype.Interpreter
             var previousNotWritten = previous.Where(sentence => !context.Written(sentence)).ToArray();
             var toWrite = previousNotWritten.Except(context.GlobalState.SubjectlessSkippedUntilEnd);
             foreach (var sentence in toWrite)
-                context.Write(sentence.predicate.ToString(new ToStringContext(context.GlobalState)), sentence, true);
+                context.Write(sentence.predicate.ToString(new PredicateContext(context.GlobalState)), sentence, true);
         }
 
         void WriteSubjectlessSkippedUntilEnd()
@@ -120,7 +121,7 @@ namespace LambdastylePrototype.Interpreter
                 if (context.GlobalState.WrittenInThisObject && !delimitersBefore.Contains(","))
                     delimitersBefore = "," + delimitersBefore;
                 var value = delimitersBefore
-                    + sentence.predicate.ToString(new ToStringContext(context.GlobalState, allowNewLine: false));
+                    + sentence.predicate.ToString(new PredicateContext(context.GlobalState, allowNewLine: false));
                 context.Write(value, sentence, true);
                 context.GlobalState.WrittenInThisObject = true;
             }

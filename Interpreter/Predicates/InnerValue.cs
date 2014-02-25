@@ -9,9 +9,9 @@ namespace LambdastylePrototype.Interpreter.Predicates
 {
     class InnerValue : ValueBase
     {
-        public override bool AppliesAt(PositionStep[] position)
+        public override bool AppliesAt(PredicateContext context)
         {
-            var tokenType = position.Last().TokenType;
+            var tokenType = context.Position.Last().TokenType;
             return tokenType.IsValue();
         }
     }

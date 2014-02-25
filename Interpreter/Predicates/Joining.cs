@@ -9,12 +9,12 @@ namespace LambdastylePrototype.Interpreter.Predicates
 {
     class Joining
     {
-        readonly ToStringContext context;
+        readonly PredicateContext context;
         readonly PredicateElement[] elements;
         bool innerValueAndRaw, rawInnerValueAndRaw;
         int firstRawLength, joiningLength;
 
-        public Joining(ToStringContext context, PredicateElement[] elements)
+        public Joining(PredicateContext context, PredicateElement[] elements)
         {
             this.context = context;
             this.elements = elements;
