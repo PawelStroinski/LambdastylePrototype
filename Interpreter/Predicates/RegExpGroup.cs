@@ -15,7 +15,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             this.groupNumber = groupNumber;
         }
 
-        public override string ToString(PredicateContext context)
+        public override ToStringResult ToString(PredicateContext context)
         {
             throw new NotImplementedException();
         }

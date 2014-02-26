@@ -25,20 +25,26 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return elements.Any(element => element.AppliesAt(context));
         }
 
-        public override string ToString(PredicateContext context)
+        public override ToStringResult ToString(PredicateContext context)
         {
-            this.context = context = context.Copy(hasOuter: HasOuter());
-            context.GlobalState.SkipDelimitersBeforeInOuterValue = false;
+            this.context = context;
             var joining = new Joining(context, elements);
-            var result = string.Join(string.Empty, joining.JoinElements()
-                .Where(element => element.AppliesAt(context))
-                .Select(element => element.ToString(context)));
-            if (!context.HasOuter && context.AllowNewLine && !joining.IsJoining)
+            var elementResult = Result(string.Empty);
+            var result = string.Empty;
+            foreach (var element in joining.JoinElements()
+                .Where(element => element.AppliesAt(context)))
+            {
+                var elementContext = context.Copy(hasOuter: HasOuter(),
+                    delimitersBefore: elementResult.DelimitersBeforeInNextOuterValue || !(element is OuterValue));
+                elementResult = element.ToString(elementContext);
+                result += elementResult.Result;
+            }
+            if (!HasOuter() && context.AllowNewLine && !joining.IsJoining)
                 result += Environment.NewLine;
             if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.Written)
                 result = InsertStartToken(result);
             context.GlobalState.Written = true;
-            return result;
+            return Result(result);
         }
 
         public bool HasOuterValue()

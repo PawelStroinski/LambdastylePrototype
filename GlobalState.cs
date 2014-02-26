@@ -20,6 +20,5 @@ namespace LambdastylePrototype
         public bool HasCopyAny;
         public string Last2ndLevelDelimitersBefore;
         public Raw Joining;
-        public bool SkipDelimitersBeforeInOuterValue;
     }
 }

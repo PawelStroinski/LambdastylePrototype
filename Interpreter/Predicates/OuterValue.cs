@@ -15,29 +15,31 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return tokenType != JsonToken.PropertyName;
         }
 
-        public override string ToString(PredicateContext context)
+        public override ToStringResult ToString(PredicateContext context)
         {
-            var delimitersBefore = context.Position.Last().DelimitersBefore;
+            var delimitersBefore = context.DelimitersBefore ? context.Position.Last().DelimitersBefore : string.Empty;
             context.GlobalState.WrittenOuter = true;
-            if (context.GlobalState.SkipDelimitersBeforeInOuterValue)
-                delimitersBefore = string.Empty;
-            return delimitersBefore + ToStringInternal(context);
+            var internalResult = ToStringInternal(context);
+            return internalResult.Copy(delimitersBefore + internalResult.Result);
         }
 
-        string ToStringInternal(PredicateContext context)
+        ToStringResult ToStringInternal(PredicateContext context)
         {
             var tokenType = context.Position.Last().TokenType;
             context.GlobalState.WrittenInThisObject = tokenType != JsonToken.StartObject;
             if (tokenType == JsonToken.String)
-                return "\"" + base.ToString(context) + "\"";
+            {
+                var baseResult = base.ToString(context);
+                return baseResult.Copy("\"" + baseResult.Result + "\"");
+            }
             if (tokenType == JsonToken.EndArray)
-                return "]";
+                return Result("]");
             if (tokenType == JsonToken.EndObject)
-                return "}";
+                return Result("}");
             if (tokenType == JsonToken.StartArray)
-                return "[";
+                return Result("[");
             if (tokenType == JsonToken.StartObject)
-                return "{";
+                return Result("{");
             return base.ToString(context);
         }
     }

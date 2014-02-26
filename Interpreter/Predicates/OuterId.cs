@@ -23,17 +23,18 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return false;
         }
 
-        public override string ToString(PredicateContext context)
+        public override ToStringResult ToString(PredicateContext context)
         {
             var propertyName = context.Position.Penultimate();
-            var delimitersBefore = propertyName.DelimitersBefore;
+            var delimitersBefore = context.DelimitersBefore ? propertyName.DelimitersBefore : string.Empty;
             if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.WrittenOuter)
                 delimitersBefore = string.Empty;
             if (!context.GlobalState.WrittenInThisObject && delimitersBefore.Contains(","))
                 delimitersBefore = RemoveExcessiveDelimiters(delimitersBefore);
             context.GlobalState.WrittenOuter = true;
             context.GlobalState.WrittenInThisObject = true;
-            return string.Format("{0}\"{1}\"{2}", delimitersBefore, propertyName.Value, propertyName.DelimitersAfter);
+            return Result(string.Format("{0}\"{1}\"{2}",
+                delimitersBefore, propertyName.Value, propertyName.DelimitersAfter));
         }
 
         string RemoveExcessiveDelimiters(string delimiters)

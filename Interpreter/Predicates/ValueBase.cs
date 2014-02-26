@@ -9,17 +9,17 @@ namespace LambdastylePrototype.Interpreter.Predicates
 {
     abstract class ValueBase : PredicateElement
     {
-        public override string ToString(PredicateContext context)
+        public override ToStringResult ToString(PredicateContext context)
         {
             var tokenType = context.Position.Last().TokenType;
             var value = context.Position.Last().Value;
             if (tokenType == JsonToken.Null)
-                return "null";
+                return Result("null");
             if (tokenType == JsonToken.Undefined)
-                return "undefined";
+                return Result("undefined");
             if (tokenType == JsonToken.Boolean)
-                return value.ToString().ToLowerInvariant();
-            return value.ToString();
+                return Result(value.ToString().ToLowerInvariant());
+            return Result(value.ToString());
         }
     }
 }

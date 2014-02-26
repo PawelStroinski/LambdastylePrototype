@@ -32,11 +32,11 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return true;
         }
 
-        public override string ToString(PredicateContext context)
+        public override ToStringResult ToString(PredicateContext context)
         {
             var position = context.Position;
             var delimitersBefore = string.Empty;
-            if (context.HasOuter)
+            if (context.DelimitersBefore && context.HasOuter)
             {
                 if (position.Any())
                     delimitersBefore = position.Last().DelimitersBefore;
@@ -45,10 +45,10 @@ namespace LambdastylePrototype.Interpreter.Predicates
                     && position.Penultimate().TokenType == JsonToken.PropertyName)
                 {
                     delimitersBefore = position.Penultimate().DelimitersBefore;
-                    context.GlobalState.SkipDelimitersBeforeInOuterValue = true;
+                    return new ToStringResult(delimitersBefore + raw, delimitersBeforeInNextOuterValue: false);
                 }
             }
-            return delimitersBefore + raw;
+            return Result(delimitersBefore + raw);
         }
     }
 }

@@ -35,8 +35,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
             rawInnerValueAndRaw = elements.AreOfTypes(typeof(Raw), typeof(InnerValue), typeof(Raw));
             if (!rawInnerValueAndRaw)
                 return false;
-            firstRawLength = elements.First().ToString(context).Length;
-            joiningLength = elements.Last().ToString(context).Length;
+            firstRawLength = elements.First().ToString(context).Result.Length;
+            joiningLength = elements.Last().ToString(context).Result.Length;
             if (firstRawLength < joiningLength)
                 return true;
             return false;
@@ -52,7 +52,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 context.GlobalState.Joining = joining;
                 if (rawInnerValueAndRaw)
                 {
-                    var joiningFull = joining.ToString(context);
+                    var joiningFull = joining.ToString(context).Result;
                     var joiningFirstHalf = joiningFull.Substring(0, firstRawLength);
                     var joiningSecondHalf = joiningFull.Substring(firstRawLength);
                     withoutJoining = withoutJoining.Concat(new Raw(joiningFirstHalf).Enclose());

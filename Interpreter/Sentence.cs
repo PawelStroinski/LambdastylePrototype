@@ -50,7 +50,7 @@ namespace LambdastylePrototype.Interpreter
                 {
                     WritePreviousUntilSubjectOnce();
                     WriteSubjectlessSkippedUntilEnd();
-                    context.Write(predicate.ToString(predicateContext), this, !subject.JustAny());
+                    context.Write(predicate.ToString(predicateContext).Result, this, !subject.JustAny());
                 }
                 return;
             }
@@ -82,7 +82,7 @@ namespace LambdastylePrototype.Interpreter
         public void ApplyEOF(ApplyContext context)
         {
             if (!HasSubject && !context.Written(this))
-                context.Write(predicate.ToString(new PredicateContext(context.GlobalState)), this, true);
+                context.Write(predicate.ToString(new PredicateContext(context.GlobalState)).Result, this, true);
             if (context.Style.MoveNext())
                 context.Style.Current.ApplyEOF(context);
             else
@@ -102,7 +102,8 @@ namespace LambdastylePrototype.Interpreter
             var previousNotWritten = previous.Where(sentence => !context.Written(sentence)).ToArray();
             var toWrite = previousNotWritten.Except(context.GlobalState.SubjectlessSkippedUntilEnd);
             foreach (var sentence in toWrite)
-                context.Write(sentence.predicate.ToString(new PredicateContext(context.GlobalState)), sentence, true);
+                context.Write(sentence.predicate.ToString(new PredicateContext(context.GlobalState)).Result,
+                    sentence, true);
         }
 
         void WriteSubjectlessSkippedUntilEnd()
@@ -120,8 +121,8 @@ namespace LambdastylePrototype.Interpreter
             {
                 if (context.GlobalState.WrittenInThisObject && !delimitersBefore.Contains(","))
                     delimitersBefore = "," + delimitersBefore;
-                var value = delimitersBefore
-                    + sentence.predicate.ToString(new PredicateContext(context.GlobalState, allowNewLine: false));
+                var value = delimitersBefore + sentence.predicate
+                    .ToString(new PredicateContext(context.GlobalState, allowNewLine: false)).Result;
                 context.Write(value, sentence, true);
                 context.GlobalState.WrittenInThisObject = true;
             }

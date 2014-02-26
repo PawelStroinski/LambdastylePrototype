@@ -13,6 +13,11 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return true;
         }
 
-        public abstract string ToString(PredicateContext context);
+        public abstract ToStringResult ToString(PredicateContext context);
+
+        protected ToStringResult Result(string result)
+        {
+            return new ToStringResult(result, delimitersBeforeInNextOuterValue: true);
+        }
     }
 }
