@@ -55,6 +55,7 @@
     <Compile Include="input1.json\1_1 replace commonjs with amd only in frameworks\Style.cs" />
     <Compile Include="input1.json\1_2 config\Style.cs" />
     <Compile Include="input1.json\1_1 add key at the end of file 2\Style.cs" />
+    <Compile Include="input2.json\2 rename menuitem to menuitems 2\Style.cs" />
     <Compile Include="input2.json\2 rename menuitem to menuitems\Style.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Builder.cs" />
@@ -91,6 +92,7 @@
     <Content Include="input1.json\1_2 config\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="input2.json\2 rename menuitem to menuitems 2\output.txt" />
     <Content Include="input2.json\2 rename menuitem to menuitems\output.txt" />
   </ItemGroup>
   <ItemGroup>

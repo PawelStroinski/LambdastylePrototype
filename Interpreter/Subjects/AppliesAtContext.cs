@@ -10,27 +10,11 @@ namespace LambdastylePrototype.Interpreter.Subjects
     {
         public readonly PositionStep[] Position;
         public readonly bool Strict;
-        public readonly bool InParentOnly;
 
         public AppliesAtContext(PositionStep[] position, bool strict)
         {
             Position = position;
             Strict = strict;
-            InParentOnly = false;
-        }
-
-        public AppliesAtContext CopyAsInParentOnly()
-        {
-            return new AppliesAtContext(
-                position: Position,
-                strict: Strict,
-                inParentOnly: true);
-        }
-
-        AppliesAtContext(PositionStep[] position, bool strict, bool inParentOnly)
-            : this(position, strict)
-        {
-            InParentOnly = inParentOnly;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
             var positionLength = 1;
             var expressionIndex = 0;
             var position = context.Position;
-            var positiveLog = new List<Type>();
+            var positiveLog = new List<LogEntry>();
             while (positionLength <= position.Length && expressionIndex < expression.Length)
             {
                 var currentPosition = position.Take(positionLength).ToArray();

@@ -3,24 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LambdastylePrototype.Interpreter.Subjects;
 using Newtonsoft.Json;
 
 namespace LambdastylePrototype
 {
     static class Extension
     {
-        public static string ToString(this PositionStep[] position, bool indent)
+        public static string ToDebugString(this IEnumerable<LogEntry> entries)
+        {
+            return string.Join(" ", entries.Select(entry => "<" 
+                + entry.Type.Name.ToString()
+                + (entry.Tail ? "[TAIL]" : string.Empty)
+                + ">"));
+        }
+
+        public static string ToDebugString(this PositionStep[] position)
         {
             var builder = new StringBuilder();
             var indentBy = 0;
             foreach (var item in position)
             {
-                if (indent)
-                {
-                    builder.Append(new string(' ', indentBy * 2));
-                    if (item.TokenType == JsonToken.StartObject || item.TokenType == JsonToken.StartArray)
-                        indentBy++;
-                }
+                builder.Append(new string(' ', indentBy * 2));
+                if (item.TokenType == JsonToken.StartObject || item.TokenType == JsonToken.StartArray)
+                    indentBy++;
                 builder.AppendLine(item.Value == null
                     ? item.TokenType.ToString() : item.TokenType + " = " + item.Value);
             }
@@ -52,7 +58,7 @@ namespace LambdastylePrototype
             return Consts.EndTokenTypes.Contains(tokenType);
         }
 
-        public static void WriteLine(string value)
+        public static void WriteDebug(string value)
         {
 #if !NCRUNCH
             Console.WriteLine(value);
@@ -69,9 +75,14 @@ namespace LambdastylePrototype
             return new List<T> { item };
         }
 
-        public static bool Contains<T>(this IEnumerable<Type> values)
+        public static bool Contains<T>(this IEnumerable<LogEntry> entries)
         {
-            return values.Contains(typeof(T));
+            return entries.Any(entry => entry.Type == typeof(T));
+        }
+
+        public static bool ContainsTail(this IEnumerable<LogEntry> entries)
+        {
+            return entries.Any(entry => entry.Tail);
         }
     }
 }

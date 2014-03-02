@@ -28,7 +28,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
         public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
             var position = context.Position;
-            var result = position.Any() && value.Equals(position.Last().Value);
+            var result = position.Any(step => value.Equals(step.Value));
             return Result(result);
         }
 

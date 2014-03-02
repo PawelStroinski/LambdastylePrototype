@@ -27,27 +27,32 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         protected AppliesAtResult AllAppliesAt(AppliesAtContext context)
         {
-            var results = expression.Select(element => element.AppliesAt(context));
+            var results = expression.Select(element => element.AppliesAt(context)).ToArray();
             return Result(results.All(result => result.Result),
                 results
                 .SelectMany(result => result.PositiveLog)
                 .ToArray());
         }
 
-        protected AppliesAtResult AnyAppliesAt(AppliesAtContext context)
+        protected AppliesAtResult AnyAppliesAt(AppliesAtContext context, bool tail = false)
         {
-            var results = expression.Select(element => element.AppliesAt(context));
-            return Result(results.Any(result => result.Result),
-                results
+            var results = expression.Select(element => element.AppliesAt(context)).ToArray();
+            return Result(results.Any(result => result.Result), tail: tail,
+                positiveLog: results
                 .SelectMany(result => result.PositiveLog)
                 .ToArray());
         }
 
-        protected AppliesAtResult Result(bool result, params Type[] positiveLog)
+        protected AppliesAtResult Result(bool result, params LogEntry[] positiveLog)
+        {
+            return Result(result: result, tail: false, positiveLog: positiveLog);
+        }
+
+        protected AppliesAtResult Result(bool result, bool tail, params LogEntry[] positiveLog)
         {
             if (result)
                 return new AppliesAtResult(true,
-                    GetType().Enclose()
+                    new LogEntry(GetType(), tail).Enclose()
                     .Concat(positiveLog)
                     .ToArray());
             else

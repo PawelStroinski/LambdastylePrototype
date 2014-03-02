@@ -40,7 +40,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             {
                 if (position.Any())
                     delimitersBefore = position.Last().DelimitersBefore;
-                if (Regex.IsMatch(raw, Consts.PropertyNameRegExp)
+                if (Regex.IsMatch(raw, Consts.StartsWithPropertyNameRegExp)
                     && position.HasPenultimate()
                     && position.Penultimate().TokenType == JsonToken.PropertyName)
                 {

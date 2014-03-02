@@ -38,19 +38,22 @@ namespace LambdastylePrototype.Interpreter
             var isParent = context.ParentScope.IsParent(this);
             if (appliesAtResult.Result || isParent)
             {
-                Extension.WriteLine(context.Position.ToString(true));
+                Extension.WriteDebug(appliesAtResult.PositiveLog.ToDebugString());
+                Extension.WriteDebug(context.Position.ToDebugString());
                 if (!isParent && appliesAtResult.PositiveLog.Contains<Parent>())
                 {
                     context.ParentScope.ParentFound(this);
                     return;
                 }
-                var predicateContext = new PredicateContext(context.Position, context.GlobalState,
-                    applyingItem: appliesAtResult.PositiveLog.Contains<Item>());
+                var predicateContext = new PredicateContext(context.GlobalState, context.Position,
+                    applyingItem: appliesAtResult.PositiveLog.Contains<Item>(),
+                    applyingTail: appliesAtResult.PositiveLog.ContainsTail());
                 if (predicate.AppliesAt(predicateContext))
                 {
                     WritePreviousUntilSubjectOnce();
                     WriteSubjectlessSkippedUntilEnd();
-                    context.Write(predicate.ToString(predicateContext).Result, this, !subject.JustAny());
+                    var toStringResult = predicate.ToString(predicateContext);
+                    context.Write(toStringResult.Result, this, !subject.JustAny());
                 }
                 return;
             }
@@ -89,7 +92,8 @@ namespace LambdastylePrototype.Interpreter
                 if (context.GlobalState.InsertedStartToken.HasValue)
                 {
                     var endToken = context.GlobalState.InsertedStartToken == JsonToken.StartObject ? "}" : "]";
-                    context.Write(" " + endToken, this, true);
+                    endToken = (context.GlobalState.WrittenNewLine ? Environment.NewLine : " ") + endToken;
+                    context.Write(endToken, this, true);
                 }
                 else
                     if (context.Position.Last().DelimitersAfter != string.Empty)

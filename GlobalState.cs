@@ -15,6 +15,7 @@ namespace LambdastylePrototype
         public bool Written;
         public bool WrittenOuter;
         public bool WrittenInThisObject;
+        public bool WrittenNewLine;
         public JsonToken? InsertedStartToken;
         public List<Sentence> SubjectlessSkippedUntilEnd = new List<Sentence>();
         public bool HasCopyAny;

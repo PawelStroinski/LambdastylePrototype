@@ -68,6 +68,7 @@
     <Compile Include="Interpreter\Subjects\AppliesAtContext.cs" />
     <Compile Include="Interpreter\Subjects\AppliesAtResult.cs" />
     <Compile Include="Interpreter\Subjects\Current.cs" />
+    <Compile Include="Interpreter\Subjects\LogEntry.cs" />
     <Compile Include="Interpreter\Subjects\Not.cs" />
     <Compile Include="Interpreter\Subjects\ItemIndex.cs" />
     <Compile Include="Interpreter\Subjects\Null.cs" />

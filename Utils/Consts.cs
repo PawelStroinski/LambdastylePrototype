@@ -26,6 +26,6 @@ namespace LambdastylePrototype
 
         public static readonly string StringRegExp = @"""(?:\\.|[^\\""])*""";
 
-        public static readonly string PropertyNameRegExp = @"^\s*" + StringRegExp + @"\s*:\s*$";
+        public static readonly string StartsWithPropertyNameRegExp = @"^\s*" + StringRegExp + @"\s*:";
     }
 }

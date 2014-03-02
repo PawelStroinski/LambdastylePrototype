@@ -28,7 +28,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public override ToStringResult ToString(PredicateContext context)
         {
             this.context = context;
-            var joining = new Joining(context, elements);
+            var joining = new Joining(context, ElementsForTail());
             var elementResult = Result(string.Empty);
             var result = string.Empty;
             foreach (var element in joining.JoinElements()
@@ -43,7 +43,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 result += Environment.NewLine;
             if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.Written)
                 result = InsertStartToken(result);
-            context.GlobalState.Written = true;
+            ChangeGlobalState(result);
             return Result(result);
         }
 
@@ -57,6 +57,14 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return elements.Any(element => element is OuterId);
         }
 
+        PredicateElement[] ElementsForTail()
+        {
+            if (context.ApplyingTail && HasOuterValue() && !HasOuterId())
+                return InsertOuterIdBeforeOuterValue();
+            else
+                return elements;
+        }
+
         bool HasOuter()
         {
             return HasOuterValue() || HasOuterId();
@@ -64,10 +72,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         string InsertStartToken(string result)
         {
-            var tokenType = context.Position.Last(step => step.TokenType == JsonToken.StartObject
-                || step.TokenType == JsonToken.StartArray).TokenType;
-            if (HasApplicableOuterId())
-                tokenType = JsonToken.StartObject;
+            var tokenType = Regex.IsMatch(result, Consts.StartsWithPropertyNameRegExp)
+                ? JsonToken.StartObject : JsonToken.StartArray;
             var startToken = tokenType == JsonToken.StartObject ? "{" : "[";
             var resultStartsWithStartToken = Regex.IsMatch(input: result, pattern: @"^\s*\" + startToken);
             if (!resultStartsWithStartToken)
@@ -78,10 +84,19 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return result;
         }
 
-        bool HasApplicableOuterId()
+        void ChangeGlobalState(string result)
         {
-            return elements.Any(element => element is OuterId
-                && element.AppliesAt(context));
+            context.GlobalState.Written = true;
+            context.GlobalState.WrittenNewLine = context.GlobalState.WrittenNewLine
+                || result.Contains(Environment.NewLine);
+        }
+
+        PredicateElement[] InsertOuterIdBeforeOuterValue()
+        {
+            var elementsList = elements.ToList();
+            var outerValueIndex = elementsList.IndexOf(elementsList.OfType<OuterValue>().First());
+            elementsList.Insert(outerValueIndex, new OuterId());
+            return elementsList.ToArray();
         }
     }
 }
