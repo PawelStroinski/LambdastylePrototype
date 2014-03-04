@@ -8,6 +8,6 @@ namespace LambdastylePrototype.Interpreter.Subjects
 {
     class And : ExpressionElement
     {
-        public And(ExpressionElement left, ExpressionElement right) : base(left, right) { }
+        public And(params ExpressionElement[] expression) : base(expression) { }
     }
 }

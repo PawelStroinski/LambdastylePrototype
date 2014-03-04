@@ -18,6 +18,7 @@ namespace LambdastylePrototype
         readonly Sentence[] style;
         readonly IEnumerator<Sentence> styleEnumerator;
         readonly Dictionary<Sentence, long> startsAt = new Dictionary<Sentence, long>();
+        readonly Dictionary<Sentence, long> endsAt = new Dictionary<Sentence, long>();
         StreamWriter writer;
         bool EOF;
         GlobalState globalState;
@@ -72,26 +73,34 @@ namespace LambdastylePrototype
                                     parentScope: parentScope);
         }
 
-        void Write(string value, Sentence sentence, bool rewind)
+        void Write(string value, Sentence sentence, bool rewind, int seekBy)
         {
             if (rewind)
             {
-                RewindOutputTo(NextWrittenSentence(sentence));
+                RewindOutputTo(NextWrittenSentence(sentence), beingWritten: sentence);
                 startsAt[sentence] = output.Position;
             }
+            if (seekBy != 0)
+                output.Position += seekBy;
             var position = output.Position;
             writer.Write(value);
             writer.Flush();
             ShiftNextWrittenSentences(sentence, output.Position - position);
+            if (rewind)
+                endsAt[sentence] = output.Position;
+            RewindOutputToEOF();
         }
 
-        void RewindOutputTo(Sentence sentence)
+        void RewindOutputTo(Sentence sentence, Sentence beingWritten)
         {
             if (sentence != null)
                 output.Position = startsAt[sentence];
             else
-                if (EOF)
-                    RewindOutputToEOF();
+                if (endsAt.ContainsKey(beingWritten))
+                    output.Position = endsAt[beingWritten];
+                else
+                    if (EOF)
+                        RewindOutputToEOF();
         }
 
         void RewindOutputToEOF()
@@ -111,7 +120,10 @@ namespace LambdastylePrototype
         {
             foreach (var sentence in style.SkipWhile(sentence => sentence != after).Skip(1))
                 if (Written(sentence))
+                {
                     startsAt[sentence] += shiftBy;
+                    endsAt[sentence] += shiftBy;
+                }
         }
 
         bool Written(Sentence sentence)

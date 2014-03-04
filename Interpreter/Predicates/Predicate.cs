@@ -11,6 +11,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
     class Predicate : PredicateElement
     {
         readonly PredicateElement[] elements;
+        PredicateIdentity identity = new PredicateIdentity();
         PredicateContext context;
 
         public Predicate(params PredicateElement[] elements)
@@ -31,20 +32,27 @@ namespace LambdastylePrototype.Interpreter.Predicates
             var joining = new Joining(context, ElementsForTail());
             var elementResult = Result(string.Empty);
             var result = string.Empty;
-            foreach (var element in joining.JoinElements()
-                .Where(element => element.AppliesAt(context)))
+            var seekBy = 0;
+            identity = HasOuterId() ? new PredicateIdentity() : identity;
+            foreach (var element in joining.JoinElements())
             {
                 var elementContext = context.Copy(hasOuter: HasOuter(),
-                    delimitersBefore: elementResult.DelimitersBeforeInNextOuterValue || !(element is OuterValue));
-                elementResult = element.ToString(elementContext);
-                result += elementResult.Result;
+                    delimitersBefore: elementResult.DelimitersBeforeInNextOuterValue || !(element is OuterValue),
+                    predicateIdentity: identity);
+                if (element.AppliesAt(elementContext))
+                {
+                    elementResult = element.ToString(elementContext);
+                    result += elementResult.Result;
+                    seekBy += elementResult.SeekBy;
+                }
             }
             if (!HasOuter() && context.AllowNewLine && !joining.IsJoining)
                 result += Environment.NewLine;
             if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.Written)
                 result = InsertStartToken(result);
-            ChangeGlobalState(result);
-            return Result(result);
+            var toStringResult = new ToStringResult(result, seekBy: seekBy);
+            ChangeGlobalState(toStringResult);
+            return toStringResult;
         }
 
         public bool HasOuterValue()
@@ -84,11 +92,13 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return result;
         }
 
-        void ChangeGlobalState(string result)
+        void ChangeGlobalState(ToStringResult result)
         {
             context.GlobalState.Written = true;
             context.GlobalState.WrittenNewLine = context.GlobalState.WrittenNewLine
-                || result.Contains(Environment.NewLine);
+                || result.Result.Contains(Environment.NewLine);
+            if (result.SeekBy != 0)
+                context.GlobalState.Seeked.Add(identity);
         }
 
         PredicateElement[] InsertOuterIdBeforeOuterValue()

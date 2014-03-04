@@ -10,18 +10,21 @@ namespace LambdastylePrototype.Interpreter.Predicates
     {
         public readonly string Result;
         public readonly bool DelimitersBeforeInNextOuterValue;
+        public readonly int SeekBy;
 
-        public ToStringResult(string result, bool delimitersBeforeInNextOuterValue)
+        public ToStringResult(string result, bool delimitersBeforeInNextOuterValue = true, int seekBy = 0)
         {
             Result = result;
             DelimitersBeforeInNextOuterValue = delimitersBeforeInNextOuterValue;
+            SeekBy = seekBy;
         }
 
-        public ToStringResult Copy(string result)
+        public ToStringResult Copy(string result, int seekBy = 0)
         {
             return new ToStringResult(
                 result: result,
-                delimitersBeforeInNextOuterValue: DelimitersBeforeInNextOuterValue);
+                delimitersBeforeInNextOuterValue: DelimitersBeforeInNextOuterValue,
+                seekBy: seekBy);
         }
     }
 }

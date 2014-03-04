@@ -28,6 +28,10 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 var inItem = position.Take(position.Length - 1).Any(step => step.TokenType == JsonToken.StartArray);
                 if (inItem && !context.ApplyingItem)
                     return false;
+                var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity);
+                var atStartArray = tokenType == JsonToken.StartArray;
+                if (writtenEndArray && atStartArray)
+                    return false;
             }
             return true;
         }

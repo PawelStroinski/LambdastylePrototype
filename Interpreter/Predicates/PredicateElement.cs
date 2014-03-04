@@ -17,7 +17,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         protected ToStringResult Result(string result)
         {
-            return new ToStringResult(result, delimitersBeforeInNextOuterValue: true);
+            return new ToStringResult(result);
         }
     }
 }

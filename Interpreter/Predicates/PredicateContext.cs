@@ -15,10 +15,12 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public readonly bool ApplyingItem;
         public readonly bool ApplyingTail;
         public readonly bool DelimitersBefore;
+        public readonly PredicateIdentity PredicateIdentity;
 
         public PredicateContext(GlobalState globalState, PositionStep[] position = null,
             bool hasOuter = false, bool allowNewLine = true, bool applyingItem = false,
-            bool applyingTail = false, bool delimitersBefore = true)
+            bool applyingTail = false, bool delimitersBefore = true,
+            PredicateIdentity predicateIdentity = null)
         {
             GlobalState = globalState;
             Position = position == null ? new PositionStep[0] : position;
@@ -27,9 +29,10 @@ namespace LambdastylePrototype.Interpreter.Predicates
             ApplyingItem = applyingItem;
             ApplyingTail = applyingTail;
             DelimitersBefore = delimitersBefore;
+            PredicateIdentity = predicateIdentity;
         }
 
-        public PredicateContext Copy(bool hasOuter, bool delimitersBefore)
+        public PredicateContext Copy(bool hasOuter, bool delimitersBefore, PredicateIdentity predicateIdentity)
         {
             return new PredicateContext(
                 globalState: GlobalState,
@@ -38,7 +41,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 allowNewLine: AllowNewLine,
                 applyingItem: ApplyingItem,
                 applyingTail: ApplyingTail,
-                delimitersBefore: delimitersBefore);
+                delimitersBefore: delimitersBefore,
+                predicateIdentity: predicateIdentity);
         }
     }
 }

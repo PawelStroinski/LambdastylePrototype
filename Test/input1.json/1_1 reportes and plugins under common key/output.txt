@@ -1,0 +1,41 @@
+{ "basePath": "../..",
+
+  "frameworks": ["jasmine", "commonjs"],
+  
+  "files": [
+    "client/*.js",
+    "test/client/*.js"
+  ],
+  
+  "exclude": [
+    "client/main.js"
+  ],
+
+  "preprocessors": {
+    "client/*.js": ["commonjs"],
+    "test/client/*.js": ["commonjs"]
+  },
+  
+  "reportersAndPlugins": ["progress", "junit",
+    "karma-jasmine",
+    "karma-chrome-launcher",
+    "karma-firefox-launcher",
+    "karma-junit-reporter",
+    "karma-commonjs"],
+
+  "junitReporter": {    
+    "outputFile": "test-results.xml"
+  },
+  
+  "port": 9876,
+  
+  "colors": true,
+  
+  "autoWatch": true,
+  
+  "captureTimeout": 20000,
+
+  "singleRun":false,
+  
+  "reportSlowerThan": 500
+}

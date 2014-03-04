@@ -8,7 +8,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
 {
     class Or : ExpressionElement
     {
-        public Or(ExpressionElement left, ExpressionElement right) : base(left, right) { }
+        public Or(params ExpressionElement[] expression) : base(expression) { }
 
         public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
