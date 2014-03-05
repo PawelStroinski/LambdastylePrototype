@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="input1.json\1 singlerun true\Style.cs" />
     <Compile Include="input1.json\1_1 add key at the end of file\Style.cs" />
+    <Compile Include="input1.json\1_1 custom key and colors key\Style.cs" />
     <Compile Include="input1.json\1_1 only keys with value 500\Style.cs" />
     <Compile Include="input1.json\1_1 output plugins separated by comma 2\Style.cs" />
     <Compile Include="input1.json\1_1 output plugins separated by comma\Style.cs" />
@@ -76,6 +77,7 @@
     </Content>
     <Content Include="input1.json\1_1 add key at the end of file 2\output.txt" />
     <Content Include="input1.json\1_1 add key at the end of file\output.txt" />
+    <Content Include="input1.json\1_1 custom key and colors key\output.txt" />
     <Content Include="input1.json\1_1 only keys with value 500\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

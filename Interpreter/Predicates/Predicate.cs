@@ -86,6 +86,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
             var resultStartsWithStartToken = Regex.IsMatch(input: result, pattern: @"^\s*\" + startToken);
             if (!resultStartsWithStartToken)
             {
+                if (result.Trim() != string.Empty)
+                    context.GlobalState.WrittenInThisObject = true;
                 result = startToken + " " + result;
                 context.GlobalState.InsertedStartToken = tokenType;
             }

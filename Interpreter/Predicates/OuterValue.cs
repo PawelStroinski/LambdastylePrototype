@@ -25,8 +25,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
             var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity);
             var seeked = context.GlobalState.Seeked.Contains(context.PredicateIdentity);
             var seekBy = 0;
-            if (writtenEndArray && !delimitersBefore.Contains(','))
-                delimitersBefore = "," + (delimitersBefore == string.Empty ? " " : delimitersBefore);
+            if (writtenEndArray && context.DelimitersBefore)
+                delimitersBefore = delimitersBefore.EnforceComma();
             if (writtenEndArray && !seeked)
                 seekBy = -1;
             context.GlobalState.WrittenOuter = true;

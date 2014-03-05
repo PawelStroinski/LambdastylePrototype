@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LambdastylePrototype.Interpreter.Predicates;
 using LambdastylePrototype.Interpreter.Subjects;
 using Newtonsoft.Json;
 
@@ -12,7 +13,7 @@ namespace LambdastylePrototype
     {
         public static string ToDebugString(this IEnumerable<LogEntry> entries)
         {
-            return string.Join(" ", entries.Select(entry => "<" 
+            return string.Join(" ", entries.Select(entry => "<"
                 + entry.Type.Name.ToString()
                 + (entry.Tail ? "[TAIL]" : string.Empty)
                 + ">"));
@@ -83,6 +84,16 @@ namespace LambdastylePrototype
         public static bool ContainsTail(this IEnumerable<LogEntry> entries)
         {
             return entries.Any(entry => entry.Tail);
+        }
+
+        public static string EnforceComma(this string value)
+        {
+            return value.Contains(",") ? value : "," + value.IfEmpty(" ");
+        }
+
+        public static string IfEmpty(this string value, string ifEmpty)
+        {
+            return value == string.Empty ? ifEmpty : value;
         }
     }
 }
