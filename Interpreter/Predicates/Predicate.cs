@@ -30,18 +30,20 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public override ToStringResult ToString(PredicateContext context)
         {
             this.context = context;
-            var elementResult = Result(string.Empty);
             var result = string.Empty;
             var seekBy = 0;
+            var delimitersBefore = true;
             identity = HasOuterId() ? new PredicateIdentity() : identity;
             foreach (var element in cases.ApplyTo(context, elements, writing: true))
             {
                 var elementContext = context.Copy(hasOuter: HasOuter(),
-                    delimitersBefore: elementResult.DelimitersBeforeInNextOuterValue || !(element is OuterValue),
+                    delimitersBefore: delimitersBefore,
                     predicateIdentity: identity);
                 if (element.AppliesAt(elementContext))
                 {
-                    elementResult = element.ToString(elementContext);
+                    var elementResult = element.ToString(elementContext);
+                    if ((element is OuterValue || element is Raw) && elementResult.HasDelimitersBefore)
+                        delimitersBefore = false;
                     result += elementResult.Result;
                     seekBy += elementResult.SeekBy;
                 }

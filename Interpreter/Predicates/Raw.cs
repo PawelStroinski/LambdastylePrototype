@@ -45,14 +45,11 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 if (position.Any())
                     delimitersBefore = position.Last().DelimitersBefore;
                 if (Regex.IsMatch(raw, Consts.StartsWithPropertyNameRegExp)
-                    && position.HasPenultimate()
-                    && position.Penultimate().TokenType == JsonToken.PropertyName)
-                {
+                        && position.HasPenultimate()
+                        && position.Penultimate().TokenType == JsonToken.PropertyName)
                     delimitersBefore = position.Penultimate().DelimitersBefore;
-                    return new ToStringResult(delimitersBefore + raw, delimitersBeforeInNextOuterValue: false);
-                }
             }
-            return Result(delimitersBefore + raw);
+            return Result(delimitersBefore + raw, hasDelimitersBefore: delimitersBefore != string.Empty);
         }
     }
 }

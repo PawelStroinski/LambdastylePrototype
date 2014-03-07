@@ -53,7 +53,8 @@ namespace LambdastylePrototype.Interpreter
                     WritePreviousUntilSubjectOnce();
                     WriteSubjectlessSkippedUntilEnd();
                     var toStringResult = predicate.ToString(predicateContext);
-                    context.Write(toStringResult.Result, this, !subject.JustAny(), toStringResult.SeekBy);
+                    var rewind = appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any));
+                    context.Write(toStringResult.Result, this, rewind, toStringResult.SeekBy);
                 }
                 return;
             }

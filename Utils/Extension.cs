@@ -91,6 +91,12 @@ namespace LambdastylePrototype
             return entries.Any(entry => entry.Type == typeof(T));
         }
 
+        public static bool ContainsAssignableTo<T>(this IEnumerable<LogEntry> entries, params Type[] not)
+        {
+            return entries.Any(entry => typeof(T).IsAssignableFrom(entry.Type)
+                && !not.Contains(entry.Type));
+        }
+
         public static bool ContainsTail(this IEnumerable<LogEntry> entries)
         {
             return entries.Any(entry => entry.Tail);

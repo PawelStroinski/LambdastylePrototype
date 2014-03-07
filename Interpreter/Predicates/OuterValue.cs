@@ -12,7 +12,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public override bool AppliesAt(PredicateContext context)
         {
             var tokenType = context.Position.Last().TokenType;
-            var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity);
+            var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity)
+                && !context.ApplyingItem;
             var arrayBoundry = tokenType == JsonToken.StartArray || tokenType == JsonToken.EndArray;
             if (writtenEndArray && arrayBoundry)
                 return false;
@@ -22,7 +23,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public override ToStringResult ToString(PredicateContext context)
         {
             var delimitersBefore = context.DelimitersBefore ? context.Position.Last().DelimitersBefore : string.Empty;
-            var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity);
+            var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity)
+                && !context.ApplyingItem;
             var seeked = context.GlobalState.Seeked.Contains(context.PredicateIdentity);
             var seekBy = 0;
             if (writtenEndArray && context.DelimitersBefore)
@@ -31,7 +33,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 seekBy = -1;
             context.GlobalState.WrittenOuter = true;
             var internalResult = ToStringInternal(context);
-            return internalResult.Copy(delimitersBefore + internalResult.Result, seekBy: seekBy);
+            return internalResult.Copy(delimitersBefore + internalResult.Result,
+                hasDelimitersBefore: delimitersBefore != string.Empty, seekBy: seekBy);
         }
 
         ToStringResult ToStringInternal(PredicateContext context)

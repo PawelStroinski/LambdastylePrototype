@@ -15,9 +15,9 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         public abstract ToStringResult ToString(PredicateContext context);
 
-        protected ToStringResult Result(string result)
+        protected ToStringResult Result(string result, bool hasDelimitersBefore = false)
         {
-            return new ToStringResult(result);
+            return new ToStringResult(result, hasDelimitersBefore: hasDelimitersBefore);
         }
     }
 }

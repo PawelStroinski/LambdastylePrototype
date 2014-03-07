@@ -36,7 +36,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
             context.GlobalState.WrittenOuter = true;
             context.GlobalState.WrittenInThisObject = true;
             return Result(string.Format("{0}\"{1}\"{2}",
-                delimitersBefore, propertyName.Value, propertyName.DelimitersAfter));
+                    delimitersBefore, propertyName.Value, propertyName.DelimitersAfter),
+                hasDelimitersBefore: delimitersBefore != string.Empty);
         }
 
         string RemoveExcessiveDelimiters(string delimiters)

@@ -9,21 +9,21 @@ namespace LambdastylePrototype.Interpreter.Predicates
     struct ToStringResult
     {
         public readonly string Result;
-        public readonly bool DelimitersBeforeInNextOuterValue;
+        public readonly bool HasDelimitersBefore;
         public readonly int SeekBy;
 
-        public ToStringResult(string result, bool delimitersBeforeInNextOuterValue = true, int seekBy = 0)
+        public ToStringResult(string result, bool hasDelimitersBefore = true, int seekBy = 0)
         {
             Result = result;
-            DelimitersBeforeInNextOuterValue = delimitersBeforeInNextOuterValue;
+            HasDelimitersBefore = hasDelimitersBefore;
             SeekBy = seekBy;
         }
 
-        public ToStringResult Copy(string result, int seekBy = 0)
+        public ToStringResult Copy(string result, bool hasDelimitersBefore = true, int seekBy = 0)
         {
             return new ToStringResult(
                 result: result,
-                delimitersBeforeInNextOuterValue: DelimitersBeforeInNextOuterValue,
+                hasDelimitersBefore: HasDelimitersBefore || hasDelimitersBefore,
                 seekBy: seekBy);
         }
     }
