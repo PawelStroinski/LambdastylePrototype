@@ -7,27 +7,15 @@ using Newtonsoft.Json;
 
 namespace LambdastylePrototype.Interpreter.Predicates
 {
-    class Joining
+    class CaseOfJoining : Case
     {
-        readonly PredicateContext context;
-        readonly PredicateElement[] elements;
         bool innerValueAndRaw, rawInnerValueAndRaw;
         int firstRawLength, joiningLength;
 
-        public Joining(PredicateContext context, PredicateElement[] elements)
-        {
-            this.context = context;
-            this.elements = elements;
-            IsJoining = GetIsJoining();
-        }
-
-        public bool IsJoining { get; private set; }
-
-        bool GetIsJoining()
+        bool AppliesAt(PredicateContext context, PredicateElement[] elements)
         {
             var position = context.Position;
-            var inArray = position.HasPenultimate() && position.Penultimate().TokenType == JsonToken.StartArray;
-            if (!inArray)
+            if (!position.IsInArray())
                 return false;
             innerValueAndRaw = elements.AreOfTypes(typeof(InnerValue), typeof(Raw));
             if (innerValueAndRaw)
@@ -37,19 +25,18 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 return false;
             firstRawLength = elements.First().ToString(context).Result.Length;
             joiningLength = elements.Last().ToString(context).Result.Length;
-            if (firstRawLength < joiningLength)
-                return true;
-            return false;
+            return firstRawLength < joiningLength;
         }
 
-        public PredicateElement[] JoinElements()
+        public override PredicateElement[] ApplyTo(PredicateContext context, PredicateElement[] elements, bool writing)
         {
-            if (IsJoining)
+            if (AppliesAt(context, elements))
             {
                 var joining = (Raw)elements.Last();
                 var withoutJoining = elements.Take(elements.Length - 1);
                 var continuation = context.GlobalState.Joining == joining;
-                context.GlobalState.Joining = joining;
+                if (writing)
+                    context.GlobalState.Joining = joining;
                 if (rawInnerValueAndRaw)
                 {
                     var joiningFull = joining.ToString(context).Result;

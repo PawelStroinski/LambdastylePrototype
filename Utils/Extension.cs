@@ -59,6 +59,16 @@ namespace LambdastylePrototype
             return Consts.EndTokenTypes.Contains(tokenType);
         }
 
+        public static bool IsInArray(this PositionStep[] position)
+        {
+            return position.HasPenultimate() && position.Penultimate().TokenType == JsonToken.StartArray;
+        }
+
+        public static bool EndsWith(this PositionStep[] position, JsonToken tokenType)
+        {
+            return position.Any() && position.Last().TokenType == tokenType;
+        }
+
         public static void WriteDebug(string value)
         {
 #if !NCRUNCH

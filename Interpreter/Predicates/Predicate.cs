@@ -11,6 +11,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
     class Predicate : PredicateElement
     {
         readonly PredicateElement[] elements;
+        readonly Cases cases = new Cases();
         PredicateIdentity identity = new PredicateIdentity();
         PredicateContext context;
 
@@ -23,18 +24,17 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         public override bool AppliesAt(PredicateContext context)
         {
-            return elements.Any(element => element.AppliesAt(context));
+            return cases.ApplyTo(context, elements, writing: false).Any(element => element.AppliesAt(context));
         }
 
         public override ToStringResult ToString(PredicateContext context)
         {
             this.context = context;
-            var joining = new Joining(context, ElementsForTail());
             var elementResult = Result(string.Empty);
             var result = string.Empty;
             var seekBy = 0;
             identity = HasOuterId() ? new PredicateIdentity() : identity;
-            foreach (var element in joining.JoinElements())
+            foreach (var element in cases.ApplyTo(context, elements, writing: true))
             {
                 var elementContext = context.Copy(hasOuter: HasOuter(),
                     delimitersBefore: elementResult.DelimitersBeforeInNextOuterValue || !(element is OuterValue),
@@ -46,7 +46,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
                     seekBy += elementResult.SeekBy;
                 }
             }
-            if (!HasOuter() && context.AllowNewLine && !joining.IsJoining)
+            if (!HasOuter() && context.AllowNewLine && !cases.AppliedCase<CaseOfJoining>()
+                    && !cases.AppliedCase<CaseOfOpening>())
                 result += Environment.NewLine;
             if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.Written)
                 result = InsertStartToken(result);
@@ -63,14 +64,6 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public bool HasOuterId()
         {
             return elements.Any(element => element is OuterId);
-        }
-
-        PredicateElement[] ElementsForTail()
-        {
-            if (context.ApplyingTail && HasOuterValue() && !HasOuterId())
-                return InsertOuterIdBeforeOuterValue();
-            else
-                return elements;
         }
 
         bool HasOuter()
@@ -101,14 +94,6 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 || result.Result.Contains(Environment.NewLine);
             if (result.SeekBy != 0)
                 context.GlobalState.Seeked.Add(identity);
-        }
-
-        PredicateElement[] InsertOuterIdBeforeOuterValue()
-        {
-            var elementsList = elements.ToList();
-            var outerValueIndex = elementsList.IndexOf(elementsList.OfType<OuterValue>().First());
-            elementsList.Insert(outerValueIndex, new OuterId());
-            return elementsList.ToArray();
         }
     }
 }
