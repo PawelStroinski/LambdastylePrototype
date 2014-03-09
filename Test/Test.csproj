@@ -65,6 +65,8 @@
     <Compile Include="input2.json\2 remove the Close menu item\Style.cs" />
     <Compile Include="input2.json\2 rename menuitem to menuitems 2\Style.cs" />
     <Compile Include="input2.json\2 rename menuitem to menuitems\Style.cs" />
+    <Compile Include="input2.json\2 replace Open menu item with Export 2\Style.cs" />
+    <Compile Include="input2.json\2 replace Open menu item with Export\Style.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Builder.cs" />
     <Compile Include="Runner.cs" />
@@ -110,6 +112,8 @@
     <Content Include="input2.json\2 remove the Close menu item\output.txt" />
     <Content Include="input2.json\2 rename menuitem to menuitems 2\output.txt" />
     <Content Include="input2.json\2 rename menuitem to menuitems\output.txt" />
+    <Content Include="input2.json\2 replace Open menu item with Export 2\output.txt" />
+    <Content Include="input2.json\2 replace Open menu item with Export\output.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LambdastylePrototype.csproj">

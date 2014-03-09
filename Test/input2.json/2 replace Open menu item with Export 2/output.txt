@@ -1,0 +1,22 @@
+{
+  "menu": {
+    "id": "file",
+    "value": "Export",
+    "popup": {
+      "menuitem": [
+        {
+          "value": "Export",
+          "onclick": "ExportDoc()"
+        },
+        {
+          "value": "Export",
+          "onclick": "ExportDoc()"
+        },
+        {
+          "value": "Export",
+          "onclick": "ExportDoc()"
+        }
+      ]
+    }
+  }
+}
