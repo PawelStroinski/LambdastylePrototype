@@ -18,7 +18,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
         bool AppliesAt(PredicateContext context, PredicateElement[] elements)
         {
             var position = context.Position;
-            if (!position.IsInArray() && !position.EndsWith(JsonToken.StartArray))
+            if (!position.Any(step => step.TokenType == JsonToken.StartArray))
                 return false;
             elementsFromRaw = elements.SkipWhile(element => !(element is Raw)).ToArray();
             var rawInnerValueAndRaw = elementsFromRaw.AreOfTypes(typeof(Raw), typeof(InnerValue), typeof(Raw));
