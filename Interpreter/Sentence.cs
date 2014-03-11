@@ -33,7 +33,7 @@ namespace LambdastylePrototype.Interpreter
         public void Apply(ApplyContext context)
         {
             this.context = context;
-            var appliesAtContext = new AppliesAtContext(context.Position, strict: true);
+            var appliesAtContext = new AppliesAtContext(context.Position);
             var appliesAtResult = HasSubject ? subject.AppliesAt(appliesAtContext) : new AppliesAtResult(false);
             var isParent = context.ParentScope.IsParent(this);
             if (appliesAtResult.Result || isParent)

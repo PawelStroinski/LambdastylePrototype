@@ -17,7 +17,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
             var arrayBoundry = tokenType == JsonToken.StartArray || tokenType == JsonToken.EndArray;
             if (writtenEndArray && arrayBoundry)
                 return false;
-            return tokenType != JsonToken.PropertyName;
+            else
+                return true;
         }
 
         public override ToStringResult ToString(PredicateContext context)
