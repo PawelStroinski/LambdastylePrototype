@@ -34,6 +34,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 var atStartArray = tokenType == JsonToken.StartArray;
                 if (writtenEndArray && atStartArray)
                     return false;
+                if (context.ApplyingTail)
+                    return false;
             }
             return true;
         }
@@ -46,10 +48,12 @@ namespace LambdastylePrototype.Interpreter.Predicates
             {
                 if (position.Any())
                     delimitersBefore = position.Last().DelimitersBefore;
-                if (Regex.IsMatch(raw, Consts.StartsWithPropertyNameRegExp)
+                if (Regex.IsMatch(input: raw, pattern: Consts.StartsWithPropertyName)
                         && position.HasPenultimate()
                         && position.Penultimate().TokenType == JsonToken.PropertyName)
                     delimitersBefore = position.Penultimate().DelimitersBefore;
+                if (!context.GlobalState.WrittenInThisObject)
+                    delimitersBefore = delimitersBefore.Replace(",", string.Empty);
             }
             context.GlobalState.WrittenRaw.Add(new Tuple<PredicateIdentity, Raw>(context.PredicateIdentity, this));
             return Result(delimitersBefore + raw, hasDelimitersBefore: delimitersBefore != string.Empty);

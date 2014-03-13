@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using LambdastylePrototype.Interpreter.Predicates.Cases;
 using Newtonsoft.Json;
 
 namespace LambdastylePrototype.Interpreter.Predicates
@@ -11,7 +12,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
     class Predicate : PredicateElement
     {
         readonly PredicateElement[] elements;
-        readonly Cases cases = new Cases();
+        readonly AllCases cases = new AllCases();
         PredicateIdentity identity = new PredicateIdentity();
         PredicateContext context;
 
@@ -24,7 +25,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         public override bool AppliesAt(PredicateContext context)
         {
-            return cases.ApplyTo(context, elements, writing: false).Any(element => element.AppliesAt(context));
+            var elements = cases.ApplyTo(new CaseContext(context, this.elements, writing: false));
+            return elements.Any(element => element.AppliesAt(context));
         }
 
         public override ToStringResult ToString(PredicateContext context)
@@ -33,11 +35,13 @@ namespace LambdastylePrototype.Interpreter.Predicates
             var result = string.Empty;
             var seekBy = 0;
             var delimitersBefore = true;
+            var elements = cases.ApplyTo(new CaseContext(context, this.elements, writing: true));
+            var previousElement = (PredicateElement)null;
             identity = HasOuterId() ? new PredicateIdentity() : identity;
-            foreach (var element in cases.ApplyTo(context, elements, writing: true))
+            foreach (var element in elements)
             {
                 var elementContext = context.Copy(hasOuter: HasOuter(),
-                    delimitersBefore: delimitersBefore,
+                    delimitersBefore: delimitersBefore || (previousElement is OuterId && element is OuterValue),
                     predicateIdentity: identity);
                 if (element.AppliesAt(elementContext))
                 {
@@ -47,13 +51,13 @@ namespace LambdastylePrototype.Interpreter.Predicates
                     result += elementResult.Result;
                     seekBy += elementResult.SeekBy;
                 }
+                previousElement = element;
             }
-            if (!HasOuter() && context.AllowNewLine && !cases.AppliedCase<CaseOfJoining>()
-                    && !cases.AppliedCase<CaseOfOpening>())
+            if (!HasOuter() && context.AllowNewLine && !cases.AppliedCase<Joining>() && !cases.AppliedCase<Opening>())
                 result += Environment.NewLine;
             if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.Written)
                 result = InsertStartToken(result);
-            var toStringResult = new ToStringResult(result, seekBy: seekBy);
+            var toStringResult = new ToStringResult(result, hasDelimitersBefore: false, seekBy: seekBy);
             ChangeGlobalState(toStringResult);
             return toStringResult;
         }
@@ -75,15 +79,17 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         string InsertStartToken(string result)
         {
-            var tokenType = Regex.IsMatch(result, Consts.StartsWithPropertyNameRegExp)
-                ? JsonToken.StartObject : JsonToken.StartArray;
-            var startToken = tokenType == JsonToken.StartObject ? "{" : "[";
-            var resultStartsWithStartToken = Regex.IsMatch(input: result, pattern: @"^\s*\" + startToken);
+            var resultStartsWithStartToken = Regex.IsMatch(input: result, pattern: Consts.StartsWithStartObject)
+                || Regex.IsMatch(input: result, pattern: Consts.StartsWithStartArray);
             if (!resultStartsWithStartToken)
             {
-                if (result.Trim() != string.Empty)
+                if (result.Trim() != string.Empty
+                        && !Regex.IsMatch(input: result, pattern: Consts.EndsWithEndObject))
                     context.GlobalState.WrittenInThisObject = true;
-                result = startToken + " " + result;
+                var tokenType = Regex.IsMatch(input: result, pattern: Consts.StartsWithPropertyName)
+                    ? JsonToken.StartObject : JsonToken.StartArray;
+                var token = tokenType == JsonToken.StartObject ? "{" : "[";
+                result = token + " " + result;
                 context.GlobalState.InsertedStartToken = tokenType;
             }
             return result;

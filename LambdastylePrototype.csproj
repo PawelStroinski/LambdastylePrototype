@@ -54,14 +54,16 @@
     </Compile>
     <Compile Include="ApplyContext.cs" />
     <Compile Include="GlobalState.cs" />
-    <Compile Include="Interpreter\Predicates\CaseOfJoining.cs" />
-    <Compile Include="Interpreter\Predicates\CaseOfOpening.cs" />
+    <Compile Include="Interpreter\Predicates\Cases\CaseContext.cs" />
+    <Compile Include="Interpreter\Predicates\Cases\Joining.cs" />
+    <Compile Include="Interpreter\Predicates\Cases\Opening.cs" />
+    <Compile Include="Interpreter\Predicates\Cases\Wrapping.cs" />
     <Compile Include="Interpreter\Predicates\PredicateContext.cs" />
     <Compile Include="Interpreter\Predicates\PredicateIdentity.cs" />
-    <Compile Include="Interpreter\Predicates\Override.cs" />
-    <Compile Include="Interpreter\Predicates\Case.cs" />
-    <Compile Include="Interpreter\Predicates\Cases.cs" />
-    <Compile Include="Interpreter\Predicates\CaseOfTail.cs" />
+    <Compile Include="Interpreter\Predicates\Proxy.cs" />
+    <Compile Include="Interpreter\Predicates\Cases\Case.cs" />
+    <Compile Include="Interpreter\Predicates\Cases\AllCases.cs" />
+    <Compile Include="Interpreter\Predicates\Cases\Tail.cs" />
     <Compile Include="Interpreter\Predicates\ToStringResult.cs" />
     <Compile Include="Interpreter\Predicates\ValueBase.cs" />
     <Compile Include="Interpreter\Predicates\RegExpGroup.cs" />

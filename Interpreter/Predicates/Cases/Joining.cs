@@ -5,37 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace LambdastylePrototype.Interpreter.Predicates
+namespace LambdastylePrototype.Interpreter.Predicates.Cases
 {
-    class CaseOfJoining : Case
+    class Joining : Case
     {
+        PredicateContext context;
+        PredicateElement[] elements; 
         bool innerValueAndRaw, rawInnerValueAndRaw;
         int firstRawLength, joiningLength;
 
-        bool AppliesAt(PredicateContext context, PredicateElement[] elements)
+        public override PredicateElement[] ApplyTo(CaseContext caseContext)
         {
-            var position = context.Position;
-            if (!position.IsInArray())
-                return false;
-            innerValueAndRaw = elements.AreOfTypes(typeof(InnerValue), typeof(Raw));
-            if (innerValueAndRaw)
-                return true;
-            rawInnerValueAndRaw = elements.AreOfTypes(typeof(Raw), typeof(InnerValue), typeof(Raw));
-            if (!rawInnerValueAndRaw)
-                return false;
-            firstRawLength = elements.First().ToString(context).Result.Length;
-            joiningLength = elements.Last().ToString(context).Result.Length;
-            return firstRawLength < joiningLength;
-        }
-
-        public override PredicateElement[] ApplyTo(PredicateContext context, PredicateElement[] elements, bool writing)
-        {
-            if (AppliesAt(context, elements))
+            context = caseContext.Context;
+            elements = caseContext.Elements;
+            if (AppliesAt())
             {
                 var joining = (Raw)elements.Last();
                 var withoutJoining = elements.Take(elements.Length - 1);
                 var continuation = context.GlobalState.Joining == joining;
-                if (writing)
+                if (caseContext.Writing)
                     context.GlobalState.Joining = joining;
                 if (rawInnerValueAndRaw)
                 {
@@ -49,6 +37,22 @@ namespace LambdastylePrototype.Interpreter.Predicates
             }
             else
                 return elements;
+        }
+
+        bool AppliesAt()
+        {
+            var position = context.Position;
+            if (!position.IsInArray())
+                return false;
+            innerValueAndRaw = elements.AreOfTypes(typeof(InnerValue), typeof(Raw));
+            if (innerValueAndRaw)
+                return true;
+            rawInnerValueAndRaw = elements.AreOfTypes(typeof(Raw), typeof(InnerValue), typeof(Raw));
+            if (!rawInnerValueAndRaw)
+                return false;
+            firstRawLength = elements.First().ToString(context).Result.Length;
+            joiningLength = elements.Last().ToString(context).Result.Length;
+            return firstRawLength < joiningLength;
         }
     }
 }

@@ -33,8 +33,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             if (writtenEndArray && !seeked)
                 seekBy = -1;
             context.GlobalState.WrittenOuter = true;
-            var internalResult = ToStringInternal(context);
-            return internalResult.Copy(delimitersBefore + internalResult.Result,
+            return new ToStringResult(delimitersBefore + ToStringInternal(context).Result,
                 hasDelimitersBefore: delimitersBefore != string.Empty, seekBy: seekBy);
         }
 
@@ -43,10 +42,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             var tokenType = context.Position.Last().TokenType;
             context.GlobalState.WrittenInThisObject = tokenType != JsonToken.StartObject;
             if (tokenType == JsonToken.String)
-            {
-                var baseResult = base.ToString(context);
-                return baseResult.Copy("\"" + baseResult.Result + "\"");
-            }
+                return Result("\"" + base.ToString(context).Result + "\"");
             if (tokenType == JsonToken.EndArray)
             {
                 context.GlobalState.WrittenEndArray.Add(context.PredicateIdentity);

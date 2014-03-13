@@ -63,6 +63,9 @@
     <Compile Include="input1.json\1_1 add key at the end of file 2\Style.cs" />
     <Compile Include="input2.json\2 add Export menu item\Style.cs" />
     <Compile Include="input2.json\2 change id to file2\Style.cs" />
+    <Compile Include="input2.json\2 move popup into popupParent 2\Style.cs" />
+    <Compile Include="input2.json\2 move popup into popupParent 3\Style.cs" />
+    <Compile Include="input2.json\2 move popup into popupParent\Style.cs" />
     <Compile Include="input2.json\2 remove the Close menu item\Style.cs" />
     <Compile Include="input2.json\2 rename menuitem to menuitems 2\Style.cs" />
     <Compile Include="input2.json\2 rename menuitem to menuitems\Style.cs" />
@@ -111,6 +114,9 @@
     </Content>
     <Content Include="input2.json\2 add Export menu item\output.txt" />
     <Content Include="input2.json\2 change id to file2\output.txt" />
+    <Content Include="input2.json\2 move popup into popupParent 2\output.txt" />
+    <Content Include="input2.json\2 move popup into popupParent 3\output.txt" />
+    <Content Include="input2.json\2 move popup into popupParent\output.txt" />
     <Content Include="input2.json\2 remove the Close menu item\output.txt" />
     <Content Include="input2.json\2 rename menuitem to menuitems 2\output.txt" />
     <Content Include="input2.json\2 rename menuitem to menuitems\output.txt" />
