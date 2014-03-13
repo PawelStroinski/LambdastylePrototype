@@ -103,6 +103,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 || result.Result.Contains(Environment.NewLine);
             if (result.SeekBy != 0)
                 context.GlobalState.Seeked.Add(identity);
+            context.GlobalState.LastApplyingTail = context.ApplyingTail;
         }
     }
 }

@@ -18,8 +18,6 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
             elements = caseContext.Elements;
             if (AppliesAt())
             {
-                if (caseContext.Writing)
-                    context.GlobalState.LastApplyingTail = context.ApplyingTail;
                 var rawLength = lastRaw.ToString(context).Result.Length;
                 var proxy = new Proxy(lastOuterValue, toString: (result, _) => new ToStringResult(
                     result.Result, hasDelimitersBefore: result.HasDelimitersBefore, seekBy: result.SeekBy - rawLength));
