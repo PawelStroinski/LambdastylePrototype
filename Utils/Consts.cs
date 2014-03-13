@@ -35,5 +35,7 @@ namespace LambdastylePrototype
         public static readonly string EndsWithEndArray = @"\]\s*$";
 
         public static readonly string EndsWithEndObject = @"\}\s*$";
+
+        public static readonly string EndsWithStartObject = @"\{\s*$";
     }
 }

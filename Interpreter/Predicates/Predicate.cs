@@ -84,6 +84,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             if (!resultStartsWithStartToken)
             {
                 if (result.Trim() != string.Empty
+                        && !Regex.IsMatch(input: result, pattern: Consts.EndsWithStartObject)
                         && !Regex.IsMatch(input: result, pattern: Consts.EndsWithEndObject))
                     context.GlobalState.WrittenInThisObject = true;
                 var tokenType = Regex.IsMatch(input: result, pattern: Consts.StartsWithPropertyName)
