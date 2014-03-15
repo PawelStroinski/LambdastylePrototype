@@ -14,32 +14,28 @@ namespace Test
 {
     public class Runner
     {
-        [Test]
-        public void Run()
+        [TestCaseSource("GetStyles")]
+        public void Run(Type style)
         {
-            var styles = GetStyles();
-            foreach (var style in styles)
+            var folders = NamespaceFolders(style.Namespace);
+            var inputFile = InputFileFullPath(folders);
+            var expectedOutputFile = OutputFileFullPath(folders);
+            var actualOutputFile = Path.GetTempFileName();
+            var builtStyle = BuiltStyle(style);
+            using (var input = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
+            using (var output = new EditableFileStream(actualOutputFile, FileMode.Create))
             {
-                var folders = NamespaceFolders(style.Namespace);
-                var inputFile = InputFileFullPath(folders);
-                var expectedOutputFile = OutputFileFullPath(folders);
-                var actualOutputFile = Path.GetTempFileName();
-                var builtStyle = BuiltStyle(style);
-                using (var input = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
-                using (var output = new EditableFileStream(actualOutputFile, FileMode.Create))
-                {
-                    var processor = new Processor(input, output, builtStyle);
-                    processor.Process();
-                }
-                Assert.AreEqual(File.ReadAllText(expectedOutputFile), File.ReadAllText(actualOutputFile),
-                    Path.Combine(folders.Item1, folders.Item2) + "\n" + actualOutputFile);
+                var processor = new Processor(input, output, builtStyle);
+                processor.Process();
             }
+            Assert.AreEqual(File.ReadAllText(expectedOutputFile), File.ReadAllText(actualOutputFile),
+                actualOutputFile);
         }
 
         [Test]
         public void RunnerItselfItWorks()
         {
-            var styles = GetStyles();
+            var styles = GetStylesInternal();
             Assert.True(styles.Any());
             var foldersFirst = NamespaceFolders(styles[0].Namespace);
             var foldersNext = NamespaceFolders(styles[1].Namespace);
@@ -53,9 +49,26 @@ namespace Test
             Assert.IsTrue(File.Exists(outputFile), "was " + outputFile);
             var builtStyle = BuiltStyle(styles[0]);
             Assert.AreEqual(2, builtStyle.Length);
+            Assert.IsNotEmpty(GetStyles());
         }
 
-        List<Type> GetStyles()
+        List<ITestCaseData> GetStyles()
+        {
+            var styles = GetStylesInternal();
+            return styles
+                .Select(style =>
+                {
+                    var folders = NamespaceFolders(style.Namespace);
+                    var testCaseData = new TestCaseData(style);
+                    testCaseData.SetName(folders.Item2);
+                    testCaseData.SetCategory(folders.Item2);
+                    testCaseData.SetDescription(Path.Combine(folders.Item1, folders.Item2) + " ");
+                    return testCaseData;
+                })
+                .Cast<ITestCaseData>().ToList();
+        }
+
+        List<Type> GetStylesInternal()
         {
             return Assembly.GetExecutingAssembly().GetTypes()
                 .Where(type => type.Name == "Style").Cast<Type>().ToList();
