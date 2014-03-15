@@ -17,12 +17,7 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
             context = caseContext.Context;
             elements = caseContext.Elements;
             if (AppliesAt())
-            {
-                var rawLength = lastRaw.ToString(context).Result.Length;
-                var proxy = new Proxy(lastOuterValue, toString: (result, _) => new ToStringResult(
-                    result.Result, hasDelimitersBefore: result.HasDelimitersBefore, seekBy: result.SeekBy - rawLength));
-                return elements.Select(element => element == lastOuterValue ? proxy : element).ToArray();
-            }
+                return elements.Select(element => element == lastOuterValue ? CreateProxy(element) : element).ToArray();
             else
                 return elements;
         }
@@ -36,6 +31,16 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
                 && elementsList.IndexOf(lastRaw) > elementsList.IndexOf(lastOuterValue);
             var applyingTail = context.ApplyingTail || context.GlobalState.LastApplyingTail;
             return lastRawIsAfterOuterValue && applyingTail;
+        }
+
+        Proxy CreateProxy(PredicateElement proxied)
+        {
+            var rawLength = lastRaw.ToString(context).Result.Length;
+            var addedNewLine = context.GlobalState.AddedNewLine.Contains(context.PredicateIdentity);
+            if (addedNewLine)
+                rawLength += Environment.NewLine.Length;
+            return new Proxy(proxied, toString: (result, _) => new ToStringResult(
+                result.Result, hasDelimitersBefore: result.HasDelimitersBefore, seekBy: result.SeekBy - rawLength));
         }
     }
 }

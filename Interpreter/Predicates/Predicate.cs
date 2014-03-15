@@ -25,19 +25,20 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         public override bool AppliesAt(PredicateContext context)
         {
-            var elements = cases.ApplyTo(new CaseContext(context, this.elements, writing: false));
+            this.context = context;
+            var elements = cases.ApplyTo(new CaseContext(ContextForCases(), this.elements, writing: false));
             return elements.Any(element => element.AppliesAt(context));
         }
 
         public override ToStringResult ToString(PredicateContext context)
         {
             this.context = context;
+            identity = HasOuterId() ? new PredicateIdentity() : identity;
             var result = string.Empty;
             var seekBy = 0;
             var delimitersBefore = true;
-            var elements = cases.ApplyTo(new CaseContext(context, this.elements, writing: true));
             var previousElement = (PredicateElement)null;
-            identity = HasOuterId() ? new PredicateIdentity() : identity;
+            var elements = cases.ApplyTo(new CaseContext(ContextForCases(), this.elements, writing: true));
             foreach (var element in elements)
             {
                 var elementContext = context.Copy(hasOuter: HasOuter(),
@@ -53,11 +54,15 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 }
                 previousElement = element;
             }
-            if (!HasOuter() && context.AllowNewLine && !cases.AppliedCase<Joining>() && !cases.AppliedCase<Opening>())
+            if (context.AllowNewLine && !HasOuter() && !cases.AppliedCase<Joining>() && !cases.AppliedCase<Opening>()
+                && !cases.AppliedCase<Tail>())
+            {
                 result += Environment.NewLine;
+                context.GlobalState.AddedNewLine.Add(identity);
+            }
             if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.Written)
                 result = InsertStartToken(result);
-            var toStringResult = new ToStringResult(result, hasDelimitersBefore: false, seekBy: seekBy);
+            var toStringResult = new ToStringResult(result, seekBy: seekBy, rewind: Rewind());
             ChangeGlobalState(toStringResult);
             return toStringResult;
         }
@@ -77,6 +82,11 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return HasOuterValue() || HasOuterId();
         }
 
+        PredicateContext ContextForCases()
+        {
+            return context.Copy(hasOuter: HasOuter(), delimitersBefore: false, predicateIdentity: identity);
+        }
+
         string InsertStartToken(string result)
         {
             var resultStartsWithStartToken = Regex.IsMatch(input: result, pattern: Consts.StartsWithStartObject)
@@ -94,6 +104,11 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 context.GlobalState.InsertedStartToken = tokenType;
             }
             return result;
+        }
+
+        bool Rewind()
+        {
+            return context.ApplyingLiteral && !HasOuterId() && !cases.AppliedCase<Wrapping>();
         }
 
         void ChangeGlobalState(ToStringResult result)

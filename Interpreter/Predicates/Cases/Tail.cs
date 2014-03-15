@@ -11,19 +11,29 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
         PredicateContext context;
         PredicateElement[] elements;
 
+        public new static int Order = Wrapping.Order - 1;
+
         public override PredicateElement[] ApplyTo(CaseContext caseContext)
         {
             context = caseContext.Context;
             elements = caseContext.Elements;
-            if (AppliesAt())
+            if (AppliesAtOuter())
                 return InsertOuterIdBeforeOuterValue();
             else
-                return elements;
+                if (AppliesAtInner())
+                    return ReplaceInnerValueWithOuterIdAndOuterValue();
+                else
+                    return elements;
         }
 
-        bool AppliesAt()
+        bool AppliesAtOuter()
         {
             return context.ApplyingTail && HasOuterValue() && !HasOuterId();
+        }
+
+        bool AppliesAtInner()
+        {
+            return context.ApplyingTail && HasInnerValue() && !HasOuterId() && !HasOuterValue();
         }
 
         PredicateElement[] InsertOuterIdBeforeOuterValue()
@@ -31,6 +41,16 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
             var elementsList = elements.ToList();
             var outerValueIndex = elementsList.IndexOf(elementsList.OfType<OuterValue>().First());
             elementsList.Insert(outerValueIndex, new OuterId());
+            return elementsList.ToArray();
+        }
+
+        PredicateElement[] ReplaceInnerValueWithOuterIdAndOuterValue()
+        {
+            var elementsList = elements.ToList();
+            var innerValueIndex = elementsList.IndexOf(elementsList.OfType<InnerValue>().First());
+            elementsList.RemoveAt(innerValueIndex);
+            elementsList.Insert(innerValueIndex, new OuterValue());
+            elementsList.Insert(innerValueIndex, new OuterId());
             return elementsList.ToArray();
         }
 
@@ -42,6 +62,11 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
         bool HasOuterId()
         {
             return elements.Any(element => element is OuterId);
+        }
+
+        bool HasInnerValue()
+        {
+            return elements.Any(element => element is InnerValue);
         }
     }
 }

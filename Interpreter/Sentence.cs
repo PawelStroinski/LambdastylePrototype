@@ -47,15 +47,14 @@ namespace LambdastylePrototype.Interpreter
                 }
                 var predicateContext = new PredicateContext(context.GlobalState, context.Position,
                     applyingItem: appliesAtResult.PositiveLog.Contains<Item>(),
-                    applyingTail: appliesAtResult.PositiveLog.ContainsTail());
+                    applyingTail: appliesAtResult.PositiveLog.ContainsTail(),
+                    applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any)));
                 if (predicate.AppliesAt(predicateContext))
                 {
                     WritePreviousUntilSubjectOnce();
                     WriteSubjectlessSkippedUntilEnd();
                     var toStringResult = predicate.ToString(predicateContext);
-                    var rewind = appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any))
-                        && !predicate.HasOuterId();
-                    context.Write(toStringResult.Result, this, rewind, toStringResult.SeekBy);
+                    context.Write(toStringResult.Result, this, toStringResult.Rewind, toStringResult.SeekBy);
                 }
                 return;
             }

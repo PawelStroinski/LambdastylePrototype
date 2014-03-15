@@ -14,13 +14,14 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public readonly bool AllowNewLine;
         public readonly bool ApplyingItem;
         public readonly bool ApplyingTail;
+        public readonly bool ApplyingLiteral;
         public readonly bool DelimitersBefore;
         public readonly PredicateIdentity PredicateIdentity;
 
         public PredicateContext(GlobalState globalState, PositionStep[] position = null,
             bool hasOuter = false, bool allowNewLine = true, bool applyingItem = false,
-            bool applyingTail = false, bool delimitersBefore = true,
-            PredicateIdentity predicateIdentity = null)
+            bool applyingTail = false, bool applyingLiteral = false,
+            bool delimitersBefore = true, PredicateIdentity predicateIdentity = null)
         {
             GlobalState = globalState;
             Position = position == null ? new PositionStep[0] : position;
@@ -28,6 +29,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             AllowNewLine = allowNewLine;
             ApplyingItem = applyingItem;
             ApplyingTail = applyingTail;
+            ApplyingLiteral = applyingLiteral;
             DelimitersBefore = delimitersBefore;
             PredicateIdentity = predicateIdentity;
         }
@@ -41,6 +43,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 allowNewLine: AllowNewLine,
                 applyingItem: ApplyingItem,
                 applyingTail: ApplyingTail,
+                applyingLiteral: ApplyingLiteral,
                 delimitersBefore: delimitersBefore,
                 predicateIdentity: predicateIdentity);
         }

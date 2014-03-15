@@ -19,6 +19,7 @@ namespace LambdastylePrototype
         public List<PredicateIdentity> WrittenEndArray = new List<PredicateIdentity>();
         public List<Tuple<PredicateIdentity, Raw>> WrittenRaw = new List<Tuple<PredicateIdentity, Raw>>();
         public List<PredicateIdentity> Seeked = new List<PredicateIdentity>();
+        public List<PredicateIdentity> AddedNewLine = new List<PredicateIdentity>();
         public JsonToken? InsertedStartToken;
         public List<Sentence> SubjectlessSkippedUntilEnd = new List<Sentence>();
         public bool HasCopyAny;
