@@ -52,6 +52,9 @@
     <Compile Include="..\..\InsertModeFileStream\EditableStream.cs">
       <Link>Utils\EditableStream.cs</Link>
     </Compile>
+    <Compile Include="..\..\StreamReaderSeeker\StreamReaderSeeker.cs">
+      <Link>Utils\StreamReaderSeeker.cs</Link>
+    </Compile>
     <Compile Include="ApplyContext.cs" />
     <Compile Include="GlobalState.cs" />
     <Compile Include="Interpreter\Predicates\Cases\CaseContext.cs" />
@@ -84,6 +87,7 @@
     <Compile Include="Interpreter\Subjects\Any.cs" />
     <Compile Include="Processor.cs" />
     <Compile Include="ParentScope.cs" />
+    <Compile Include="Seeker.cs" />
     <Compile Include="SentenceScratchpad.cs" />
     <Compile Include="SubjectScratchpad.cs" />
     <Compile Include="Interpreter\Subjects\Value.cs" />

@@ -20,8 +20,11 @@ namespace LambdastylePrototype
         readonly Dictionary<Sentence, long> startsAt = new Dictionary<Sentence, long>();
         readonly Dictionary<Sentence, long> endsAt = new Dictionary<Sentence, long>();
         StreamWriter writer;
+        StreamReader streamReader;
+        PositionJsonReader reader;
         bool EOF;
         GlobalState globalState;
+        Seeker seeker;
         ParentScope parentScope;
 
         public Processor(Stream input, EditableStream output, params Sentence[] style)
@@ -37,29 +40,42 @@ namespace LambdastylePrototype
             bool readResult;
             EOF = false;
             globalState = new GlobalState();
-            parentScope = new ParentScope(input, output, globalState);
             output.InsertMode = true;
             using (writer = new StreamWriter(output))
-            using (var reader = new PositionJsonReader(new JsonTextReader(
-                    new StreamReader(input), grabDelimiters: true)))
+            using (streamReader = new StreamReader(input))
             {
-                if (!style.Any())
-                    return;
-                styleEnumerator.Reset();
-                styleEnumerator.MoveNext();
-                styleEnumerator.Current.ApplyBOF(CreateContext(reader));
-                do
+                reader = new PositionJsonReader(new JsonTextReader(streamReader, grabDelimiters: true));
+                reader.CloseInput = false;
+                seeker = new Seeker(output, globalState, streamReader, ReplaceReader, reader);
+                parentScope = new ParentScope(seeker);
+                try
                 {
+                    if (!style.Any())
+                        return;
                     styleEnumerator.Reset();
                     styleEnumerator.MoveNext();
-                    readResult = reader.Read();
-                    parentScope.PositionChanged(reader.Position);
-                    if (readResult)
-                        styleEnumerator.Current.Apply(CreateContext(reader));
+                    styleEnumerator.Current.ApplyBOF(CreateContext(reader));
+                    do
+                    {
+                        styleEnumerator.Reset();
+                        styleEnumerator.MoveNext();
+                        parentScope.BeforePositionChange(reader.Position);
+                        readResult = reader.Read();
+                        if (readResult && !reader.Position.EndsWith(JsonToken.PropertyName))
+                        {
+                            parentScope.PositionChanged(reader.Position);
+                            styleEnumerator.Current.Apply(CreateContext(reader));
+                        }
+                    }
+                    while (readResult);
+                    EOF = true;
+                    styleEnumerator.Current.ApplyEOF(CreateContext(reader));
                 }
-                while (readResult);
-                EOF = true;
-                styleEnumerator.Current.ApplyEOF(CreateContext(reader));
+                finally
+                {
+                    reader.Dispose();
+                    parentScope.Dispose();
+                }
             }
         }
 
@@ -129,6 +145,11 @@ namespace LambdastylePrototype
         bool Written(Sentence sentence)
         {
             return startsAt.ContainsKey(sentence);
+        }
+
+        void ReplaceReader(PositionJsonReader value)
+        {
+            reader = value;
         }
     }
 }

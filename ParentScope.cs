@@ -9,37 +9,34 @@ using Newtonsoft.Json;
 
 namespace LambdastylePrototype
 {
-    class ParentScope
+    class ParentScope : IDisposable
     {
-        readonly Stream input;
-        readonly EditableStream output;
-        readonly GlobalState globalState;
-        Tuple<long, long> startTokenWasAt, propertyNameTokenWasAt;
+        readonly Seeker seeker;
+        readonly List<Seeker.Anchor> anchors = new List<Seeker.Anchor>();
         PositionStep[] position, parentPosition;
         Sentence parent;
-        bool ending, writtenInThisObject;
+        bool ending;
 
-        public ParentScope(Stream input, EditableStream output, GlobalState globalState)
+        public ParentScope(Seeker seeker)
         {
-            this.input = input;
-            this.output = output;
-            this.globalState = globalState;
+            this.seeker = seeker;
         }
 
-        public void PositionChanged(PositionStep[] position)
+        public void BeforePositionChange(PositionStep[] previousPosition)
         {
-            this.position = position;
-            var tokenType = position.Last().TokenType;
-            if (tokenType.IsStart())
-            {
-                if (position.HasPenultimate() && position.Penultimate().TokenType == JsonToken.PropertyName)
-                    startTokenWasAt = propertyNameTokenWasAt;
-                else
-                    startTokenWasAt = At();
-                writtenInThisObject = globalState.WrittenInThisObject;
-            }
-            if (tokenType == JsonToken.PropertyName)
-                propertyNameTokenWasAt = At();
+            if (previousPosition.Any() && previousPosition.Last().TokenType.IsStart())
+                foreach (var anchor in anchors.ExceptLast().ToList())
+                {
+                    anchors.Remove(anchor);
+                    if (!seeker.IsCurrentReader(anchor))
+                        anchor.Dispose();
+                }
+            anchors.Add(seeker.GetAnchor());
+        }
+
+        public void PositionChanged(PositionStep[] newPosition)
+        {
+            position = newPosition;
             if (ending)
             {
                 ending = false;
@@ -53,16 +50,7 @@ namespace LambdastylePrototype
         {
             this.parent = parent;
             this.parentPosition = position;
-            var inputPosition = startTokenWasAt.Item1;
-            var outputPosition = startTokenWasAt.Item2;
-            input.Position = inputPosition;
-            if (output.Position != outputPosition)
-            {
-                var count = output.Position - outputPosition;
-                output.Position = outputPosition;
-                output.Delete(count);
-            }
-            globalState.WrittenInThisObject = writtenInThisObject;
+            seeker.Seek(anchors.First());
         }
 
         public bool IsParent(Sentence sentence)
@@ -70,14 +58,15 @@ namespace LambdastylePrototype
             return parent == sentence;
         }
 
-        Tuple<long, long> At()
+        public void Dispose()
         {
-            return new Tuple<long, long>(input.Position, output.Position);
+            foreach (var anchor in anchors)
+                anchor.Dispose();
         }
 
         bool End()
         {
-            var start = parentPosition.Last(step => step.TokenType.IsStart());
+            var start = parentPosition.ExceptLast().Last(step => step.TokenType.IsStart());
             var startIndex = parentPosition.ToList().IndexOf(start);
             var positionAfterStart = position.Skip(startIndex + 1).ToArray();
             if (positionAfterStart.Any(step => step.TokenType.IsStart()))

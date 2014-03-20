@@ -13,9 +13,14 @@ namespace LambdastylePrototype.Utils
         readonly Stack<PositionStep> position;
 
         public PositionJsonReader(JsonReader reader)
+            : this(reader: reader, position: new Stack<PositionStep>())
+        {
+        }
+
+        PositionJsonReader(JsonReader reader, Stack<PositionStep> position)
         {
             this.reader = reader;
-            position = new Stack<PositionStep>();
+            this.position = position;
         }
 
         public PositionStep[] Position { get { return position.Reverse().ToArray(); } }
@@ -63,7 +68,20 @@ namespace LambdastylePrototype.Utils
             return reader.ReadAsString();
         }
 
-        void IDisposable.Dispose()
+        public override bool CloseInput
+        {
+            get { return reader.CloseInput; }
+            set { if (reader != null) reader.CloseInput = value; }
+        }
+
+        public override int RemainingBufferedCharacters { get { return reader.RemainingBufferedCharacters; } }
+
+        public override JsonReader Clone()
+        {
+            return new PositionJsonReader(reader: reader.Clone(), position: new Stack<PositionStep>(Position));
+        }
+
+        public void Dispose()
         {
             (reader as IDisposable).Dispose();
         }

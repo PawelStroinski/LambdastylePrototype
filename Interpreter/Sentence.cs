@@ -38,8 +38,8 @@ namespace LambdastylePrototype.Interpreter
             var isParent = context.ParentScope.IsParent(this);
             if (appliesAtResult.Result || isParent)
             {
-                Extension.WriteDebug(appliesAtResult.PositiveLog.ToDebugString());
                 Extension.WriteDebug(context.Position.ToDebugString());
+                Extension.WriteDebugLine(appliesAtResult.PositiveLog.ToDebugString());
                 if (!isParent && appliesAtResult.PositiveLog.Contains<Parent>())
                 {
                     context.ParentScope.ParentFound(this);

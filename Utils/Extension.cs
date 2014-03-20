@@ -16,7 +16,7 @@ namespace LambdastylePrototype
             return string.Join(" ", entries.Select(entry => "<"
                 + entry.Type.Name.ToString()
                 + (entry.Tail ? "[TAIL]" : string.Empty)
-                + ">"));
+                + ">")) + Environment.NewLine;
         }
 
         public static string ToDebugString(this PositionStep[] position)
@@ -72,6 +72,13 @@ namespace LambdastylePrototype
         public static void WriteDebug(string value)
         {
 #if !NCRUNCH
+            Console.Write(value);
+#endif
+        }
+
+        public static void WriteDebugLine(string value)
+        {
+#if !NCRUNCH
             Console.WriteLine(value);
 #endif
         }
@@ -79,6 +86,11 @@ namespace LambdastylePrototype
         public static bool AreOfTypes<T>(this IEnumerable<T> values, params Type[] types)
         {
             return values.Select(item => item.GetType()).SequenceEqual(types);
+        }
+
+        public static IEnumerable<T> ExceptLast<T>(this IEnumerable<T> source)
+        {
+            return source.Any() ? source.Except(source.Last().Enclose()) : source;
         }
 
         public static IEnumerable<T> Enclose<T>(this T item)
