@@ -11,20 +11,24 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
         public readonly PredicateContext Context;
         public readonly PredicateElement[] Elements;
         public readonly bool Writing;
+        public readonly Type[] AppliedCases;
 
-        public CaseContext(PredicateContext context, PredicateElement[] elements, bool writing)
+        public CaseContext(PredicateContext context, PredicateElement[] elements, bool writing,
+            params Type[] appliedCases)
         {
             Context = context;
             Elements = elements;
             Writing = writing;
+            AppliedCases = appliedCases;
         }
 
-        public CaseContext Copy(PredicateElement[] elements)
+        public CaseContext Copy(PredicateElement[] elements, Type[] appliedCases)
         {
             return new CaseContext(
                 context: Context,
                 elements: elements,
-                writing: Writing);
+                writing: Writing,
+                appliedCases: appliedCases);
         }
     }
 }

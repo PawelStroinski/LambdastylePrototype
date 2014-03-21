@@ -18,7 +18,7 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
             var elements = context.Elements;
             foreach (var @case in cases)
             {
-                var elementsAfterCase = @case.ApplyTo(context.Copy(elements));
+                var elementsAfterCase = @case.ApplyTo(context.Copy(elements, appliedCases.ToArray()));
                 if (!elementsAfterCase.SequenceEqual(elements))
                     appliedCases.Add(@case.GetType());
                 elements = elementsAfterCase;

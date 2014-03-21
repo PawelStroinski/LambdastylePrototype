@@ -8,5 +8,14 @@ namespace LambdastylePrototype.Interpreter.Predicates
 {
     class PredicateIdentity
     {
+#if DEBUG
+        readonly static Random random = new Random();
+        readonly int debuggingId = random.Next(100);
+
+        public override string ToString()
+        {
+            return debuggingId.ToString();
+        }
+#endif
     }
 }

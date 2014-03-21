@@ -60,6 +60,7 @@
     <Compile Include="Interpreter\Predicates\Cases\CaseContext.cs" />
     <Compile Include="Interpreter\Predicates\Cases\Joining.cs" />
     <Compile Include="Interpreter\Predicates\Cases\Opening.cs" />
+    <Compile Include="Interpreter\Predicates\Cases\TailBoundary.cs" />
     <Compile Include="Interpreter\Predicates\Cases\Wrapping.cs" />
     <Compile Include="Interpreter\Predicates\PredicateContext.cs" />
     <Compile Include="Interpreter\Predicates\PredicateIdentity.cs" />

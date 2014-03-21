@@ -114,6 +114,11 @@ namespace LambdastylePrototype
             return entries.Any(entry => entry.Tail);
         }
 
+        public static bool Contains<T>(this IEnumerable<Type> types)
+        {
+            return types.Contains(typeof(T));
+        }
+
         public static string EnforceComma(this string value)
         {
             return value.Contains(",") ? value : "," + value.IfEmpty(" ");

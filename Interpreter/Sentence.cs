@@ -48,7 +48,8 @@ namespace LambdastylePrototype.Interpreter
                 var predicateContext = new PredicateContext(context.GlobalState, context.Position,
                     applyingItem: appliesAtResult.PositiveLog.Contains<Item>(),
                     applyingTail: appliesAtResult.PositiveLog.ContainsTail(),
-                    applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any)));
+                    applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any)),
+                    applyingParent: isParent);
                 if (predicate.AppliesAt(predicateContext))
                 {
                     WritePreviousUntilSubjectOnce();

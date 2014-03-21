@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace LambdastylePrototype.Interpreter.Predicates.Cases
 {
@@ -28,12 +29,14 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
 
         bool AppliesAtOuter()
         {
-            return context.ApplyingTail && HasOuterValue() && !HasOuterId();
+            var tailOrParent = context.ApplyingTail || context.ApplyingParent;
+            return tailOrParent && HasOuterValue() && !HasOuterId();
         }
 
         bool AppliesAtInner()
         {
-            return context.ApplyingTail && HasInnerValue() && !HasOuterId() && !HasOuterValue();
+            var tailOrParent = context.ApplyingTail || context.ApplyingParent;
+            return tailOrParent && HasInnerValue() && !HasOuterId() && !HasOuterValue();
         }
 
         PredicateElement[] InsertOuterIdBeforeOuterValue()
