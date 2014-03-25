@@ -32,13 +32,15 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
             if (caseContext.AppliedCases.Contains<Tail>() && !applyingTail)
             {
                 var tokenType = context.Position.Last().TokenType;
-                var used = context.GlobalState.TailBoundaryUsed.Contains(context.PredicateIdentity);
-                if (tokenType.IsStart() && !used)
+                var used = context.GlobalState.TailBoundaryUsed;
+                var wasUsed = used.ContainsKey(context.PredicateIdentity);
+                if (tokenType.IsStart() && !wasUsed)
                 {
-                    context.GlobalState.TailBoundaryUsed.Add(context.PredicateIdentity);
+                    used[context.PredicateIdentity] = context.Position;
                     return true;
                 }
-                if (tokenType.IsEnd())
+                if (tokenType.IsEnd() && wasUsed
+                        && used[context.PredicateIdentity].SequenceEqual(context.Position.ExceptLast()))
                     return true;
             }
             return false;

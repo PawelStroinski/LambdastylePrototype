@@ -16,6 +16,7 @@ namespace LambdastylePrototype.Interpreter
         readonly Predicate predicate;
         readonly Sentence[] children;
         ApplyContext context;
+        bool childrenApplied;
 
         public Sentence(Subject subject, Predicate predicate, params Sentence[] children)
         {
@@ -30,7 +31,7 @@ namespace LambdastylePrototype.Interpreter
             this.children = new Sentence[0];
         }
 
-        public void Apply(ApplyContext context)
+        public virtual void Apply(ApplyContext context)
         {
             this.context = context;
             var appliesAtContext = new AppliesAtContext(context.Position);
@@ -40,6 +41,10 @@ namespace LambdastylePrototype.Interpreter
             {
                 Extension.WriteDebug(context.Position.ToDebugString());
                 Extension.WriteDebugLine(appliesAtResult.PositiveLog.ToDebugString());
+                context.SentenceScope.StartedApply(context);
+                ApplyChildren();
+                if (childrenApplied)
+                    return;
                 if (!isParent && appliesAtResult.PositiveLog.Contains<Parent>())
                 {
                     context.ParentScope.ParentFound(this);
@@ -57,6 +62,7 @@ namespace LambdastylePrototype.Interpreter
                     var toStringResult = predicate.ToString(predicateContext);
                     context.Write(toStringResult.Result, this, toStringResult.Rewind, toStringResult.SeekBy);
                 }
+                context.SentenceScope.EndedApply();
                 return;
             }
             if (context.Style.MoveNext())
@@ -102,6 +108,22 @@ namespace LambdastylePrototype.Interpreter
                         context.Write(context.Position.Last().DelimitersAfter, this, true, 0);
         }
 
+        void ApplyChildren()
+        {
+            childrenApplied = false;
+            if (children.Any())
+            {
+                var afterChildren = new MarkerSentence();
+                var childrenAndAfterChildren = children.Concat(afterChildren.Enclose());
+                var style = childrenAndAfterChildren.Cast<Sentence>().GetEnumerator();
+                style.MoveNext();
+                style.Current.Apply(context.Copy(style, this));
+                childrenApplied = !afterChildren.Reached;
+                if (childrenApplied && !context.SentenceScope.WillContinue())
+                    WriteSubjectlessChildrenFromEnd();
+            }
+        }
+
         void WritePreviousUntilSubjectOnce()
         {
             var previous = PreviousUntilSubjectReversed().Reverse().ToArray();
@@ -132,6 +154,15 @@ namespace LambdastylePrototype.Interpreter
                 context.Write(value, sentence, true, 0);
                 context.GlobalState.WrittenInThisObject = true;
             }
+        }
+
+        void WriteSubjectlessChildrenFromEnd()
+        {
+            foreach (var sentence in children
+                    .SkipWhile(child => child.HasSubject)
+                    .Where(child => !child.HasSubject))
+                context.Write(sentence.predicate.ToString(new PredicateContext(context.GlobalState)).Result,
+                    sentence, true, 0);
         }
 
         IEnumerable<Sentence> PreviousUntilSubjectReversed()

@@ -90,7 +90,7 @@ namespace LambdastylePrototype
 
         public static IEnumerable<T> ExceptLast<T>(this IEnumerable<T> source)
         {
-            return source.Any() ? source.Except(source.Last().Enclose()) : source;
+            return source.Any() ? source.Take(source.Count() - 1) : source;
         }
 
         public static IEnumerable<T> Enclose<T>(this T item)

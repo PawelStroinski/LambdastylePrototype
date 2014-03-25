@@ -24,6 +24,7 @@ namespace LambdastylePrototype
         PositionJsonReader reader;
         bool EOF;
         GlobalState globalState;
+        SentenceScope sentenceScope;
         Seeker seeker;
         ParentScope parentScope;
 
@@ -40,6 +41,7 @@ namespace LambdastylePrototype
             bool readResult;
             EOF = false;
             globalState = new GlobalState();
+            sentenceScope = new SentenceScope();
             output.InsertMode = true;
             using (writer = new StreamWriter(output))
             using (streamReader = new StreamReader(input))
@@ -86,6 +88,7 @@ namespace LambdastylePrototype
                                     write: Write,
                                     written: Written,
                                     globalState: globalState,
+                                    sentenceScope: sentenceScope,
                                     parentScope: parentScope);
         }
 
