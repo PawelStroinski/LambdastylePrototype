@@ -108,7 +108,9 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         bool Rewind()
         {
-            return context.ApplyingLiteral && !HasOuterId() && !cases.AppliedCase<Wrapping>();
+            if (context.ApplyingOr)
+                return true;
+            return context.ApplyingLiteral && !HasOuterId() && !HasRawPropertyName() && !cases.AppliedCase<Wrapping>();
         }
 
         void ChangeGlobalState(ToStringResult result)
@@ -119,6 +121,12 @@ namespace LambdastylePrototype.Interpreter.Predicates
             if (result.SeekBy != 0)
                 context.GlobalState.Seeked.Add(identity);
             context.GlobalState.LastApplyingTail = context.ApplyingTail;
+        }
+
+        bool HasRawPropertyName()
+        {
+            return elements.OfType<Raw>()
+                .Any(raw => Regex.IsMatch(input: raw.ToString(context).Result, pattern: Consts.PropertyName));
         }
     }
 }

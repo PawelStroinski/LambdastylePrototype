@@ -54,7 +54,8 @@ namespace LambdastylePrototype.Interpreter
                     applyingItem: appliesAtResult.PositiveLog.Contains<Item>(),
                     applyingTail: appliesAtResult.PositiveLog.ContainsTail(),
                     applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any)),
-                    applyingParent: isParent);
+                    applyingParent: isParent,
+                    applyingOr: appliesAtResult.PositiveLog.Contains<Or>());
                 if (predicate.AppliesAt(predicateContext))
                 {
                     WritePreviousUntilSubjectOnce();

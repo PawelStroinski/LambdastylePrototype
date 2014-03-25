@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace LambdastylePrototype.Interpreter.Subjects
 {
@@ -23,14 +24,20 @@ namespace LambdastylePrototype.Interpreter.Subjects
                 if (result.Result)
                 {
                     positiveLog.AddRange(result.PositiveLog);
-                    if (expressionIndex == expression.Length - 1)
-                        return Result(true, positiveLog.ToArray());
-                    expressionIndex++;
                     position = position.Skip(positionLength).ToArray();
                     positionLength = 1;
+                    if (expressionIndex == expression.Length - 1)
+                    {
+                        var tail = position.Any(step => step.TokenType == JsonToken.PropertyName);
+                        return Result(true, tail: tail, positiveLog: positiveLog.ToArray());
+                    }
+                    expressionIndex++;
                 }
                 else
-                    positionLength++;
+                    if (currentPosition.EndsWith(JsonToken.PropertyName))
+                        break;
+                    else
+                        positionLength++;
             }
             return Result(false);
         }

@@ -28,7 +28,9 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 var inItem = position.Take(position.Length - 1).Any(step => step.TokenType == JsonToken.StartArray);
                 var writtenRaw = context.GlobalState.WrittenRaw
                     .Any(tuple => tuple.Item1 == context.PredicateIdentity && tuple.Item2 == this);
-                if (inItem && !context.ApplyingItem && writtenRaw)
+                var tail = context.ApplyingTail || tokenType == JsonToken.StartObject;
+                var tailOrOr = tail || context.ApplyingOr;
+                if (inItem && !context.ApplyingItem && writtenRaw && tailOrOr)
                     return false;
                 var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity);
                 var atStartArray = tokenType == JsonToken.StartArray;

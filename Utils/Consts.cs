@@ -37,5 +37,7 @@ namespace LambdastylePrototype
         public static readonly string EndsWithEndObject = @"\}\s*$";
 
         public static readonly string EndsWithStartObject = @"\{\s*$";
+
+        public static readonly string PropertyName = StartsWithPropertyName + @"\s*$";
     }
 }
