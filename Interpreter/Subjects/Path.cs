@@ -34,7 +34,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
                     expressionIndex++;
                 }
                 else
-                    if (currentPosition.EndsWith(JsonToken.PropertyName))
+                    if (currentPosition.EndsWith(JsonToken.PropertyName) && expressionIndex > 0)
                         break;
                     else
                         positionLength++;
