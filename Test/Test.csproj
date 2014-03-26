@@ -78,7 +78,7 @@
     <Compile Include="input2.json\2 similar to rename value in menu only 2\Style.cs" />
     <Compile Include="input2.json\2 similar to rename value in menu only\Style.cs" />
     <Compile Include="input2.json\2 rename value in menu only\Style.cs" />
-    <Compile Include="input2.json\2 replace Open menu item with Export 2\Style.cs" />
+    <Compile Include="input2.json\2 similar to replace Open menu item with Export\Style.cs" />
     <Compile Include="input2.json\2 replace Open menu item with Export\Style.cs" />
     <Compile Include="input2.json\2 prepare for move popup as menu sibling 3\Style.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -140,7 +140,7 @@
     <Content Include="input2.json\2 similar to rename value in menu only 2\output.txt" />
     <Content Include="input2.json\2 similar to rename value in menu only\output.txt" />
     <Content Include="input2.json\2 rename value in menu only\output.txt" />
-    <Content Include="input2.json\2 replace Open menu item with Export 2\output.txt" />
+    <Content Include="input2.json\2 similar to replace Open menu item with Export\output.txt" />
     <Content Include="input2.json\2 replace Open menu item with Export\output.txt" />
   </ItemGroup>
   <ItemGroup>

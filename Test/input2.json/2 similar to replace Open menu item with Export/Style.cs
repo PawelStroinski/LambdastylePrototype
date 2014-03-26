@@ -8,7 +8,7 @@ using LambdastylePrototype.Interpreter;
 using LambdastylePrototype.Interpreter.Predicates;
 using LambdastylePrototype.Interpreter.Subjects;
 
-namespace Test.input2.json._2_replace_Open_menu_item_with_Export_2
+namespace Test.input2.json._2_similar_to_replace_Open_menu_item_with_Export
 {
     class Style
     {
