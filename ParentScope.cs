@@ -67,7 +67,7 @@ namespace LambdastylePrototype
         bool End()
         {
             var start = parentPosition.ExceptLast().Last(step => step.TokenType.IsStart());
-            var startIndex = parentPosition.ToList().IndexOf(start);
+            var startIndex = parentPosition.ToList().LastIndexOf(start);
             var positionAfterStart = position.Skip(startIndex + 1).ToArray();
             if (positionAfterStart.Any(step => step.TokenType.IsStart()))
                 return false;
