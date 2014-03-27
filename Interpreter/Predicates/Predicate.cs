@@ -26,19 +26,20 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public override bool AppliesAt(PredicateContext context)
         {
             this.context = context;
-            var elements = cases.ApplyTo(new CaseContext(ContextForCases(), this.elements, writing: false));
+            SetIdentityAndScope();
+            var elements = cases.ApplyTo(new CaseContext(GetContext(), this.elements, writing: false));
             return elements.Any(element => element.AppliesAt(context));
         }
 
         public override ToStringResult ToString(PredicateContext context)
         {
             this.context = context;
-            identity = HasOuterId() ? new PredicateIdentity() : identity;
+            SetIdentityAndScope();
             var result = string.Empty;
             var seekBy = 0;
             var delimitersBefore = true;
             var previousElement = (PredicateElement)null;
-            var elements = cases.ApplyTo(new CaseContext(ContextForCases(), this.elements, writing: true));
+            var elements = cases.ApplyTo(new CaseContext(GetContext(), this.elements, writing: true));
             foreach (var element in elements)
             {
                 var elementContext = context.Copy(hasOuter: HasOuter(),
@@ -64,6 +65,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 result = InsertStartToken(result);
             var toStringResult = new ToStringResult(result, seekBy: seekBy, rewind: Rewind());
             ChangeGlobalState(toStringResult);
+            WriteDebug(toStringResult);
             return toStringResult;
         }
 
@@ -82,7 +84,13 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return HasOuterValue() || HasOuterId();
         }
 
-        PredicateContext ContextForCases()
+        void SetIdentityAndScope()
+        {
+            identity = HasOuterId() ? new PredicateIdentity() : identity;
+            context.GlobalState.PredicateScope.Change(GetContext());
+        }
+
+        PredicateContext GetContext()
         {
             return context.Copy(hasOuter: HasOuter(), delimitersBefore: false, predicateIdentity: identity);
         }
@@ -121,6 +129,12 @@ namespace LambdastylePrototype.Interpreter.Predicates
             if (result.SeekBy != 0)
                 context.GlobalState.Seeked.Add(identity);
             context.GlobalState.LastApplyingTail = context.ApplyingTail;
+            context.GlobalState.PredicateScope.SetWritten();
+        }
+
+        void WriteDebug(ToStringResult toStringResult)
+        {
+            Extension.WriteDebugLine(toStringResult.ToString() + "   " + cases.ToString() + Environment.NewLine);
         }
 
         bool HasRawPropertyName()

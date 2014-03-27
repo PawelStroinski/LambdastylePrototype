@@ -25,7 +25,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
         {
             var delimitersBefore = context.DelimitersBefore ? context.Position.Last().DelimitersBefore : string.Empty;
             var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity)
-                && !context.ApplyingItem && !context.ApplyingTail && !context.GlobalState.LastApplyingTail;
+                && !context.ApplyingItem && !context.ApplyingTail && !context.GlobalState.LastApplyingTail
+                && !context.ApplyingParent;
             var seeked = context.GlobalState.Seeked.Contains(context.PredicateIdentity);
             var seekBy = 0;
             if (writtenEndArray && context.DelimitersBefore)

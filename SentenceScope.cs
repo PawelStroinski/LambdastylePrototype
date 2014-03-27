@@ -14,26 +14,17 @@ namespace LambdastylePrototype
         ApplyContext context;
         JsonToken tokenType;
 
-        public void StartedApply(ApplyContext context)
+        public void Change(ApplyContext context)
         {
             this.context = context;
             tokenType = context.Position.Last().TokenType;
-            if (IsStart() && !Started())
+            if (IsStart() && !Continues())
                 startsAt[context.Style.Current] = context.Position;
-        }
-
-        public bool WillContinue()
-        {
-            return Started() && !IsEnd();
-        }
-
-        public void EndedApply()
-        {
             if (IsEnd())
                 startsAt.Remove(context.Style.Current);
         }
 
-        bool Started()
+        public bool Continues()
         {
             return startsAt.ContainsKey(context.Style.Current);
         }
@@ -45,7 +36,7 @@ namespace LambdastylePrototype
 
         bool IsEnd()
         {
-            return tokenType.IsEnd() && Started()
+            return tokenType.IsEnd() && Continues()
                 && startsAt[context.Style.Current].SequenceEqual(context.Position.ExceptLast());
         }
     }

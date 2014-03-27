@@ -65,6 +65,7 @@
     <Compile Include="Interpreter\Predicates\Cases\Wrapping.cs" />
     <Compile Include="Interpreter\Predicates\PredicateContext.cs" />
     <Compile Include="Interpreter\Predicates\PredicateIdentity.cs" />
+    <Compile Include="Interpreter\Predicates\PredicateScope.cs" />
     <Compile Include="Interpreter\Predicates\Proxy.cs" />
     <Compile Include="Interpreter\Predicates\Cases\Case.cs" />
     <Compile Include="Interpreter\Predicates\Cases\AllCases.cs" />

@@ -30,5 +30,15 @@ namespace LambdastylePrototype.Interpreter.Predicates
             : this(result: result, hasDelimitersBefore: false, seekBy: seekBy, rewind: rewind)
         {
         }
+
+        public override string ToString()
+        {
+            var result = "'" + Result + "'";
+            if (SeekBy != 0)
+                result += "   SeekBy " + SeekBy;
+            if (Rewind)
+                result += "   Rewind";
+            return result;
+        }
     }
 }

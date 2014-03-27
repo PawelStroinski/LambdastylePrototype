@@ -13,10 +13,13 @@ namespace LambdastylePrototype
     {
         public static string ToDebugString(this IEnumerable<LogEntry> entries)
         {
-            return string.Join(" ", entries.Select(entry => "<"
-                + entry.Type.Name.ToString()
-                + (entry.Tail ? "[TAIL]" : string.Empty)
-                + ">")) + Environment.NewLine;
+            if (entries.Any())
+                return string.Join(" ", entries.Select(entry => "<"
+                    + entry.Type.Name.ToString()
+                    + (entry.Tail ? "[TAIL]" : string.Empty)
+                    + ">")) + Environment.NewLine;
+            else
+                return string.Empty;
         }
 
         public static string ToDebugString(this PositionStep[] position)
@@ -67,6 +70,11 @@ namespace LambdastylePrototype
         public static bool EndsWith(this PositionStep[] position, JsonToken tokenType)
         {
             return position.Any() && position.Last().TokenType == tokenType;
+        }
+
+        public static JsonToken LastTokenType(this PositionStep[] position)
+        {
+            return position.Any() ? position.Last().TokenType : JsonToken.None;
         }
 
         public static void WriteDebug(string value)

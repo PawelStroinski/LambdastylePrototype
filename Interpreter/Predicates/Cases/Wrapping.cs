@@ -29,7 +29,8 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
             var elementsList = elements.ToList();
             var lastRawIsAfterOuterValue = lastRaw != null && lastOuterValue != null
                 && elementsList.IndexOf(lastRaw) > elementsList.IndexOf(lastOuterValue);
-            var applyingTail = context.ApplyingTail || context.GlobalState.LastApplyingTail;
+            var applyingTail = context.ApplyingTail || context.GlobalState.LastApplyingTail
+                || context.GlobalState.PredicateScope.Written();
             return lastRawIsAfterOuterValue && applyingTail;
         }
 

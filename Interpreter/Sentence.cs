@@ -41,7 +41,7 @@ namespace LambdastylePrototype.Interpreter
             {
                 Extension.WriteDebug(context.Position.ToDebugString());
                 Extension.WriteDebugLine(appliesAtResult.PositiveLog.ToDebugString());
-                context.SentenceScope.StartedApply(context);
+                context.SentenceScope.Change(context);
                 ApplyChildren();
                 if (childrenApplied)
                     return;
@@ -63,7 +63,6 @@ namespace LambdastylePrototype.Interpreter
                     var toStringResult = predicate.ToString(predicateContext);
                     context.Write(toStringResult.Result, this, toStringResult.Rewind, toStringResult.SeekBy);
                 }
-                context.SentenceScope.EndedApply();
                 return;
             }
             if (context.Style.MoveNext())
@@ -102,7 +101,7 @@ namespace LambdastylePrototype.Interpreter
                 {
                     var endToken = context.GlobalState.InsertedStartToken == JsonToken.StartObject ? "}" : "]";
                     endToken = (context.GlobalState.WrittenNewLine ? Environment.NewLine : " ") + endToken;
-                    context.Write(endToken, this, true, 0);
+                    context.Write(endToken, this, false, 0);
                 }
                 else
                     if (context.Position.Last().DelimitersAfter != string.Empty)
@@ -120,7 +119,7 @@ namespace LambdastylePrototype.Interpreter
                 style.MoveNext();
                 style.Current.Apply(context.Copy(style, this));
                 childrenApplied = !afterChildren.Reached;
-                if (childrenApplied && !context.SentenceScope.WillContinue())
+                if (childrenApplied && !context.SentenceScope.Continues())
                     WriteSubjectlessChildrenFromEnd();
             }
         }

@@ -28,5 +28,6 @@ namespace LambdastylePrototype
         public string Last2ndLevelDelimitersBefore;
         public Raw Joining;
         public bool LastApplyingTail;
+        public readonly PredicateScope PredicateScope = new PredicateScope();
     }
 }

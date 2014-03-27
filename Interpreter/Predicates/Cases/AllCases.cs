@@ -44,5 +44,10 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
                 .Cast<Case>()
                 .ToArray();
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", appliedCases.Select(@case => @case.Name.ToString()));
+        }
     }
 }
