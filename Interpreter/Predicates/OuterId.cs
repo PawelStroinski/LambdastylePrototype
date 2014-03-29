@@ -30,7 +30,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.WrittenOuter)
                 delimitersBefore = string.Empty;
             if (!context.GlobalState.WrittenInThisObject && delimitersBefore.Contains(","))
-                delimitersBefore = RemoveExcessiveDelimiters(delimitersBefore);
+                delimitersBefore = delimitersBefore.Replace(",", string.Empty);
             if (context.GlobalState.WrittenInThisObject && context.DelimitersBefore)
                 delimitersBefore = delimitersBefore.EnforceComma();
             context.GlobalState.WrittenOuter = true;
@@ -38,16 +38,6 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return Result(string.Format("{0}\"{1}\"{2}",
                     delimitersBefore, propertyName.Value, propertyName.DelimitersAfter),
                 hasDelimitersBefore: delimitersBefore != string.Empty);
-        }
-
-        string RemoveExcessiveDelimiters(string delimiters)
-        {
-            delimiters = delimiters.Replace(",", string.Empty);
-            var lastLineBreak = Math.Max(delimiters.LastIndexOf('\r'), delimiters.LastIndexOf('\n'));
-            if (lastLineBreak == -1)
-                return delimiters;
-            delimiters = delimiters.Substring(lastLineBreak + 1);
-            return delimiters.Length > 1 ? delimiters.Substring(1) : delimiters;
         }
     }
 }
