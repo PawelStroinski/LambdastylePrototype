@@ -117,8 +117,13 @@ namespace LambdastylePrototype.Interpreter
                 var childrenAndAfterChildren = children.Concat(afterChildren.Enclose());
                 var style = childrenAndAfterChildren.Cast<Sentence>().GetEnumerator();
                 style.MoveNext();
-                style.Current.Apply(context.Copy(style, this));
+                var child = style.Current;
+                context.GlobalState.Scope.Start(child, writtenCurrent: context.Written(this));
+                child.Apply(context.Copy(style, this));
+                context.GlobalState.Scope.ReturnToPrevious();
                 childrenApplied = !afterChildren.Reached;
+                if (!childrenApplied)
+                    context.GlobalState.Scope.Forget(child);
                 if (childrenApplied && !context.SentenceScope.Continues())
                     WriteSubjectlessChildrenFromEnd();
             }
