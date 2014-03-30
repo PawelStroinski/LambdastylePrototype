@@ -125,7 +125,7 @@ namespace LambdastylePrototype.Interpreter
         void ApplyChildren()
         {
             if (children.Any() && !context.SentenceScope.Continues())
-                context.Spawn(children);
+                context.Spawn(EnsureThatEachChildWithValueHasSubject());
         }
 
         void WritePreviousUntilSubjectOnce()
@@ -176,6 +176,16 @@ namespace LambdastylePrototype.Interpreter
                     break;
                 else
                     yield return sentence;
+        }
+
+        Sentence[] EnsureThatEachChildWithValueHasSubject()
+        {
+            var replacement = children
+                .Select(child => child.predicate.HasValue() && !child.HasSubject
+                    ? new Sentence(subject, child.predicate, child.children)
+                    : child)
+                .ToArray();
+            return replacement;
         }
 
         bool HasSubject { get { return subject != null; } }

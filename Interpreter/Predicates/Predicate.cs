@@ -79,6 +79,11 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return elements.Any(element => element is OuterId);
         }
 
+        public bool HasValue()
+        {
+            return elements.Any(element => element is ValueBase);
+        }
+
         bool HasOuter()
         {
             return HasOuterValue() || HasOuterId();
