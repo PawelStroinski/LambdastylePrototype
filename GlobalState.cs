@@ -14,11 +14,7 @@ namespace LambdastylePrototype
         public bool? ForceSyntax;
         public bool Written;
         public bool WrittenOuter;
-        public bool WrittenInThisObject
-        {
-            get { return Scope.Current.WrittenInThisObject; }
-            set { Scope.Current.WrittenInThisObject = value; }
-        }
+        public bool WrittenInThisObject;
         public bool WrittenNewLine;
         public List<PredicateIdentity> WrittenEndArray = new List<PredicateIdentity>();
         public List<Tuple<PredicateIdentity, Raw>> WrittenRaw = new List<Tuple<PredicateIdentity, Raw>>();
@@ -33,6 +29,14 @@ namespace LambdastylePrototype
         public Raw Joining;
         public bool LastApplyingTail;
         public readonly PredicateScope PredicateScope = new PredicateScope();
-        public readonly GlobalStateScope Scope = new GlobalStateScope();
+
+        public GlobalState Copy()
+        {
+            var copy = new GlobalState();
+            copy.Written = Written;
+            copy.WrittenOuter = WrittenOuter;
+            copy.WrittenInThisObject = WrittenInThisObject;
+            return copy;
+        }
     }
 }

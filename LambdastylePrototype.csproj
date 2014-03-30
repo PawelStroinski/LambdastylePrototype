@@ -88,7 +88,6 @@
     <Compile Include="Interpreter\Subjects\Null.cs" />
     <Compile Include="Interpreter\Subjects\RegExp.cs" />
     <Compile Include="Interpreter\Subjects\Any.cs" />
-    <Compile Include="GlobalStateScope.cs" />
     <Compile Include="Processor.cs" />
     <Compile Include="ParentScope.cs" />
     <Compile Include="SentenceScope.cs" />

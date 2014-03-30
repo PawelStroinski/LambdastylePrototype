@@ -19,6 +19,8 @@ namespace LambdastylePrototype
         readonly IEnumerator<Sentence> styleEnumerator;
         readonly Dictionary<Sentence, long> startsAt = new Dictionary<Sentence, long>();
         readonly Dictionary<Sentence, long> endsAt = new Dictionary<Sentence, long>();
+        readonly PositionStep[] spawnerPosition;
+        readonly GlobalState spawnerGlobalState;
         StreamWriter writer;
         StreamReader streamReader;
         PositionJsonReader reader;
@@ -36,16 +38,26 @@ namespace LambdastylePrototype
             this.styleEnumerator = style.Cast<Sentence>().GetEnumerator();
         }
 
+        Processor(Stream input, EditableStream output, Sentence[] style, PositionStep[] spawnerPosition,
+                  GlobalState spawnerGlobalState)
+            : this(input, output, style)
+        {
+            this.spawnerPosition = spawnerPosition;
+            this.spawnerGlobalState = spawnerGlobalState;
+        }
+
         public void Process()
         {
             bool readResult;
             EOF = false;
-            globalState = new GlobalState();
+            globalState = spawnerGlobalState == null ? new GlobalState() : spawnerGlobalState.Copy();
             sentenceScope = new SentenceScope();
             output.InsertMode = true;
             using (writer = new StreamWriter(output))
-            using (streamReader = new StreamReader(input))
+            using (streamReader = new StreamReader(input, Encoding.UTF8, true, 1024, leaveOpen: true))
             {
+                var inputPosition = input.Position;
+                input.Position = 0;
                 reader = new PositionJsonReader(new JsonTextReader(streamReader, grabDelimiters: true));
                 reader.CloseInput = false;
                 seeker = new Seeker(output, globalState, streamReader, ReplaceReader, reader);
@@ -54,13 +66,11 @@ namespace LambdastylePrototype
                 {
                     if (!style.Any())
                         return;
-                    styleEnumerator.Reset();
-                    styleEnumerator.MoveNext();
+                    styleEnumerator.ResetAndMoveNext();
                     styleEnumerator.Current.ApplyBOF(CreateContext(reader));
                     do
                     {
-                        styleEnumerator.Reset();
-                        styleEnumerator.MoveNext();
+                        styleEnumerator.ResetAndMoveNext();
                         parentScope.BeforePositionChange(reader.Position);
                         readResult = reader.Read();
                         if (readResult && !reader.Position.EndsWith(JsonToken.PropertyName))
@@ -77,6 +87,7 @@ namespace LambdastylePrototype
                 {
                     reader.Dispose();
                     parentScope.Dispose();
+                    input.Position = inputPosition;
                 }
             }
         }
@@ -87,9 +98,12 @@ namespace LambdastylePrototype
                                     position: reader.Position,
                                     write: Write,
                                     written: Written,
+                                    spawn: Spawn,
+                                    spawnerPosition: spawnerPosition,
                                     globalState: globalState,
                                     sentenceScope: sentenceScope,
-                                    parentScope: parentScope);
+                                    parentScope: parentScope,
+                                    silent: false);
         }
 
         void Write(string value, Sentence sentence, bool rewind, int seekBy)
@@ -108,6 +122,13 @@ namespace LambdastylePrototype
             if (rewind)
                 endsAt[sentence] = output.Position;
             RewindOutputToEOF();
+        }
+
+        void Spawn(params Sentence[] style)
+        {
+            var spawned = new Processor(input, output, style, spawnerPosition: reader.Position,
+                spawnerGlobalState: globalState);
+            spawned.Process();
         }
 
         void RewindOutputTo(Sentence sentence, Sentence beingWritten)

@@ -16,7 +16,6 @@ namespace LambdastylePrototype.Interpreter
         readonly Predicate predicate;
         readonly Sentence[] children;
         ApplyContext context;
-        bool childrenApplied;
 
         public Sentence(Subject subject, Predicate predicate, params Sentence[] children)
         {
@@ -39,30 +38,30 @@ namespace LambdastylePrototype.Interpreter
             var isParent = context.ParentScope.IsParent(this);
             if (appliesAtResult.Result || isParent)
             {
+                if (context.Silent)
+                    return;
                 Extension.WriteDebug(context.Position.ToDebugString());
                 Extension.WriteDebugLine(appliesAtResult.PositiveLog.ToDebugString());
-                context.SentenceScope.Change(context);
-                ApplyChildren();
-                if (childrenApplied)
-                    return;
                 if (!isParent && appliesAtResult.PositiveLog.Contains<Parent>())
                 {
                     context.ParentScope.ParentFound(this);
                     return;
                 }
+                context.SentenceScope.Change(context);
                 var predicateContext = new PredicateContext(context.GlobalState, context.Position,
                     applyingItem: appliesAtResult.PositiveLog.Contains<Item>(),
                     applyingTail: appliesAtResult.PositiveLog.ContainsTail(),
                     applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any)),
                     applyingParent: isParent,
                     applyingOr: appliesAtResult.PositiveLog.Contains<Or>());
-                if (predicate.AppliesAt(predicateContext))
+                if (predicate.AppliesAt(predicateContext) && !ChildApplies())
                 {
                     WritePreviousUntilSubjectOnce();
                     WriteSubjectlessSkippedUntilEnd();
                     var toStringResult = predicate.ToString(predicateContext);
                     context.Write(toStringResult.Result, this, toStringResult.Rewind, toStringResult.SeekBy);
                 }
+                ApplyChildren();
                 return;
             }
             if (context.Style.MoveNext())
@@ -108,25 +107,25 @@ namespace LambdastylePrototype.Interpreter
                         context.Write(context.Position.Last().DelimitersAfter, this, true, 0);
         }
 
-        void ApplyChildren()
+        bool ChildApplies()
         {
-            childrenApplied = false;
             if (children.Any())
             {
                 var afterChildren = new MarkerSentence();
                 var childrenAndAfterChildren = children.Concat(afterChildren.Enclose());
-                var style = childrenAndAfterChildren.Cast<Sentence>().GetEnumerator();
-                style.MoveNext();
-                var child = style.Current;
-                context.GlobalState.Scope.Start(child, writtenCurrent: context.Written(this));
-                child.Apply(context.Copy(style, this));
-                context.GlobalState.Scope.ReturnToPrevious();
-                childrenApplied = !afterChildren.Reached;
-                if (!childrenApplied)
-                    context.GlobalState.Scope.Forget(child);
-                if (childrenApplied && !context.SentenceScope.Continues())
-                    WriteSubjectlessChildrenFromEnd();
+                var childrenStyle = childrenAndAfterChildren.Cast<Sentence>().GetEnumerator();
+                childrenStyle.MoveNext();
+                childrenStyle.Current.Apply(context.Copy(style: childrenStyle, silent: true, caller: this));
+                return !afterChildren.Reached;
             }
+            else
+                return false;
+        }
+
+        void ApplyChildren()
+        {
+            if (children.Any() && !context.SentenceScope.Continues())
+                context.Spawn(children);
         }
 
         void WritePreviousUntilSubjectOnce()

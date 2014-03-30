@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -135,6 +136,12 @@ namespace LambdastylePrototype
         public static string IfEmpty(this string value, string ifEmpty)
         {
             return value == string.Empty ? ifEmpty : value;
+        }
+
+        public static void ResetAndMoveNext(this IEnumerator enumerator)
+        {
+            enumerator.Reset();
+            enumerator.MoveNext();
         }
     }
 }
