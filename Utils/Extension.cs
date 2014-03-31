@@ -82,6 +82,7 @@ namespace LambdastylePrototype
         {
 #if !NCRUNCH
             Console.Write(value);
+            NLog.LogManager.GetCurrentClassLogger().Debug(value);
 #endif
         }
 
@@ -89,6 +90,7 @@ namespace LambdastylePrototype
         {
 #if !NCRUNCH
             Console.WriteLine(value);
+            NLog.LogManager.GetCurrentClassLogger().Debug(value + Environment.NewLine);
 #endif
         }
 
