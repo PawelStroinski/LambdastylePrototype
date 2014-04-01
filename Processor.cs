@@ -71,8 +71,7 @@ namespace LambdastylePrototype
                     do
                     {
                         styleEnumerator.ResetAndMoveNext();
-                        parentScope.BeforePositionChange(reader.Position);
-                        readResult = reader.Read();
+                        readResult = parentScope.JustFoundParent || reader.Read();
                         if (readResult && !reader.Position.EndsWith(JsonToken.PropertyName))
                         {
                             parentScope.PositionChanged(reader.Position);

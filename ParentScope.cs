@@ -22,21 +22,12 @@ namespace LambdastylePrototype
             this.seeker = seeker;
         }
 
-        public void BeforePositionChange(PositionStep[] previousPosition)
-        {
-            if (previousPosition.Any() && previousPosition.Last().TokenType.IsStart())
-                foreach (var anchor in anchors.ExceptLast().ToList())
-                {
-                    anchors.Remove(anchor);
-                    if (!seeker.IsCurrentReader(anchor))
-                        anchor.Dispose();
-                }
-            anchors.Add(seeker.GetAnchor());
-        }
+        public bool JustFoundParent { get; private set; }
 
         public void PositionChanged(PositionStep[] newPosition)
         {
             position = newPosition;
+            AddRemoveAnchor();
             if (ending)
             {
                 ending = false;
@@ -44,13 +35,16 @@ namespace LambdastylePrototype
             }
             if (parent != null && End())
                 ending = true;
+            JustFoundParent = false;
         }
 
         public void ParentFound(Sentence parent)
         {
             this.parent = parent;
             this.parentPosition = position;
-            seeker.Seek(anchors.First());
+            var anchor = position.LastTokenType().IsStart() ? anchors.Penultimate() : anchors.Last();
+            seeker.Seek(anchor);
+            JustFoundParent = true;
         }
 
         public bool IsParent(Sentence sentence)
@@ -64,10 +58,25 @@ namespace LambdastylePrototype
                 anchor.Dispose();
         }
 
+        void AddRemoveAnchor()
+        {
+            var tokenType = position.LastTokenType();
+            if (tokenType.IsStart())
+                anchors.Add(seeker.GetAnchor());
+            else
+                if (tokenType.IsEnd())
+                {
+                    var anchor = anchors.Last();
+                    if (!seeker.IsCurrentReader(anchor))
+                        anchor.Dispose();
+                    anchors.Remove(anchor);
+                }
+        }
+
         bool End()
         {
             var start = parentPosition.ExceptLast().Last(step => step.TokenType.IsStart());
-            var startIndex = parentPosition.ToList().LastIndexOf(start);
+            var startIndex = parentPosition.ExceptLast().ToList().LastIndexOf(start);
             var positionAfterStart = position.Skip(startIndex + 1).ToArray();
             if (positionAfterStart.Any(step => step.TokenType.IsStart()))
                 return false;
