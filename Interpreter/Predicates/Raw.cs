@@ -56,6 +56,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
                     delimitersBefore = position.Penultimate().DelimitersBefore;
                 if (!context.GlobalState.WrittenInThisObject)
                     delimitersBefore = delimitersBefore.Replace(",", string.Empty);
+                if (raw.EndsWith("{") && context.GlobalState.ForceSyntax.Value)
+                    context.GlobalState.WrittenInThisObject = false;
             }
             context.GlobalState.WrittenRaw.Add(new Tuple<PredicateIdentity, Raw>(context.PredicateIdentity, this));
             return Result(delimitersBefore + raw, hasDelimitersBefore: delimitersBefore != string.Empty);

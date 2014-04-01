@@ -63,6 +63,7 @@
     <Compile Include="input1.json\1_1 add key at the end of file 2\Style.cs" />
     <Compile Include="input2.json\2 add Export menu item\Style.cs" />
     <Compile Include="input2.json\2 change id to file2\Style.cs" />
+    <Compile Include="input2.json\2 move popup as menu sibling 2\Style.cs" />
     <Compile Include="input2.json\2 move popup as menu sibling\Style.cs" />
     <Compile Include="input2.json\2 prepare for move popup as menu sibling 2\Style.cs" />
     <Compile Include="input2.json\2 prepare for move popup as menu sibling 4\Style.cs" />
@@ -79,6 +80,8 @@
     <Compile Include="input2.json\2 similar to move popup as menu sibling 3\Style.cs" />
     <Compile Include="input2.json\2 similar to move popup as menu sibling 4\Style.cs" />
     <Compile Include="input2.json\2 similar to move popup as menu sibling 5\Style.cs" />
+    <Compile Include="input2.json\2 similar to move popup as menu sibling 6\Style.cs" />
+    <Compile Include="input2.json\2 similar to move popup as menu sibling 7\Style.cs" />
     <Compile Include="input2.json\2 similar to move popup as menu sibling\Style.cs" />
     <Compile Include="input2.json\2 similar to rename value in menu only 2\Style.cs" />
     <Compile Include="input2.json\2 similar to rename value in menu only\Style.cs" />
@@ -132,6 +135,7 @@
     </Content>
     <Content Include="input2.json\2 add Export menu item\output.txt" />
     <Content Include="input2.json\2 change id to file2\output.txt" />
+    <Content Include="input2.json\2 move popup as menu sibling 2\output.txt" />
     <Content Include="input2.json\2 move popup as menu sibling\output.txt" />
     <Content Include="input2.json\2 prepare for move popup as menu sibling 2\output.txt" />
     <Content Include="input2.json\2 prepare for move popup as menu sibling 3\output.txt" />
@@ -149,6 +153,8 @@
     <Content Include="input2.json\2 similar to move popup as menu sibling 3\output.txt" />
     <Content Include="input2.json\2 similar to move popup as menu sibling 4\output.txt" />
     <Content Include="input2.json\2 similar to move popup as menu sibling 5\output.txt" />
+    <Content Include="input2.json\2 similar to move popup as menu sibling 6\output.txt" />
+    <Content Include="input2.json\2 similar to move popup as menu sibling 7\output.txt" />
     <Content Include="input2.json\2 similar to move popup as menu sibling\output.txt" />
     <Content Include="input2.json\2 similar to rename value in menu only 2\output.txt" />
     <Content Include="input2.json\2 similar to rename value in menu only\output.txt" />

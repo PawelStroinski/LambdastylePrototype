@@ -89,9 +89,14 @@ namespace LambdastylePrototype.Interpreter.Predicates
             return HasOuterValue() || HasOuterId();
         }
 
+        bool HasInnerValue()
+        {
+            return elements.Any(element => element is InnerValue);
+        }
+
         void SetIdentityAndScope()
         {
-            identity = HasOuterId() ? new PredicateIdentity() : identity;
+            identity = HasOuterId() && !HasInnerValue() ? new PredicateIdentity() : identity;
             context.GlobalState.PredicateScope.Change(GetContext());
         }
 

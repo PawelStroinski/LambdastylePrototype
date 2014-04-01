@@ -21,7 +21,10 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
             context = caseContext.Context;
             elements = caseContext.Elements;
             if (AppliesAt())
+            {
+                Extension.WriteDebugLine("[TailBoundary]");
                 return new PredicateElement[0];
+            }
             else
                 return elements;
         }
