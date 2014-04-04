@@ -102,7 +102,8 @@ namespace LambdastylePrototype
                                     globalState: globalState,
                                     sentenceScope: sentenceScope,
                                     parentScope: parentScope,
-                                    silent: false);
+                                    scan: false,
+                                    strict: false);
         }
 
         void Write(string value, Sentence sentence, bool rewind, int seekBy)

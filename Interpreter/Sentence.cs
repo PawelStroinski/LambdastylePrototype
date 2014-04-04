@@ -33,12 +33,13 @@ namespace LambdastylePrototype.Interpreter
         public virtual void Apply(ApplyContext context)
         {
             this.context = context;
-            var appliesAtContext = new AppliesAtContext(context.Position);
+            var appliesAtContext = new AppliesAtContext(context.Position, strict: context.Strict);
             var appliesAtResult = HasSubject ? subject.AppliesAt(appliesAtContext) : new AppliesAtResult(false);
             var isParent = context.ParentScope.IsParent(this);
+            var nextContext = context.Copy(this);
             if (appliesAtResult.Result || isParent)
             {
-                if (context.Silent)
+                if (context.Scan)
                     return;
                 Extension.WriteDebug(context.Position.ToDebugString());
                 Extension.WriteDebugLine(appliesAtResult.PositiveLog.ToDebugString());
@@ -62,10 +63,10 @@ namespace LambdastylePrototype.Interpreter
                     context.Write(toStringResult.Result, this, toStringResult.Rewind, toStringResult.SeekBy);
                 }
                 ApplyChildren();
-                return;
+                nextContext = context.Copy(caller: this, strict: true);
             }
             if (context.Style.MoveNext())
-                context.Style.Current.Apply(context.Copy(this));
+                context.Style.Current.Apply(nextContext);
         }
 
         public void ApplyBOF(ApplyContext context)
@@ -115,7 +116,7 @@ namespace LambdastylePrototype.Interpreter
                 var childrenAndAfterChildren = children.Concat(afterChildren.Enclose());
                 var childrenStyle = childrenAndAfterChildren.Cast<Sentence>().GetEnumerator();
                 childrenStyle.MoveNext();
-                childrenStyle.Current.Apply(context.Copy(style: childrenStyle, silent: true, caller: this));
+                childrenStyle.Current.Apply(context.Copy(caller: this, style: childrenStyle, scan: true));
                 return !afterChildren.Reached;
             }
             else

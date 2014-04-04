@@ -27,6 +27,8 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         protected AppliesAtResult AllAppliesAt(AppliesAtContext context)
         {
+            if (RejectByStrictness(context))
+                return Result(false);
             var results = expression.Select(element => element.AppliesAt(context)).ToArray();
             return Result(results.All(result => result.Result),
                 results
@@ -36,6 +38,8 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         protected AppliesAtResult AnyAppliesAt(AppliesAtContext context, bool tail = false)
         {
+            if (RejectByStrictness(context))
+                return Result(false);
             var results = expression.Select(element => element.AppliesAt(context)).ToArray();
             return Result(results.Any(result => result.Result), tail: tail,
                 positiveLog: results
@@ -57,6 +61,13 @@ namespace LambdastylePrototype.Interpreter.Subjects
                     .ToArray());
             else
                 return new AppliesAtResult(false);
+        }
+
+        bool RejectByStrictness(AppliesAtContext context)
+        {
+            return context.Strict
+                && expression.Select(element => element.GetType())
+                    .Any(type => type != typeof(Id) && type != typeof(Literal));
         }
     }
 }

@@ -20,7 +20,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
             while (positionLength <= position.Length && expressionIndex < expression.Length)
             {
                 var currentPosition = position.Take(positionLength).ToArray();
-                var result = expression[expressionIndex].AppliesAt(new AppliesAtContext(currentPosition));
+                var result = expression[expressionIndex].AppliesAt(context.Copy(currentPosition));
                 if (result.Result)
                 {
                     positiveLog.AddRange(result.PositiveLog);

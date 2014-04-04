@@ -21,14 +21,14 @@ namespace LambdastylePrototype.Interpreter.Subjects
             {
                 var lastPropertyName = propertyNames.Skip(propertyNames.Length - 1).ToArray();
                 var propertyNamesWithoutLast = propertyNames.Take(propertyNames.Length - 1).ToArray();
-                var result = AnyAppliesAt(new AppliesAtContext(lastPropertyName));
+                var result = AnyAppliesAt(context.Copy(lastPropertyName));
                 if (result.Result)
                     return result;
                 else
-                    return AnyAppliesAt(new AppliesAtContext(propertyNamesWithoutLast), tail: true);
+                    return AnyAppliesAt(context.Copy(propertyNamesWithoutLast), tail: true);
             }
             else
-                return AnyAppliesAt(new AppliesAtContext(propertyNames));
+                return AnyAppliesAt(context.Copy(propertyNames));
         }
     }
 }

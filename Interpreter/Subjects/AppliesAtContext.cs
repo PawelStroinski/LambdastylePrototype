@@ -9,10 +9,17 @@ namespace LambdastylePrototype.Interpreter.Subjects
     struct AppliesAtContext
     {
         public readonly PositionStep[] Position;
+        public readonly bool Strict;
 
-        public AppliesAtContext(PositionStep[] position)
+        public AppliesAtContext(PositionStep[] position, bool strict)
         {
             Position = position;
+            Strict = strict;
+        }
+
+        public AppliesAtContext Copy(PositionStep[] position)
+        {
+            return new AppliesAtContext(position, Strict);
         }
     }
 }
