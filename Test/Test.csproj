@@ -89,12 +89,16 @@
     <Compile Include="input2.json\2 similar to replace Open menu item with Export\Style.cs" />
     <Compile Include="input2.json\2 replace Open menu item with Export\Style.cs" />
     <Compile Include="input2.json\2 prepare for move popup as menu sibling 3\Style.cs" />
+    <Compile Include="input2.json\2 similar to convert widget to an array\Style.cs" />
+    <Compile Include="input3.json\3 convert widget to an array\Style.cs" />
     <Compile Include="input3.json\3 copy image as a widget sibling\Style.cs" />
     <Compile Include="input3.json\3 copy image as image2\Style.cs" />
     <Compile Include="input3.json\3 ParentScope bugs\Style.cs" />
     <Compile Include="input3.json\3 replace name sun1 with sun2\Style.cs" />
+    <Compile Include="input3.json\3 similar to convert widget to an array 2\Style.cs" />
     <Compile Include="input3.json\3 similar to convert widget to an array\Style.cs" />
     <Compile Include="input3.json\3 swap offsets in text\Style.cs" />
+    <Compile Include="input3.json\3 similar to convert widget to an array 3\Style.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Builder.cs" />
     <Compile Include="Runner.cs" />
@@ -104,6 +108,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="input2.json\input2.json" />
+    <None Include="input3.json\3 similar to convert widget to an array 3\input.json" />
     <None Include="input3.json\input3.json" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -165,10 +170,14 @@
     <Content Include="input2.json\2 rename value in menu only\output.txt" />
     <Content Include="input2.json\2 similar to replace Open menu item with Export\output.txt" />
     <Content Include="input2.json\2 replace Open menu item with Export\output.txt" />
+    <Content Include="input2.json\2 similar to convert widget to an array\output.txt" />
+    <Content Include="input3.json\3 convert widget to an array\output.txt" />
     <Content Include="input3.json\3 copy image as a widget sibling\output.txt" />
     <Content Include="input3.json\3 copy image as image2\output.txt" />
     <Content Include="input3.json\3 ParentScope bugs\output.txt" />
     <Content Include="input3.json\3 replace name sun1 with sun2\output.txt" />
+    <Content Include="input3.json\3 similar to convert widget to an array 2\output.txt" />
+    <Content Include="input3.json\3 similar to convert widget to an array 3\output.txt" />
     <Content Include="input3.json\3 similar to convert widget to an array\output.txt" />
     <Content Include="input3.json\3 swap offsets in text\output.txt" />
   </ItemGroup>

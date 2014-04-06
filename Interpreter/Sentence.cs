@@ -33,7 +33,8 @@ namespace LambdastylePrototype.Interpreter
         public virtual void Apply(ApplyContext context)
         {
             this.context = context;
-            var appliesAtContext = new AppliesAtContext(context.Position, strict: context.Strict);
+            var appliesAtContext = new AppliesAtContext(position: context.Position, strict: context.Strict,
+                startPosition: StartPosition());
             var appliesAtResult = HasSubject ? subject.AppliesAt(appliesAtContext) : new AppliesAtResult(false);
             var isParent = context.ParentScope.IsParent(this);
             var nextContext = context.Copy(this);
@@ -54,7 +55,8 @@ namespace LambdastylePrototype.Interpreter
                     applyingTail: appliesAtResult.PositiveLog.ContainsTail(),
                     applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any)),
                     applyingParent: isParent,
-                    applyingOr: appliesAtResult.PositiveLog.Contains<Or>());
+                    applyingOr: appliesAtResult.PositiveLog.Contains<Or>(),
+                    applyingStart: appliesAtResult.PositiveLog.Contains<Start>());
                 if (predicate.AppliesAt(predicateContext) && !ChildApplies())
                 {
                     WritePreviousUntilSubjectOnce();
@@ -108,6 +110,19 @@ namespace LambdastylePrototype.Interpreter
                         context.Write(context.Position.Last().DelimitersAfter, this, true, 0);
         }
 
+        PositionStep[] StartPosition()
+        {
+            if (context.SpawnerPosition == null)
+                return null;
+            else
+            {
+                var spawnerPosition = context.SpawnerPosition;
+                if (spawnerPosition.LastTokenType().IsEnd())
+                    spawnerPosition = spawnerPosition.ExceptLast().ToArray();
+                return spawnerPosition;
+            }
+        }
+
         bool ChildApplies()
         {
             if (children.Any())
@@ -115,8 +130,10 @@ namespace LambdastylePrototype.Interpreter
                 var afterChildren = new MarkerSentence();
                 var childrenAndAfterChildren = children.Concat(afterChildren.Enclose());
                 var childrenStyle = childrenAndAfterChildren.Cast<Sentence>().GetEnumerator();
+                var childrenContext = context.Copy(caller: this, style: childrenStyle,
+                    spawnerPosition: context.SentenceScope.StartsAt(), scan: true);
                 childrenStyle.MoveNext();
-                childrenStyle.Current.Apply(context.Copy(caller: this, style: childrenStyle, scan: true));
+                childrenStyle.Current.Apply(childrenContext);
                 return !afterChildren.Reached;
             }
             else

@@ -6,17 +6,12 @@ using System.Threading.Tasks;
 
 namespace LambdastylePrototype.Interpreter.Subjects
 {
-    class Any : Literal
+    class Start : ExpressionElement
     {
         public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
-            var result = !context.Position.All(step => step.TokenType.IsEnd());
+            var result = context.StartPosition != null && context.StartPosition.SequenceEqual(context.Position);
             return Result(result);
-        }
-
-        public override bool JustAny()
-        {
-            return true;
         }
     }
 }

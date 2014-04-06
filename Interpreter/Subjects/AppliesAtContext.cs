@@ -10,16 +10,18 @@ namespace LambdastylePrototype.Interpreter.Subjects
     {
         public readonly PositionStep[] Position;
         public readonly bool Strict;
+        public readonly PositionStep[] StartPosition;
 
-        public AppliesAtContext(PositionStep[] position, bool strict)
+        public AppliesAtContext(PositionStep[] position, bool strict, PositionStep[] startPosition)
         {
             Position = position;
             Strict = strict;
+            StartPosition = startPosition;
         }
 
         public AppliesAtContext Copy(PositionStep[] position)
         {
-            return new AppliesAtContext(position, Strict);
+            return new AppliesAtContext(position: position, strict: Strict, startPosition: StartPosition);
         }
     }
 }

@@ -43,20 +43,25 @@ namespace LambdastylePrototype
 
         public ApplyContext Copy(Sentence caller)
         {
-            return this.Copy(caller: caller, style: Style, scan: Scan, strict: Strict);
+            return this.Copy(caller: caller, style: Style, spawnerPosition: SpawnerPosition, scan: Scan,
+                strict: Strict);
         }
 
-        public ApplyContext Copy(Sentence caller, IEnumerator<Sentence> style, bool scan)
+        public ApplyContext Copy(Sentence caller, IEnumerator<Sentence> style, PositionStep[] spawnerPosition,
+            bool scan)
         {
-            return this.Copy(caller: caller, style: style, scan: scan, strict: Strict);
+            return this.Copy(caller: caller, style: style, spawnerPosition: spawnerPosition, scan: scan,
+                strict: Strict);
         }
 
         public ApplyContext Copy(Sentence caller, bool strict)
         {
-            return this.Copy(caller: caller, style: Style, scan: Scan, strict: strict);
+            return this.Copy(caller: caller, style: Style, spawnerPosition: SpawnerPosition, scan: Scan,
+                strict: strict);
         }
 
-        ApplyContext Copy(Sentence caller, IEnumerator<Sentence> style, bool scan, bool strict)
+        ApplyContext Copy(Sentence caller, IEnumerator<Sentence> style, PositionStep[] spawnerPosition, bool scan,
+            bool strict)
         {
             return new ApplyContext(
                 style: style,
@@ -64,7 +69,7 @@ namespace LambdastylePrototype
                 write: Write,
                 written: Written,
                 spawn: Spawn,
-                spawnerPosition: SpawnerPosition,
+                spawnerPosition: spawnerPosition,
                 globalState: GlobalState,
                 sentenceScope: SentenceScope,
                 parentScope: ParentScope,

@@ -89,7 +89,11 @@ namespace Test
 
         string InputFileFullPath(Tuple<string, string> folders)
         {
-            return Path.Combine(ParentDirectory(), folders.Item1, folders.Item1);
+            var local = Path.Combine(ParentDirectory(), folders.Item1, folders.Item2, "input.json");
+            if (File.Exists(local))
+                return local;
+            else
+                return Path.Combine(ParentDirectory(), folders.Item1, folders.Item1);
         }
 
         string OutputFileFullPath(Tuple<string, string> folders)

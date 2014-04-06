@@ -18,6 +18,7 @@ namespace LambdastylePrototype
         public bool WrittenNewLine;
         public List<PredicateIdentity> WrittenEndArray = new List<PredicateIdentity>();
         public List<Tuple<PredicateIdentity, Raw>> WrittenRaw = new List<Tuple<PredicateIdentity, Raw>>();
+        public HashSet<PredicateIdentity> WrittenPredicate = new HashSet<PredicateIdentity>();
         public List<PredicateIdentity> Seeked = new List<PredicateIdentity>();
         public List<PredicateIdentity> AddedNewLine = new List<PredicateIdentity>();
         public Dictionary<PredicateIdentity, PositionStep[]> TailBoundaryUsed

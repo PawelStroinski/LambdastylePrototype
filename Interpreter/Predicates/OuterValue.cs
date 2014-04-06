@@ -13,7 +13,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
         {
             var tokenType = context.Position.Last().TokenType;
             var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity)
-                && !context.ApplyingItem && !context.ApplyingTail && !context.GlobalState.LastApplyingTail;
+                && !context.ApplyingItem && !context.ApplyingTail && !context.GlobalState.LastApplyingTail
+                && !context.ApplyingStart;
             var arrayBoundry = tokenType == JsonToken.StartArray || tokenType == JsonToken.EndArray;
             if (writtenEndArray && arrayBoundry)
                 return false;
@@ -26,7 +27,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             var delimitersBefore = context.DelimitersBefore ? context.Position.Last().DelimitersBefore : string.Empty;
             var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity)
                 && !context.ApplyingItem && !context.ApplyingTail && !context.GlobalState.LastApplyingTail
-                && !context.ApplyingParent;
+                && !context.ApplyingParent && !context.ApplyingStart;
             var seeked = context.GlobalState.Seeked.Contains(context.PredicateIdentity);
             var seekBy = 0;
             if (writtenEndArray && context.DelimitersBefore)

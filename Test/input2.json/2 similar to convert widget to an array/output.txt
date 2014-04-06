@@ -1,5 +1,6 @@
 {
   "menu": {
+    "id": "file",
     "value": "File",
     "popup": {
       "menuitem": [
@@ -14,8 +15,7 @@
         {
           "value": "Close",
           "onclick": "CloseDoc()"
-        }
-      ]
+        }]
     }
-  },
-    "id": "file"}
+  }
+}

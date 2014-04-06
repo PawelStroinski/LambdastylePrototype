@@ -29,6 +29,14 @@ namespace LambdastylePrototype
             return startsAt.ContainsKey(context.Style.Current);
         }
 
+        public PositionStep[] StartsAt()
+        {
+            if (Continues())
+                return startsAt[context.Style.Current];
+            else
+                return context.Position;
+        }
+
         bool IsStart()
         {
             return tokenType.IsStart();

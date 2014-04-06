@@ -56,7 +56,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 previousElement = element;
             }
             if (context.AllowNewLine && !HasOuter() && !cases.AppliedCase<Joining>() && !cases.AppliedCase<Opening>()
-                && !cases.AppliedCase<Tail>())
+                && !cases.AppliedCase<Tail>() && !context.GlobalState.ForceSyntax.Value)
             {
                 result += Environment.NewLine;
                 context.GlobalState.AddedNewLine.Add(identity);
@@ -96,7 +96,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         void SetIdentityAndScope()
         {
-            identity = HasOuterId() && !HasInnerValue() ? new PredicateIdentity() : identity;
+            identity = HasOuterId() && !HasInnerValue() && !context.ApplyingStart ? new PredicateIdentity() : identity;
             context.GlobalState.PredicateScope.Change(GetContext());
         }
 
@@ -140,6 +140,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 context.GlobalState.Seeked.Add(identity);
             context.GlobalState.LastApplyingTail = context.ApplyingTail;
             context.GlobalState.PredicateScope.SetWritten();
+            context.GlobalState.WrittenPredicate.Add(identity);
         }
 
         void WriteDebug(ToStringResult toStringResult)

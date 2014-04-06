@@ -62,6 +62,7 @@
     <Compile Include="GlobalState.cs" />
     <Compile Include="Interpreter\MarkerSentence.cs" />
     <Compile Include="Interpreter\Predicates\Cases\CaseContext.cs" />
+    <Compile Include="Interpreter\Predicates\Cases\CommaForcer.cs" />
     <Compile Include="Interpreter\Predicates\Cases\IdAndNoValue.cs" />
     <Compile Include="Interpreter\Predicates\Cases\IdAndInnerValue.cs" />
     <Compile Include="Interpreter\Predicates\Cases\Joining.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Interpreter\Subjects\Null.cs" />
     <Compile Include="Interpreter\Subjects\RegExp.cs" />
     <Compile Include="Interpreter\Subjects\Any.cs" />
+    <Compile Include="Interpreter\Subjects\Start.cs" />
     <Compile Include="Processor.cs" />
     <Compile Include="ParentScope.cs" />
     <Compile Include="SentenceScope.cs" />
