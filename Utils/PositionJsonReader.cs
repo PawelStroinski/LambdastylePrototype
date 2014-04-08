@@ -31,6 +31,7 @@ namespace LambdastylePrototype.Utils
             if (result)
             {
                 Pop();
+                IncreaseItemIndex();
                 Push();
             }
             else
@@ -108,13 +109,28 @@ namespace LambdastylePrototype.Utils
                     position.Pop();
         }
 
+        void IncreaseItemIndex()
+        {
+            if (position.Any() && position.Peek().TokenType == JsonToken.StartArray)
+            {
+                var last = position.Pop();
+                position.Push(new PositionStep(
+                    tokenType: last.TokenType,
+                    value: last.Value,
+                    delimitersBefore: last.DelimitersBefore,
+                    delimitersAfter: last.DelimitersAfter,
+                    itemIndex: (int)last.ItemIndex + 1));
+            }
+        }
+
         void Push()
         {
             position.Push(new PositionStep(
                 tokenType: reader.TokenType,
                 value: reader.Value,
                 delimitersBefore: reader.DelimitersBefore,
-                delimitersAfter: reader.DelimitersAfter));
+                delimitersAfter: reader.DelimitersAfter,
+                itemIndex: -1));
         }
 
         void AppendDelimitersAfter()
@@ -124,7 +140,8 @@ namespace LambdastylePrototype.Utils
                 tokenType: last.TokenType,
                 value: last.Value,
                 delimitersBefore: last.DelimitersBefore,
-                delimitersAfter: last.DelimitersAfter + reader.DelimitersAfter));
+                delimitersAfter: last.DelimitersAfter + reader.DelimitersAfter,
+                itemIndex: last.ItemIndex));
         }
     }
 }
