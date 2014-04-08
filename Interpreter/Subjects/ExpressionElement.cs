@@ -17,7 +17,8 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         public virtual AppliesAtResult AppliesAt(AppliesAtContext context)
         {
-            return AllAppliesAt(context);
+            var substitute = Substitute(context);
+            return substitute.AllAppliesAt(context);
         }
 
         public virtual bool JustAny()
@@ -68,6 +69,37 @@ namespace LambdastylePrototype.Interpreter.Subjects
             return context.Strict
                 && expression.Select(element => element.GetType())
                     .Any(type => type != typeof(Id) && type != typeof(Literal));
+        }
+
+        ExpressionElement Substitute(AppliesAtContext context)
+        {
+            var substitute = SubstituteParent(context)
+                .Select(element => element.Substitute(context)).ToArray();
+            if (expression.SequenceEqual(substitute))
+                return this;
+            else
+                return (ExpressionElement)Activator.CreateInstance(this.GetType(), substitute);
+        }
+
+        ExpressionElement[] SubstituteParent(AppliesAtContext context)
+        {
+            return context.IsParent ? SubstituteParentWhenIsParent() : SubstituteParentWhenIsNotParent();
+        }
+
+        ExpressionElement[] SubstituteParentWhenIsParent()
+        {
+            if (expression.Length == 1 && expression.First() is Parent)
+                return new Any().Enclose().ToArray();
+            else
+                return expression.Select(element => element is Parent ? new Start() : element).ToArray();
+        }
+
+        ExpressionElement[] SubstituteParentWhenIsNotParent()
+        {
+            if (expression.Any(element => element is Parent))
+                return expression.Where(element => element is Parent).ToArray();
+            else
+                return expression;
         }
     }
 }

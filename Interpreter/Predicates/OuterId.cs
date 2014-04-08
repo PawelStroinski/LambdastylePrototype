@@ -31,7 +31,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 delimitersBefore = string.Empty;
             if (!context.GlobalState.WrittenInThisObject && delimitersBefore.Contains(","))
                 delimitersBefore = delimitersBefore.Replace(",", string.Empty);
-            if (context.GlobalState.WrittenInThisObject && context.DelimitersBefore && !context.ApplyingTail)
+            if (context.GlobalState.WrittenInThisObject && context.DelimitersBefore && !context.ApplyingTail
+                    && !context.ApplyingStart)
                 delimitersBefore = delimitersBefore.EnforceComma();
             context.GlobalState.WrittenOuter = true;
             context.GlobalState.WrittenInThisObject = true;

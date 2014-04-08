@@ -34,17 +34,16 @@ namespace LambdastylePrototype.Interpreter
         {
             this.context = context;
             var appliesAtContext = new AppliesAtContext(position: context.Position, strict: context.Strict,
-                startPosition: StartPosition());
+                startPosition: StartPosition(), isParent: context.ParentScope.IsParent(this));
             var appliesAtResult = HasSubject ? subject.AppliesAt(appliesAtContext) : new AppliesAtResult(false);
-            var isParent = context.ParentScope.IsParent(this);
             var nextContext = context.Copy(this);
-            if (appliesAtResult.Result || isParent)
+            if (appliesAtResult.Result)
             {
                 if (context.Scan)
                     return;
                 Extension.WriteDebug(context.Position.ToDebugString());
                 Extension.WriteDebugLine(appliesAtResult.PositiveLog.ToDebugString());
-                if (!isParent && appliesAtResult.PositiveLog.Contains<Parent>())
+                if (appliesAtResult.PositiveLog.Contains<Parent>())
                 {
                     context.ParentScope.ParentFound(this);
                     return;
@@ -54,7 +53,7 @@ namespace LambdastylePrototype.Interpreter
                     applyingItem: appliesAtResult.PositiveLog.Contains<Item>(),
                     applyingTail: appliesAtResult.PositiveLog.ContainsTail(),
                     applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any)),
-                    applyingParent: isParent,
+                    applyingParent: context.ParentScope.IsParent(this),
                     applyingOr: appliesAtResult.PositiveLog.Contains<Or>(),
                     applyingStart: appliesAtResult.PositiveLog.Contains<Start>());
                 if (predicate.AppliesAt(predicateContext) && !ChildApplies())
@@ -112,15 +111,18 @@ namespace LambdastylePrototype.Interpreter
 
         PositionStep[] StartPosition()
         {
-            if (context.SpawnerPosition == null)
-                return null;
+            if (context.ParentScope.IsParent(this))
+                return context.ParentScope.StartedAt;
             else
-            {
-                var spawnerPosition = context.SpawnerPosition;
-                if (spawnerPosition.LastTokenType().IsEnd())
-                    spawnerPosition = spawnerPosition.ExceptLast().ToArray();
-                return spawnerPosition;
-            }
+                if (context.SpawnerPosition == null)
+                    return null;
+                else
+                {
+                    var spawnerPosition = context.SpawnerPosition;
+                    if (spawnerPosition.LastTokenType().IsEnd())
+                        spawnerPosition = spawnerPosition.ExceptLast().ToArray();
+                    return spawnerPosition;
+                }
         }
 
         bool ChildApplies()

@@ -94,6 +94,8 @@
     <Compile Include="input3.json\3 copy image as a widget sibling\Style.cs" />
     <Compile Include="input3.json\3 copy image as image2\Style.cs" />
     <Compile Include="input3.json\3 copy title from window to image\Style.cs" />
+    <Compile Include="input3.json\3 if name is text1 set parent alignment to left 2\Style.cs" />
+    <Compile Include="input3.json\3 if name is text1 set parent alignment to left\Style.cs" />
     <Compile Include="input3.json\3 output copy only if debug on 2\Style.cs" />
     <Compile Include="input3.json\3 output copy only if debug on\Style.cs" />
     <Compile Include="input3.json\3 ParentScope bugs\Style.cs" />
@@ -180,6 +182,8 @@
     <Content Include="input3.json\3 copy image as a widget sibling\output.txt" />
     <Content Include="input3.json\3 copy image as image2\output.txt" />
     <Content Include="input3.json\3 copy title from window to image\output.txt" />
+    <Content Include="input3.json\3 if name is text1 set parent alignment to left 2\output.txt" />
+    <Content Include="input3.json\3 if name is text1 set parent alignment to left\output.txt" />
     <Content Include="input3.json\3 output copy only if debug on 2\output.txt" />
     <Content Include="input3.json\3 output copy only if debug on\output.txt" />
     <Content Include="input3.json\3 ParentScope bugs\output.txt" />

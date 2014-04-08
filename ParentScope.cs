@@ -24,6 +24,8 @@ namespace LambdastylePrototype
 
         public bool JustFoundParent { get; private set; }
 
+        public PositionStep[] StartedAt { get; private set; }
+
         public void PositionChanged(PositionStep[] newPosition)
         {
             position = newPosition;
@@ -45,6 +47,7 @@ namespace LambdastylePrototype
             var anchor = position.LastTokenType().IsStart() ? anchors.Penultimate() : anchors.Last();
             seeker.Seek(anchor);
             JustFoundParent = true;
+            StartedAt = anchor.Reader.Position;
         }
 
         public bool IsParent(Sentence sentence)
