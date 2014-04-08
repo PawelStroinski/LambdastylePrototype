@@ -9,5 +9,11 @@ namespace LambdastylePrototype.Interpreter.Subjects
     class Not : ExpressionElement
     {
         public Not(params ExpressionElement[] expression) : base(expression) { }
+
+        public override AppliesAtResult AppliesAt(AppliesAtContext context)
+        {
+            var baseResult = base.AppliesAt(context);
+            return Result(!baseResult.Result);
+        }
     }
 }

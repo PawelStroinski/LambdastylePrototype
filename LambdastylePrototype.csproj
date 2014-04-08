@@ -91,6 +91,7 @@
     <Compile Include="Interpreter\Subjects\LogEntry.cs" />
     <Compile Include="Interpreter\Subjects\Not.cs" />
     <Compile Include="Interpreter\Subjects\ItemIndex.cs" />
+    <Compile Include="Interpreter\Subjects\NotEquals.cs" />
     <Compile Include="Interpreter\Subjects\Null.cs" />
     <Compile Include="Interpreter\Subjects\RegExp.cs" />
     <Compile Include="Interpreter\Subjects\Any.cs" />

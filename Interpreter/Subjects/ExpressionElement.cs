@@ -64,14 +64,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
                 return new AppliesAtResult(false);
         }
 
-        bool RejectByStrictness(AppliesAtContext context)
-        {
-            return context.Strict
-                && expression.Select(element => element.GetType())
-                    .Any(type => type != typeof(Id) && type != typeof(Literal));
-        }
-
-        ExpressionElement Substitute(AppliesAtContext context)
+        protected virtual ExpressionElement Substitute(AppliesAtContext context)
         {
             var substitute = SubstituteParent(context)
                 .Select(element => element.Substitute(context)).ToArray();
@@ -100,6 +93,13 @@ namespace LambdastylePrototype.Interpreter.Subjects
                 return expression.Where(element => element is Parent).ToArray();
             else
                 return expression;
+        }
+
+        bool RejectByStrictness(AppliesAtContext context)
+        {
+            return context.Strict
+                && expression.Select(element => element.GetType())
+                    .Any(type => type != typeof(Id) && type != typeof(Literal));
         }
     }
 }
