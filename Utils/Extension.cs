@@ -34,6 +34,11 @@ namespace LambdastylePrototype
                     indentBy++;
                 builder.AppendLine(item.Value == null
                     ? item.TokenType.ToString() : item.TokenType + " = " + item.Value);
+                if (item.ItemIndex != -1)
+                {
+                    builder.Append(new string(' ', indentBy * 2));
+                    builder.AppendLine("[" + item.ItemIndex + "]");
+                }
             }
             return builder.ToString();
         }

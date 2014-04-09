@@ -119,7 +119,7 @@ namespace LambdastylePrototype.Utils
                     value: last.Value,
                     delimitersBefore: last.DelimitersBefore,
                     delimitersAfter: last.DelimitersAfter,
-                    itemIndex: (int)last.ItemIndex + 1));
+                    itemIndex: reader.TokenType == JsonToken.EndArray ? -1 : (int)last.ItemIndex + 1));
             }
         }
 

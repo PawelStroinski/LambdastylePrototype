@@ -50,7 +50,7 @@ namespace LambdastylePrototype.Interpreter
                 }
                 context.SentenceScope.Change(context);
                 var predicateContext = new PredicateContext(context.GlobalState, context.Position,
-                    applyingItem: appliesAtResult.PositiveLog.Contains<Item>(),
+                    applyingItem: appliesAtResult.PositiveLog.ContainsAssignableTo<Item>(),
                     applyingTail: appliesAtResult.PositiveLog.ContainsTail(),
                     applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any)),
                     applyingParent: context.ParentScope.IsParent(this),

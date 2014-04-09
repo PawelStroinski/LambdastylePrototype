@@ -129,6 +129,7 @@ namespace LambdastylePrototype
             var spawned = new Processor(input, output, style, spawnerPosition: reader.Position,
                 spawnerGlobalState: globalState);
             spawned.Process();
+            globalState.WrittenInThisObject = spawned.globalState.WrittenInThisObject;
         }
 
         void RewindOutputTo(Sentence sentence, Sentence beingWritten)
