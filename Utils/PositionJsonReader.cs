@@ -101,9 +101,8 @@ namespace LambdastylePrototype.Utils
                         break;
                     else
                         position.Pop();
-            if (currentTokenType.IsValue())
-                while (position.Any() && position.Peek().TokenType.IsValue())
-                    position.Pop();
+            while (position.Any() && position.Peek().TokenType.IsValue())
+                position.Pop();
             if (currentTokenType.IsEnd())
                 while (position.Any() && !position.Peek().TokenType.IsStart())
                     position.Pop();
