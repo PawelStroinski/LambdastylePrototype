@@ -107,6 +107,7 @@
     <Compile Include="input3.json\3 swap offsets in text\Style.cs" />
     <Compile Include="input3.json\3 similar to convert widget to an array 3\Style.cs" />
     <Compile Include="input4.json\4 change first servlet class\Style.cs" />
+    <Compile Include="input4.json\4 copy params from cofaxEmail to cofaxTools\Style.cs" />
     <Compile Include="input4.json\4 swap first and second servlet\Style.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Builder.cs" />
@@ -199,6 +200,7 @@
     <Content Include="input3.json\3 similar to convert widget to an array\output.txt" />
     <Content Include="input3.json\3 swap offsets in text\output.txt" />
     <Content Include="input4.json\4 change first servlet class\output.txt" />
+    <Content Include="input4.json\4 copy params from cofaxEmail to cofaxTools\output.txt" />
     <Content Include="input4.json\4 swap first and second servlet\output.txt" />
   </ItemGroup>
   <ItemGroup>

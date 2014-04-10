@@ -28,9 +28,11 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
         {
             var hasIdAndInnerValue = elements.Any(element => element is OuterId)
                 && elements.Any(element => element is InnerValue);
-            var applyingTail = context.ApplyingTail || context.GlobalState.LastApplyingTail
-                || context.GlobalState.PredicateScope.Written() || context.ApplyingParent;
-            return hasIdAndInnerValue && applyingTail;
+            var tail = context.ApplyingTail || context.GlobalState.LastApplyingTail;
+            var parent = context.ApplyingParent
+                && (!context.ApplyingStart || context.GlobalState.PredicateScope.Written());
+            var tailOrParent = tail || parent;
+            return hasIdAndInnerValue && tailOrParent;
         }
     }
 }

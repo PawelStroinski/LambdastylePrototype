@@ -28,8 +28,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 var inItem = position.Take(position.Length - 1).Any(step => step.TokenType == JsonToken.StartArray);
                 var writtenRaw = context.GlobalState.WrittenRaw
                     .Any(tuple => tuple.Item1 == context.PredicateIdentity && tuple.Item2 == this);
-                var tail = context.ApplyingTail || tokenType == JsonToken.StartObject;
-                var tailOrOr = tail || context.ApplyingOr;
+                var tailOrOr = context.ApplyingTail || context.ApplyingOr;
                 if (inItem && !context.ApplyingItem && writtenRaw && tailOrOr)
                     return false;
                 var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity);
@@ -56,7 +55,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                     delimitersBefore = position.Penultimate().DelimitersBefore;
                 if (!context.GlobalState.WrittenInThisObject)
                     delimitersBefore = delimitersBefore.Replace(",", string.Empty);
-                if (raw.EndsWith("{") && context.GlobalState.ForceSyntax.Value)
+                if (raw.EndsWith("{"))
                     context.GlobalState.WrittenInThisObject = false;
             }
             context.GlobalState.WrittenRaw.Add(new Tuple<PredicateIdentity, Raw>(context.PredicateIdentity, this));
