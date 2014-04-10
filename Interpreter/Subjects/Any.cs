@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LambdastylePrototype.Interpreter.Subjects
 {
-    class Any : Literal
+    class Any : Literalish
     {
         public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
@@ -17,6 +17,11 @@ namespace LambdastylePrototype.Interpreter.Subjects
         public override bool JustAny()
         {
             return true;
+        }
+
+        public override string ToRegExp()
+        {
+            return "*";
         }
     }
 }

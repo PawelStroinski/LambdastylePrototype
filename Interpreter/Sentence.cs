@@ -52,7 +52,7 @@ namespace LambdastylePrototype.Interpreter
                 var predicateContext = new PredicateContext(context.GlobalState, context.Position,
                     applyingItem: appliesAtResult.PositiveLog.ContainsAssignableTo<Item>(),
                     applyingTail: appliesAtResult.PositiveLog.ContainsTail(),
-                    applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(not: typeof(Any)),
+                    applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(),
                     applyingParent: context.ParentScope.IsParent(this),
                     applyingOr: appliesAtResult.PositiveLog.Contains<Or>(),
                     applyingStart: appliesAtResult.PositiveLog.Contains<Start>());

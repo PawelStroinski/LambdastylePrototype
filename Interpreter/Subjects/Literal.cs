@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LambdastylePrototype.Interpreter.Subjects
 {
-    class Literal : ExpressionElement
+    class Literal : Literalish
     {
         readonly object value;
 
@@ -30,6 +31,11 @@ namespace LambdastylePrototype.Interpreter.Subjects
             var position = context.Position;
             var result = position.Any(step => value.Equals(step.Value));
             return Result(result);
+        }
+
+        public override string ToRegExp()
+        {
+            return Regex.Escape(value.ToString());
         }
 
         protected Literal() { }

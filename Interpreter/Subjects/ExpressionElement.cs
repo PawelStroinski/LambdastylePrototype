@@ -98,8 +98,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
         bool RejectByStrictness(AppliesAtContext context)
         {
             return context.Strict
-                && expression.Select(element => element.GetType())
-                    .Any(type => type != typeof(Id) && type != typeof(Literal));
+                && !expression.All(element => element is Id || element is Literal);
         }
     }
 }

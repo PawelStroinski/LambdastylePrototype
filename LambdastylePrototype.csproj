@@ -85,9 +85,11 @@
     <Compile Include="Interpreter\Predicates\PredicateElement.cs" />
     <Compile Include="Interpreter\Predicates\InnerValue.cs" />
     <Compile Include="Interpreter\Subjects\And.cs" />
+    <Compile Include="Interpreter\Subjects\Literalish.cs" />
     <Compile Include="Interpreter\Subjects\AppliesAtContext.cs" />
     <Compile Include="Interpreter\Subjects\AppliesAtResult.cs" />
     <Compile Include="Interpreter\Subjects\Current.cs" />
+    <Compile Include="Interpreter\Subjects\LiteralishSequence.cs" />
     <Compile Include="Interpreter\Subjects\LogEntry.cs" />
     <Compile Include="Interpreter\Subjects\Not.cs" />
     <Compile Include="Interpreter\Subjects\ItemIndex.cs" />
