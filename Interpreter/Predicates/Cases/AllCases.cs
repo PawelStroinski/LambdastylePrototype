@@ -28,7 +28,12 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
 
         public bool AppliedCase<T>() where T : Case
         {
-            return appliedCases.Contains(typeof(T));
+            return AppliedCase(typeof(T));
+        }
+
+        public bool AppliedCase(Type caseType)
+        {
+            return appliedCases.Contains(caseType);
         }
 
         Case[] CreateCases()

@@ -30,5 +30,10 @@ namespace LambdastylePrototype.Interpreter.Subjects
             else
                 return AnyAppliesAt(context.Copy(propertyNames));
         }
+
+        protected override bool IsStrict()
+        {
+            return true;
+        }
     }
 }

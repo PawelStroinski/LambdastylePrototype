@@ -14,7 +14,7 @@ namespace LambdastylePrototype.Interpreter
 
         public override void Apply(ApplyContext context)
         {
-            Reached = true;
+            Reached = !context.Strict;
         }
     }
 }

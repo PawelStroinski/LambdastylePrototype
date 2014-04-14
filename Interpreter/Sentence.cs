@@ -34,29 +34,24 @@ namespace LambdastylePrototype.Interpreter
         {
             this.context = context;
             var appliesAtContext = new AppliesAtContext(position: context.Position, strict: context.Strict,
-                startPosition: StartPosition(), isParent: context.ParentScope.IsParent(this));
+                startPosition: StartPosition(), isParent: context.ParentScope.IsParent(this), findParent: false);
+            if (FindParent(appliesAtContext))
+                return;
             var appliesAtResult = HasSubject ? subject.AppliesAt(appliesAtContext) : new AppliesAtResult(false);
-            var nextContext = context.Copy(this);
-            if (appliesAtResult.Result)
+            if (appliesAtResult.Result && !context.Scan && !SkipStrictCopyBecauseSpawnerCopiedIt())
             {
-                if (context.Scan)
-                    return;
                 Extension.WriteDebug(context.Position.ToDebugString());
                 Extension.WriteDebugLine(appliesAtResult.PositiveLog.ToDebugString());
-                if (appliesAtResult.PositiveLog.Contains<Parent>())
-                {
-                    context.ParentScope.ParentFound(this);
-                    return;
-                }
                 context.SentenceScope.Change(context);
                 var predicateContext = new PredicateContext(context.GlobalState, context.Position,
+                    childApplies: ChildApplies(),
                     applyingItem: appliesAtResult.PositiveLog.ContainsAssignableTo<Item>(),
                     applyingTail: appliesAtResult.PositiveLog.ContainsTail(),
                     applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(),
-                    applyingParent: context.ParentScope.IsParent(this),
+                    applyingParent: appliesAtContext.IsParent,
                     applyingOr: appliesAtResult.PositiveLog.Contains<Or>(),
                     applyingStart: appliesAtResult.PositiveLog.Contains<Start>());
-                if (predicate.AppliesAt(predicateContext) && !ChildApplies())
+                if (predicate.AppliesAt(predicateContext))
                 {
                     WritePreviousUntilSubjectOnce();
                     WriteSubjectlessSkippedUntilEnd();
@@ -64,10 +59,9 @@ namespace LambdastylePrototype.Interpreter
                     context.Write(toStringResult.Result, this, toStringResult.Rewind, toStringResult.SeekBy);
                 }
                 ApplyChildren();
-                nextContext = context.Copy(caller: this, strict: true);
             }
             if (context.Style.MoveNext())
-                context.Style.Current.Apply(nextContext);
+                context.Style.Current.Apply(NextContext(appliesAtResult));
         }
 
         public void ApplyBOF(ApplyContext context)
@@ -125,6 +119,33 @@ namespace LambdastylePrototype.Interpreter
                 }
         }
 
+        bool FindParent(AppliesAtContext appliesAtContext)
+        {
+            if (HasSubject && subject.HasParent() && !appliesAtContext.IsParent)
+            {
+                context.ReducedsScope.Change(context);
+                var reduced = context.ReducedsScope.GetReduced();
+                if (reduced == null)
+                    reduced = subject;
+                reduced = reduced.ReduceAt(appliesAtContext.Copy(findParent: true));
+                context.ReducedsScope.SetReduced(reduced);
+                if (reduced.JustAny())
+                {
+                    Extension.WriteDebug(context.Position.ToDebugString());
+                    Extension.WriteDebugLine("[Parent found]");
+                    context.ParentScope.ParentFound(this);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool SkipStrictCopyBecauseSpawnerCopiedIt()
+        {
+            var isStrictCopy = context.Strict && predicate.HasOuterId() && predicate.HasOuterValue();
+            return isStrictCopy && context.SpawnerCanCopy;
+        }
+
         bool ChildApplies()
         {
             if (children.Any())
@@ -133,10 +154,16 @@ namespace LambdastylePrototype.Interpreter
                 var childrenAndAfterChildren = children.Concat(afterChildren.Enclose());
                 var childrenStyle = childrenAndAfterChildren.Cast<Sentence>().GetEnumerator();
                 var childrenContext = context.Copy(caller: this, style: childrenStyle,
-                    spawnerPosition: context.SentenceScope.StartsAt(), scan: true);
+                    spawnerPosition: context.SentenceScope.StartsAt(), scan: true, spawnerCanCopy: CanCopyAsSpawner());
                 childrenStyle.MoveNext();
                 childrenStyle.Current.Apply(childrenContext);
-                return !afterChildren.Reached;
+                if (afterChildren.Reached)
+                    return false;
+                else
+                {
+                    Extension.WriteDebugLine("[Child applies]");
+                    return true;
+                }
             }
             else
                 return false;
@@ -145,7 +172,7 @@ namespace LambdastylePrototype.Interpreter
         void ApplyChildren()
         {
             if (children.Any() && !context.SentenceScope.Continues())
-                context.Spawn(EnsureThatEachChildWithValueHasSubject());
+                context.Spawn(EnsureThatEachChildWithValueHasSubject(), CanCopyAsSpawner());
         }
 
         void WritePreviousUntilSubjectOnce()
@@ -180,13 +207,19 @@ namespace LambdastylePrototype.Interpreter
             }
         }
 
-        void WriteSubjectlessChildrenFromEnd()
+        ApplyContext NextContext(AppliesAtResult appliesAtResult)
         {
-            foreach (var sentence in children
-                    .SkipWhile(child => child.HasSubject)
-                    .Where(child => !child.HasSubject))
-                context.Write(sentence.predicate.ToString(new PredicateContext(context.GlobalState)).Result,
-                    sentence, true, 0);
+            if (appliesAtResult.Result)
+            {
+                bool strict;
+                if (context.Scan && predicate.HasOuterId() && predicate.HasOuterValue() && context.SpawnerCanCopy)
+                    strict = !context.Strict;
+                else
+                    strict = true;
+                return context.Copy(caller: this, strict: strict);
+            }
+            else
+                return context.Copy(this);
         }
 
         IEnumerable<Sentence> PreviousUntilSubjectReversed()
@@ -196,6 +229,11 @@ namespace LambdastylePrototype.Interpreter
                     break;
                 else
                     yield return sentence;
+        }
+
+        bool CanCopyAsSpawner()
+        {
+            return predicate.HasOuterId() && predicate.HasValue();
         }
 
         Sentence[] EnsureThatEachChildWithValueHasSubject()

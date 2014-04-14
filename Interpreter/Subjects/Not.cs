@@ -15,5 +15,15 @@ namespace LambdastylePrototype.Interpreter.Subjects
             var baseResult = base.AppliesAt(context);
             return Result(!baseResult.Result);
         }
+
+        public override ExpressionElement ReduceAt(AppliesAtContext context)
+        {
+            if (expression.Any() && context.Position.LastTokenType().IsEnd())
+                return new Any();
+            if (AppliesAt(context).Result)
+                return this;
+            else
+                return new Not();
+        }
     }
 }

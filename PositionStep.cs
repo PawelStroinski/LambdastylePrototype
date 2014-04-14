@@ -31,7 +31,20 @@ namespace LambdastylePrototype
                 return false;
             var compared = (PositionStep)obj;
             return TokenType == compared.TokenType
-                && object.Equals(Value, compared.Value);
+                && object.Equals(Value, compared.Value)
+                && (ItemIndex == -1 || compared.ItemIndex == -1 || ItemIndex == compared.ItemIndex);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hash = 3;
+                hash = hash * 5 + TokenType.GetHashCode();
+                if (Value != null)
+                    hash = hash * 5 + Value.GetHashCode();
+                return hash;
+            }
         }
     }
 }

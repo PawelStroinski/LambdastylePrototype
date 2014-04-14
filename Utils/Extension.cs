@@ -149,5 +149,10 @@ namespace LambdastylePrototype
             enumerator.Reset();
             enumerator.MoveNext();
         }
+
+        public static bool StartsWith<T>(this IEnumerable<T> starts, IEnumerable<T> with)
+        {
+            return starts.Take(with.Count()).SequenceEqual(with);
+        }
     }
 }

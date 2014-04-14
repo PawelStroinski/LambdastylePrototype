@@ -15,7 +15,7 @@ namespace LambdastylePrototype
         readonly List<Seeker.Anchor> anchors = new List<Seeker.Anchor>();
         PositionStep[] position, parentPosition;
         Sentence parent;
-        bool ending;
+        bool ending, removing;
 
         public ParentScope(Seeker seeker)
         {
@@ -63,17 +63,20 @@ namespace LambdastylePrototype
 
         void AddRemoveAnchor()
         {
+            if (removing)
+            {
+                var anchor = anchors.Last();
+                if (!seeker.IsCurrentReader(anchor))
+                    anchor.Dispose();
+                anchors.Remove(anchor);
+                removing = false;
+            }
             var tokenType = position.LastTokenType();
             if (tokenType.IsStart())
                 anchors.Add(seeker.GetAnchor());
             else
                 if (tokenType.IsEnd())
-                {
-                    var anchor = anchors.Last();
-                    if (!seeker.IsCurrentReader(anchor))
-                        anchor.Dispose();
-                    anchors.Remove(anchor);
-                }
+                    removing = true;
         }
 
         bool End()

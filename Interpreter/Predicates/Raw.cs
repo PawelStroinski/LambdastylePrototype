@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using LambdastylePrototype.Interpreter.Predicates.Cases;
 using Newtonsoft.Json;
 
 namespace LambdastylePrototype.Interpreter.Predicates
@@ -49,11 +50,26 @@ namespace LambdastylePrototype.Interpreter.Predicates
             {
                 if (position.Any())
                     delimitersBefore = position.Last().DelimitersBefore;
-                if (Regex.IsMatch(input: raw, pattern: Consts.StartsWithPropertyName)
-                        && position.HasPenultimate()
+                var startsWithPropertyName = Regex.IsMatch(input: raw, pattern: Consts.StartsWithPropertyName);
+                var startsWithStartObject = Regex.IsMatch(input: raw, pattern: Consts.StartsWithStartObject);
+                if (startsWithPropertyName && position.HasPenultimate()
                         && position.Penultimate().TokenType == JsonToken.PropertyName)
                     delimitersBefore = position.Penultimate().DelimitersBefore;
-                if (!context.GlobalState.WrittenInThisObject)
+                if (context.GlobalState.WrittenInThisObject)
+                {
+                    // TODO: Rewrite this
+                    var writingObject = false;
+                    if (startsWithStartObject)
+                    {
+                        if (context.AppliedCase(typeof(Tail)))
+                            writingObject = true;
+                        if (context.ApplyingStart && !context.ApplyingParent && context.ApplyingLiteral)
+                            writingObject = true;
+                    }
+                    if (startsWithPropertyName || writingObject)
+                        delimitersBefore = delimitersBefore.EnforceComma();
+                }
+                else
                     delimitersBefore = delimitersBefore.Replace(",", string.Empty);
                 if (raw.EndsWith("{"))
                     context.GlobalState.WrittenInThisObject = false;

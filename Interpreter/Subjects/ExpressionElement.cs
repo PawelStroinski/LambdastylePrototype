@@ -17,8 +17,19 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         public virtual AppliesAtResult AppliesAt(AppliesAtContext context)
         {
+            if (context.Strict && !AllStrict())
+                return Result(false);
             var substitute = Substitute(context);
             return substitute.AllAppliesAt(context);
+        }
+
+        public virtual ExpressionElement ReduceAt(AppliesAtContext context)
+        {
+            var reduced = Substitute(context).expression.Select(element => element.ReduceAt(context)).ToArray();
+            if (reduced.All(element => element is Any) && AppliesAt(context).Result)
+                return new Any();
+            else
+                return RecreateWithExpression(reduced);
         }
 
         public virtual bool JustAny()
@@ -26,10 +37,13 @@ namespace LambdastylePrototype.Interpreter.Subjects
             return expression.Any() && expression.All(element => element.JustAny());
         }
 
+        public virtual bool HasParent()
+        {
+            return expression.Any(element => element.HasParent());
+        }
+
         protected AppliesAtResult AllAppliesAt(AppliesAtContext context)
         {
-            if (RejectByStrictness(context))
-                return Result(false);
             var results = expression.Select(element => element.AppliesAt(context)).ToArray();
             return Result(results.All(result => result.Result),
                 results
@@ -39,8 +53,6 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         protected AppliesAtResult AnyAppliesAt(AppliesAtContext context, bool tail = false)
         {
-            if (RejectByStrictness(context))
-                return Result(false);
             var results = expression.Select(element => element.AppliesAt(context)).ToArray();
             return Result(results.Any(result => result.Result), tail: tail,
                 positiveLog: results
@@ -64,19 +76,29 @@ namespace LambdastylePrototype.Interpreter.Subjects
                 return new AppliesAtResult(false);
         }
 
+        protected virtual bool IsStrict()
+        {
+            return false;
+        }
+
         protected virtual ExpressionElement Substitute(AppliesAtContext context)
         {
             var substitute = SubstituteParent(context)
                 .Select(element => element.Substitute(context)).ToArray();
-            if (expression.SequenceEqual(substitute))
+            return RecreateWithExpression(substitute);
+        }
+
+        protected ExpressionElement RecreateWithExpression(ExpressionElement[] expression)
+        {
+            if (this.expression.SequenceEqual(expression))
                 return this;
             else
-                return (ExpressionElement)Activator.CreateInstance(this.GetType(), substitute);
+                return (ExpressionElement)Activator.CreateInstance(this.GetType(), expression);
         }
 
         ExpressionElement[] SubstituteParent(AppliesAtContext context)
         {
-            return context.IsParent ? SubstituteParentWhenIsParent() : SubstituteParentWhenIsNotParent();
+            return context.IsParent ? SubstituteParentWhenIsParent() : SubstituteParentWhenIsNotParent(context);
         }
 
         ExpressionElement[] SubstituteParentWhenIsParent()
@@ -87,18 +109,20 @@ namespace LambdastylePrototype.Interpreter.Subjects
                 return expression.Select(element => element is Parent ? new Start() : element).ToArray();
         }
 
-        ExpressionElement[] SubstituteParentWhenIsNotParent()
+        ExpressionElement[] SubstituteParentWhenIsNotParent(AppliesAtContext context)
         {
             if (expression.Any(element => element is Parent))
-                return expression.Where(element => element is Parent).ToArray();
+                if (context.FindParent)
+                    return expression.Select(element => element is Parent ? element : new Any()).ToArray();
+                else
+                    return expression.Select(element => element is Parent ? new Not() : element).ToArray();
             else
                 return expression;
         }
 
-        bool RejectByStrictness(AppliesAtContext context)
+        bool AllStrict()
         {
-            return context.Strict
-                && !expression.All(element => element is Id || element is Literal);
+            return IsStrict() && expression.All(element => element.AllStrict());
         }
     }
 }

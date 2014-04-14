@@ -36,7 +36,8 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
             {
                 var tokenType = context.Position.Last().TokenType;
                 var used = context.GlobalState.TailBoundaryUsed;
-                var wasUsed = used.ContainsKey(context.PredicateIdentity);
+                var wasUsed = used.ContainsKey(context.PredicateIdentity)
+                    && context.Position.StartsWith(used[context.PredicateIdentity]);
                 if (tokenType.IsStart() && !wasUsed)
                 {
                     used[context.PredicateIdentity] = context.Position;

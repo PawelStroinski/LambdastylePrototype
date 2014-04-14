@@ -44,7 +44,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             {
                 var elementContext = context.Copy(hasOuter: HasOuter(),
                     delimitersBefore: delimitersBefore || (previousElement is OuterId && element is OuterValue),
-                    predicateIdentity: identity);
+                    predicateIdentity: identity, appliedCase: cases.AppliedCase);
                 if (element.AppliesAt(elementContext))
                 {
                     var elementResult = element.ToString(elementContext);
@@ -96,13 +96,15 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         void SetIdentityAndScope()
         {
-            identity = HasOuterId() && !HasInnerValue() && !context.ApplyingStart ? new PredicateIdentity() : identity;
+            if (HasOuterId() && !HasInnerValue() && !context.ApplyingStart)
+                identity = new PredicateIdentity();
             context.GlobalState.PredicateScope.Change(GetContext());
         }
 
         PredicateContext GetContext()
         {
-            return context.Copy(hasOuter: HasOuter(), delimitersBefore: false, predicateIdentity: identity);
+            return context.Copy(hasOuter: HasOuter(), delimitersBefore: false, predicateIdentity: identity,
+                appliedCase: cases.AppliedCase);
         }
 
         string InsertStartToken(string result)

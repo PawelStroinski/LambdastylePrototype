@@ -13,19 +13,22 @@ namespace LambdastylePrototype
         public readonly PositionStep[] Position;
         public readonly Action<string, Sentence, bool, int> Write;
         public readonly Func<Sentence, bool> Written;
-        public readonly Action<Sentence[]> Spawn;
+        public readonly Action<Sentence[], bool> Spawn;
         public readonly PositionStep[] SpawnerPosition;
         public readonly GlobalState GlobalState;
         public readonly SentenceScope SentenceScope;
         public readonly ParentScope ParentScope;
+        public readonly ReducedsScope ReducedsScope;
         public readonly bool Scan;
         public readonly bool Strict;
+        public readonly bool SpawnerCanCopy;
         public readonly Sentence[] Previous;
 
         public ApplyContext(IEnumerator<Sentence> style, PositionStep[] position,
-            Action<string, Sentence, bool, int> write, Func<Sentence, bool> written, Action<Sentence[]> spawn,
+            Action<string, Sentence, bool, int> write, Func<Sentence, bool> written, Action<Sentence[], bool> spawn,
             PositionStep[] spawnerPosition, GlobalState globalState, SentenceScope sentenceScope,
-            ParentScope parentScope, bool scan, bool strict, params Sentence[] previous)
+            ParentScope parentScope, ReducedsScope reducedsScope, bool scan, bool strict, bool spawnerCanCopy,
+            params Sentence[] previous)
         {
             Style = style;
             Position = position;
@@ -36,32 +39,34 @@ namespace LambdastylePrototype
             GlobalState = globalState;
             SentenceScope = sentenceScope;
             ParentScope = parentScope;
+            ReducedsScope = reducedsScope;
             Scan = scan;
             Strict = strict;
+            SpawnerCanCopy = spawnerCanCopy;
             Previous = previous;
         }
 
         public ApplyContext Copy(Sentence caller)
         {
             return this.Copy(caller: caller, style: Style, spawnerPosition: SpawnerPosition, scan: Scan,
-                strict: Strict);
+                strict: Strict, spawnerCanCopy: SpawnerCanCopy);
         }
 
         public ApplyContext Copy(Sentence caller, IEnumerator<Sentence> style, PositionStep[] spawnerPosition,
-            bool scan)
+            bool scan, bool spawnerCanCopy)
         {
             return this.Copy(caller: caller, style: style, spawnerPosition: spawnerPosition, scan: scan,
-                strict: Strict);
+                strict: Strict, spawnerCanCopy: spawnerCanCopy);
         }
 
         public ApplyContext Copy(Sentence caller, bool strict)
         {
             return this.Copy(caller: caller, style: Style, spawnerPosition: SpawnerPosition, scan: Scan,
-                strict: strict);
+                strict: strict, spawnerCanCopy: SpawnerCanCopy);
         }
 
         ApplyContext Copy(Sentence caller, IEnumerator<Sentence> style, PositionStep[] spawnerPosition, bool scan,
-            bool strict)
+            bool strict, bool spawnerCanCopy)
         {
             return new ApplyContext(
                 style: style,
@@ -73,8 +78,10 @@ namespace LambdastylePrototype
                 globalState: GlobalState,
                 sentenceScope: SentenceScope,
                 parentScope: ParentScope,
+                reducedsScope: ReducedsScope,
                 scan: scan,
                 strict: strict,
+                spawnerCanCopy: spawnerCanCopy,
                 previous: Previous.Concat(new Sentence[] { caller }).ToArray());
         }
     }
