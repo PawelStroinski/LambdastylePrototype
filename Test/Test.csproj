@@ -110,6 +110,7 @@
     <Compile Include="input4.json\4 copy params from cofaxEmail to cofaxTools\Style.cs" />
     <Compile Include="input4.json\4 remove every key with value ending with id\Style.cs" />
     <Compile Include="input4.json\4 swap first and second servlet\Style.cs" />
+    <Compile Include="input5.json\5 append dots to every label not ending with dots\Style.cs" />
     <Compile Include="input5.json\5 if id is present but not label copy it as label\Style.cs" />
     <Compile Include="input5.json\5 replace every null with curly braces\Style.cs" />
     <Compile Include="input5.json\5 similar to if id is present but not label copy it as label 2\Style.cs" />
@@ -209,6 +210,7 @@
     <Content Include="input4.json\4 copy params from cofaxEmail to cofaxTools\output.txt" />
     <Content Include="input4.json\4 remove every key with value ending with id\output.txt" />
     <Content Include="input4.json\4 swap first and second servlet\output.txt" />
+    <Content Include="input5.json\5 append dots to every label not ending with dots\output.txt" />
     <Content Include="input5.json\5 if id is present but not label copy it as label\output.txt" />
     <Content Include="input5.json\5 replace every null with curly braces\output.txt" />
     <Content Include="input5.json\5 similar to if id is present but not label copy it as label 2\output.txt" />
