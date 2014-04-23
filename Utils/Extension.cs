@@ -154,5 +154,15 @@ namespace LambdastylePrototype
         {
             return starts.Take(with.Count()).SequenceEqual(with);
         }
+
+        public static Func<TKey, TValue> ToFunc<TKey, TValue>(this IDictionary<TKey, TValue> dictionary)
+        {
+            return (TKey key) => dictionary.ContainsKey(key) ? dictionary[key] : default(TValue);
+        }
+
+        public static IEnumerable<T> SkipEndWhile<T>(this IEnumerable<T> sequence, Func<T, bool> condition)
+        {
+            return sequence.Reverse().SkipWhile(condition).Reverse();
+        }
     }
 }

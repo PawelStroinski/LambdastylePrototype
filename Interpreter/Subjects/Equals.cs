@@ -12,9 +12,11 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
-            if (!context.Position.LastTokenType().IsValue())
+            var tokenType = context.Position.LastTokenType();
+            if (tokenType.IsValue() || tokenType.IsStart())
+                return base.AppliesAt(context);
+            else
                 return Result(false);
-            return base.AppliesAt(context);
         }
     }
 }

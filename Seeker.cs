@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LambdastylePrototype.Interpreter;
 using LambdastylePrototype.Utils;
 using Newtonsoft.Json;
 
@@ -14,15 +15,17 @@ namespace LambdastylePrototype
         readonly EditableStream output;
         readonly GlobalState globalState;
         readonly StreamReader streamReader;
+        readonly Dictionary<Sentence, long> endsAt;
         readonly Action<PositionJsonReader> replaceReader;
         PositionJsonReader reader;
 
         public Seeker(EditableStream output, GlobalState globalState, StreamReader streamReader,
-            Action<PositionJsonReader> replaceReader, PositionJsonReader reader)
+            Dictionary<Sentence, long> endsAt, Action<PositionJsonReader> replaceReader, PositionJsonReader reader)
         {
             this.output = output;
             this.globalState = globalState;
             this.streamReader = streamReader;
+            this.endsAt = endsAt;
             this.replaceReader = replaceReader;
             this.reader = reader;
         }
@@ -42,6 +45,8 @@ namespace LambdastylePrototype
             if (output.Position != anchor.OutputPosition)
             {
                 var count = output.Position - anchor.OutputPosition;
+                foreach (var endsAt in this.endsAt.Where(kvp => kvp.Value >= output.Position).ToList())
+                    this.endsAt[endsAt.Key] = endsAt.Value - count;
                 output.Position = anchor.OutputPosition;
                 output.Delete(count);
             }

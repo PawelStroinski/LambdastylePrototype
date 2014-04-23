@@ -10,10 +10,5 @@ namespace LambdastylePrototype.Interpreter.Subjects
     class Subject : ExpressionElement
     {
         public Subject(params ExpressionElement[] expression) : base(expression) { }
-
-        protected override bool IsStrict()
-        {
-            return true;
-        }
     }
 }

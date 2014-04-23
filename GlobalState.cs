@@ -30,6 +30,7 @@ namespace LambdastylePrototype
         public Raw Joining;
         public bool LastApplyingTail;
         public readonly PredicateScope PredicateScope = new PredicateScope();
+        public bool WriteDeferredNewLine;
 
         public GlobalState Copy()
         {

@@ -23,5 +23,10 @@ namespace LambdastylePrototype.Interpreter.Subjects
         {
             return "*";
         }
+
+        protected override bool IsStrict()
+        {
+            return false;
+        }
     }
 }

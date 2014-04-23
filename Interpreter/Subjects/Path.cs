@@ -13,17 +13,35 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
+            return AppliesAt(context, (_, __) => { });
+        }
+
+        public override ExpressionElement ReduceAt(AppliesAtContext context)
+        {
+            var reduced = new List<ExpressionElement>();
+            if (AppliesAt(context, onProgress: (element, context_) => reduced.Add(element.ReduceAt(context_))).Result
+                    && reduced.All(element => element is Any))
+                return new Any();
+            else
+                return base.ReduceAt(context);
+        }
+
+        AppliesAtResult AppliesAt(AppliesAtContext context, Action<ExpressionElement, AppliesAtContext> onProgress)
+        {
             var positionLength = 1;
             var expressionIndex = 0;
             var position = context.Position;
             var positiveLog = new List<LogEntry>();
+            var skippedPosition = new PositionStep[0];
             while (positionLength <= position.Length && expressionIndex < expression.Length)
             {
                 var currentPosition = position.Take(positionLength).ToArray();
                 var result = expression[expressionIndex].AppliesAt(context.Copy(currentPosition));
                 if (result.Result)
                 {
-                    positiveLog.AddRange(result.PositiveLog);
+                    onProgress(expression[expressionIndex], context.Copy(currentPosition));
+                    positiveLog.AddRange(PrefixPosition(log: result.PositiveLog, prefix: skippedPosition));
+                    skippedPosition = skippedPosition.Concat(position.Take(positionLength)).ToArray();
                     position = position.Skip(positionLength).ToArray();
                     positionLength = 1;
                     if (expressionIndex == expression.Length - 1)
@@ -42,9 +60,10 @@ namespace LambdastylePrototype.Interpreter.Subjects
             return Result(false);
         }
 
-        protected override bool IsStrict()
+        LogEntry[] PrefixPosition(LogEntry[] log, PositionStep[] prefix)
         {
-            return true;
+            return log.Select(entry => entry.Position == null
+                ? entry : entry.Copy(prefix.Concat(entry.Position).ToArray())).ToArray();
         }
     }
 }

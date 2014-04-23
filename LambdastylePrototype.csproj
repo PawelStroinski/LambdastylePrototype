@@ -99,6 +99,7 @@
     <Compile Include="Interpreter\Subjects\RegExp.cs" />
     <Compile Include="Interpreter\Subjects\Any.cs" />
     <Compile Include="Interpreter\Subjects\Start.cs" />
+    <Compile Include="WriteAsScope.cs" />
     <Compile Include="Processor.cs" />
     <Compile Include="ParentScope.cs" />
     <Compile Include="ReducedsScope.cs" />

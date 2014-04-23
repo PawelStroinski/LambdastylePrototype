@@ -21,6 +21,7 @@ namespace LambdastylePrototype
         readonly Dictionary<Sentence, long> endsAt = new Dictionary<Sentence, long>();
         readonly PositionStep[] spawnerPosition;
         readonly GlobalState spawnerGlobalState;
+        readonly Sentence spawner;
         readonly bool spawnerCanCopy;
         StreamWriter writer;
         StreamReader streamReader;
@@ -31,6 +32,7 @@ namespace LambdastylePrototype
         Seeker seeker;
         ParentScope parentScope;
         ReducedsScope reducedsScope;
+        WriteAsScope writeAsScope;
 
         public Processor(Stream input, EditableStream output, params Sentence[] style)
         {
@@ -40,12 +42,16 @@ namespace LambdastylePrototype
             this.styleEnumerator = style.Cast<Sentence>().GetEnumerator();
         }
 
-        Processor(Stream input, EditableStream output, Sentence[] style, PositionStep[] spawnerPosition,
-                  GlobalState spawnerGlobalState, bool spawnerCanCopy)
+        Processor(Stream input, EditableStream output, Dictionary<Sentence, long> startsAt,
+                Dictionary<Sentence, long> endsAt, Sentence[] style, PositionStep[] spawnerPosition,
+                GlobalState spawnerGlobalState, Sentence spawner, bool spawnerCanCopy)
             : this(input, output, style)
         {
+            this.startsAt = startsAt;
+            this.endsAt = endsAt;
             this.spawnerPosition = spawnerPosition;
             this.spawnerGlobalState = spawnerGlobalState;
+            this.spawner = spawner;
             this.spawnerCanCopy = spawnerCanCopy;
         }
 
@@ -54,7 +60,7 @@ namespace LambdastylePrototype
             bool readResult;
             EOF = false;
             globalState = spawnerGlobalState == null ? new GlobalState() : spawnerGlobalState.Copy();
-            sentenceScope = new SentenceScope(); reducedsScope = new ReducedsScope();
+            sentenceScope = new SentenceScope(); reducedsScope = new ReducedsScope(); writeAsScope = new WriteAsScope();
             output.InsertMode = true;
             using (writer = new StreamWriter(output))
             using (streamReader = new StreamReader(input, Encoding.UTF8, true, 1024, leaveOpen: true))
@@ -63,7 +69,7 @@ namespace LambdastylePrototype
                 input.Position = 0;
                 reader = new PositionJsonReader(new JsonTextReader(streamReader, grabDelimiters: true));
                 reader.CloseInput = false;
-                seeker = new Seeker(output, globalState, streamReader, ReplaceReader, reader);
+                seeker = new Seeker(output, globalState, streamReader, endsAt, ReplaceReader, reader);
                 parentScope = new ParentScope(seeker);
                 try
                 {
@@ -106,8 +112,10 @@ namespace LambdastylePrototype
                                     sentenceScope: sentenceScope,
                                     parentScope: parentScope,
                                     reducedsScope: reducedsScope,
+                                    writeAsScope: writeAsScope,
                                     scan: false,
                                     strict: false,
+                                    spawner: spawner,
                                     spawnerCanCopy: spawnerCanCopy);
         }
 
@@ -129,12 +137,14 @@ namespace LambdastylePrototype
             RewindOutputToEOF();
         }
 
-        void Spawn(Sentence[] style, bool spawnerCanCopy)
+        void Spawn(Sentence[] style, Sentence spawner, bool spawnerCanCopy)
         {
-            var spawned = new Processor(input, output, style, spawnerPosition: reader.Position,
-                spawnerGlobalState: globalState, spawnerCanCopy: spawnerCanCopy);
+            var spawned = new Processor(input: input, output: output, startsAt: startsAt, endsAt: endsAt, style: style,
+                spawnerPosition: reader.Position, spawnerGlobalState: globalState, spawner: spawner,
+                spawnerCanCopy: spawnerCanCopy);
             spawned.Process();
             globalState.WrittenInThisObject = spawned.globalState.WrittenInThisObject;
+            globalState.WriteDeferredNewLine = spawned.globalState.WriteDeferredNewLine;
         }
 
         void RewindOutputTo(Sentence sentence, Sentence beingWritten)

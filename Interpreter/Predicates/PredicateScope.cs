@@ -36,7 +36,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         bool Continues()
         {
-            return scopes.ContainsKey(context.PredicateIdentity);
+            return scopes.ContainsKey(context.PredicateIdentity)
+                && context.Position.StartsWith(scopes[context.PredicateIdentity].StartsAt);
         }
 
         bool IsStart()

@@ -13,10 +13,5 @@ namespace LambdastylePrototype.Interpreter.Subjects
             var result = context.StartPosition != null && context.StartPosition.SequenceEqual(context.Position);
             return Result(result);
         }
-
-        protected override bool IsStrict()
-        {
-            return true;
-        }
     }
 }

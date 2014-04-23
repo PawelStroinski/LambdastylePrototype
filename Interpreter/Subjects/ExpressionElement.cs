@@ -78,7 +78,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         protected virtual bool IsStrict()
         {
-            return false;
+            return true;
         }
 
         protected virtual ExpressionElement Substitute(AppliesAtContext context)

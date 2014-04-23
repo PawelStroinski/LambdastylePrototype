@@ -38,7 +38,8 @@ namespace LambdastylePrototype.Interpreter
             if (FindParent(appliesAtContext))
                 return;
             var appliesAtResult = HasSubject ? subject.AppliesAt(appliesAtContext) : new AppliesAtResult(false);
-            if (appliesAtResult.Result && !context.Scan && !SkipStrictCopyBecauseSpawnerCopiedIt())
+            var apply = appliesAtResult.Result && !context.Scan && !SkipStrictCopyBecauseSpawnerCopiedIt();
+            if (apply)
             {
                 Extension.WriteDebug(context.Position.ToDebugString());
                 Extension.WriteDebugLine(appliesAtResult.PositiveLog.ToDebugString());
@@ -50,16 +51,19 @@ namespace LambdastylePrototype.Interpreter
                     applyingLiteral: appliesAtResult.PositiveLog.ContainsAssignableTo<Literal>(),
                     applyingParent: appliesAtContext.IsParent,
                     applyingOr: appliesAtResult.PositiveLog.Contains<Or>(),
-                    applyingStart: appliesAtResult.PositiveLog.Contains<Start>());
+                    applyingStart: appliesAtResult.PositiveLog.Contains<Start>(),
+                    applyingSpawn: context.Spawner != null,
+                    allowNewLine: !children.Any());
                 if (predicate.AppliesAt(predicateContext))
                 {
                     WritePreviousUntilSubjectOnce();
                     WriteSubjectlessSkippedUntilEnd();
                     var toStringResult = predicate.ToString(predicateContext);
-                    context.Write(toStringResult.Result, this, toStringResult.Rewind, toStringResult.SeekBy);
+                    var writeAs = context.WriteAsScope.GetWriteAs(context, appliesAtResult);
+                    context.Write(toStringResult.Result, writeAs, toStringResult.Rewind, toStringResult.SeekBy);
                 }
-                ApplyChildren();
             }
+            ApplyChildren(appliedSentence: apply);
             if (context.Style.MoveNext())
                 context.Style.Current.Apply(NextContext(appliesAtResult));
         }
@@ -87,8 +91,9 @@ namespace LambdastylePrototype.Interpreter
 
         public void ApplyEOF(ApplyContext context)
         {
-            if (!HasSubject && !context.Written(this))
-                context.Write(predicate.ToString(new PredicateContext(context.GlobalState)).Result, this, true, 0);
+            var notWrittenOrIsSpawn = !context.Written(this) || context.Spawner != null;
+            if (!HasSubject && notWrittenOrIsSpawn)
+                context.Write(predicate.ToString(new PredicateContext(context.GlobalState)).Result, this, false, 0);
             if (context.Style.MoveNext())
                 context.Style.Current.ApplyEOF(context);
             else
@@ -132,7 +137,7 @@ namespace LambdastylePrototype.Interpreter
                 if (reduced.JustAny())
                 {
                     Extension.WriteDebug(context.Position.ToDebugString());
-                    Extension.WriteDebugLine("[Parent found]");
+                    Extension.WriteDebugLine("[ParentFound]");
                     context.ParentScope.ParentFound(this);
                     return true;
                 }
@@ -154,14 +159,15 @@ namespace LambdastylePrototype.Interpreter
                 var childrenAndAfterChildren = children.Concat(afterChildren.Enclose());
                 var childrenStyle = childrenAndAfterChildren.Cast<Sentence>().GetEnumerator();
                 var childrenContext = context.Copy(caller: this, style: childrenStyle,
-                    spawnerPosition: context.SentenceScope.StartsAt(), scan: true, spawnerCanCopy: CanCopyAsSpawner());
+                    spawnerPosition: context.SentenceScope.StartsAt(), scan: true, spawnerCanCopy: CanCopyAsSpawner(),
+                    spawner: this);
                 childrenStyle.MoveNext();
                 childrenStyle.Current.Apply(childrenContext);
                 if (afterChildren.Reached)
                     return false;
                 else
                 {
-                    Extension.WriteDebugLine("[Child applies]");
+                    Extension.WriteDebugLine("[ChildApplies]");
                     return true;
                 }
             }
@@ -169,10 +175,19 @@ namespace LambdastylePrototype.Interpreter
                 return false;
         }
 
-        void ApplyChildren()
+        void ApplyChildren(bool appliedSentence)
         {
-            if (children.Any() && !context.SentenceScope.Continues())
-                context.Spawn(EnsureThatEachChildWithValueHasSubject(), CanCopyAsSpawner());
+            if (children.Any() && context.SentenceScope.EndsAt(context, appliedSentence: appliedSentence))
+            {
+                Extension.WriteDebugLine("[ApplyChildren]");
+                context.Spawn(EnsureThatEachChildWithValueHasSubject(), this, CanCopyAsSpawner());
+                Extension.WriteDebugLine("[/ApplyChildren]");
+                if (context.GlobalState.WriteDeferredNewLine)
+                {
+                    context.Write(Environment.NewLine, context.Style.Current, true, 0);
+                    context.GlobalState.WriteDeferredNewLine = false;
+                }
+            }
         }
 
         void WritePreviousUntilSubjectOnce()

@@ -56,11 +56,17 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 previousElement = element;
             }
             if (context.AllowNewLine && !HasOuter() && !cases.AppliedCase<Joining>() && !cases.AppliedCase<Opening>()
-                && !cases.AppliedCase<Tail>() && !context.GlobalState.ForceSyntax.Value)
-            {
-                result += Environment.NewLine;
-                context.GlobalState.AddedNewLine.Add(identity);
-            }
+                    && !cases.AppliedCase<Tail>() && !context.GlobalState.ForceSyntax.Value)
+                if (context.ApplyingSpawn)
+                {
+                    if (!context.GlobalState.WrittenInThisObject)
+                        context.GlobalState.WriteDeferredNewLine = true;
+                }
+                else
+                {
+                    result += Environment.NewLine;
+                    context.GlobalState.AddedNewLine.Add(identity);
+                }
             if (context.GlobalState.ForceSyntax.Value && !context.GlobalState.Written)
                 result = InsertStartToken(result);
             var toStringResult = new ToStringResult(result, seekBy: seekBy, rewind: Rewind());
@@ -130,6 +136,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
         {
             if (context.ApplyingOr)
                 return true;
+            if (context.ApplyingStart && context.GlobalState.WrittenInThisObject)
+                return false;
             return context.ApplyingLiteral && !HasOuterId() && !HasRawPropertyName() && !cases.AppliedCase<Wrapping>();
         }
 

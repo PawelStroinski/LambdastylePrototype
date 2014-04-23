@@ -19,6 +19,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public readonly bool ApplyingParent;
         public readonly bool ApplyingOr;
         public readonly bool ApplyingStart;
+        public readonly bool ApplyingSpawn;
         public readonly Func<Type, bool> AppliedCase;
         public readonly bool DelimitersBefore;
         public readonly PredicateIdentity PredicateIdentity;
@@ -27,8 +28,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
             bool childApplies = false, bool hasOuter = false, bool allowNewLine = true,
             bool applyingItem = false, bool applyingTail = false, bool applyingLiteral = false,
             bool applyingParent = false, bool applyingOr = false, bool applyingStart = false,
-            Func<Type, bool> appliedCase = null, bool delimitersBefore = true,
-            PredicateIdentity predicateIdentity = null)
+            bool applyingSpawn = false, Func<Type, bool> appliedCase = null,
+            bool delimitersBefore = true, PredicateIdentity predicateIdentity = null)
         {
             GlobalState = globalState;
             Position = position == null ? new PositionStep[0] : position;
@@ -41,6 +42,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
             ApplyingParent = applyingParent;
             ApplyingOr = applyingOr;
             ApplyingStart = applyingStart;
+            ApplyingSpawn = applyingSpawn;
             AppliedCase = appliedCase;
             DelimitersBefore = delimitersBefore;
             PredicateIdentity = predicateIdentity;
@@ -61,6 +63,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 applyingParent: ApplyingParent,
                 applyingOr: ApplyingOr,
                 applyingStart: ApplyingStart,
+                applyingSpawn: ApplyingSpawn,
                 appliedCase: appliedCase,
                 delimitersBefore: delimitersBefore,
                 predicateIdentity: predicateIdentity);

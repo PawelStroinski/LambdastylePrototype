@@ -84,7 +84,6 @@
           "betaServer": true,
           "mailHost": "mail1",
           "mailHostOverride": "mail2"}
-
       }
     ],
     "servlet-mapping": {
