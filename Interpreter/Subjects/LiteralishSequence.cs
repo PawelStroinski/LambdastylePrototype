@@ -10,7 +10,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
     {
         public LiteralishSequence(params Literalish[] expression) : base(expression) { }
 
-        protected override ExpressionElement Substitute(AppliesAtContext context)
+        public override ExpressionElement SubstituteAt(AppliesAtContext context)
         {
             return new RegExp("^" + string.Join(string.Empty,
                 expression.Cast<Literalish>().Select(literalish => literalish.ToRegExp())) + "$");

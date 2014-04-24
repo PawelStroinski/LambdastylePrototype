@@ -11,11 +11,6 @@ namespace LambdastylePrototype.Interpreter.Subjects
     {
         public Path(params ExpressionElement[] expression) : base(expression) { }
 
-        public override AppliesAtResult AppliesAt(AppliesAtContext context)
-        {
-            return AppliesAt(context, (_, __) => { });
-        }
-
         public override ExpressionElement ReduceAt(AppliesAtContext context)
         {
             var reduced = new List<ExpressionElement>();
@@ -24,6 +19,11 @@ namespace LambdastylePrototype.Interpreter.Subjects
                 return new Any();
             else
                 return base.ReduceAt(context);
+        }
+
+        public override AppliesAtResult AppliesAt(AppliesAtContext context)
+        {
+            return AppliesAt(context, (_, __) => { });
         }
 
         AppliesAtResult AppliesAt(AppliesAtContext context, Action<ExpressionElement, AppliesAtContext> onProgress)

@@ -37,7 +37,8 @@ namespace LambdastylePrototype.Interpreter
                 startPosition: StartPosition(), isParent: context.ParentScope.IsParent(this), findParent: false);
             if (FindParent(appliesAtContext))
                 return;
-            var appliesAtResult = HasSubject ? subject.AppliesAt(appliesAtContext) : new AppliesAtResult(false);
+            var appliesAtResult = HasSubject ? subject.SubstituteAt(appliesAtContext).AppliesAt(appliesAtContext)
+                : new AppliesAtResult(false);
             var apply = appliesAtResult.Result && !context.Scan && !SkipStrictCopyBecauseSpawnerCopiedIt();
             if (apply)
             {
@@ -126,13 +127,14 @@ namespace LambdastylePrototype.Interpreter
 
         bool FindParent(AppliesAtContext appliesAtContext)
         {
-            if (HasSubject && subject.HasParent() && !appliesAtContext.IsParent)
+            appliesAtContext = appliesAtContext.Copy(findParent: true);
+            if (HasSubject && subject.SubstituteAt(appliesAtContext).HasParent() && !appliesAtContext.IsParent)
             {
                 context.ReducedsScope.Change(context);
                 var reduced = context.ReducedsScope.GetReduced();
                 if (reduced == null)
                     reduced = subject;
-                reduced = reduced.ReduceAt(appliesAtContext.Copy(findParent: true));
+                reduced = reduced.SubstituteAt(appliesAtContext).ReduceAt(appliesAtContext);
                 context.ReducedsScope.SetReduced(reduced);
                 if (reduced.JustAny())
                 {

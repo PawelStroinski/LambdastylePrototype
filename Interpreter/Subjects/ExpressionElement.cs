@@ -15,21 +15,36 @@ namespace LambdastylePrototype.Interpreter.Subjects
             this.expression = expression;
         }
 
-        public virtual AppliesAtResult AppliesAt(AppliesAtContext context)
+        public virtual ExpressionElement SubstituteAt(AppliesAtContext context)
         {
-            if (context.Strict && !AllStrict())
-                return Result(false);
-            var substitute = Substitute(context);
-            return substitute.AllAppliesAt(context);
+            ExpressionElement[] previousSubstitute;
+            ExpressionElement[] substitute = SubstituteParent(context);
+            bool substituted;
+            do
+            {
+                previousSubstitute = substitute;
+                substitute = substitute.Select(element => element.SubstituteAt(context)).ToArray();
+                substituted = !substitute.SequenceEqual(previousSubstitute);
+            }
+            while (substituted);
+            return RecreateWithExpression(substitute);
         }
 
         public virtual ExpressionElement ReduceAt(AppliesAtContext context)
         {
-            var reduced = Substitute(context).expression.Select(element => element.ReduceAt(context)).ToArray();
+            var reduced = expression.Select(element => element.ReduceAt(context)).ToArray();
             if (reduced.All(element => element is Any) && AppliesAt(context).Result)
                 return new Any();
             else
                 return RecreateWithExpression(reduced);
+        }
+
+        public virtual AppliesAtResult AppliesAt(AppliesAtContext context)
+        {
+            if (context.Strict && !AllStrict())
+                return Result(false);
+            else
+                return AllAppliesAt(context);
         }
 
         public virtual bool JustAny()
@@ -81,13 +96,6 @@ namespace LambdastylePrototype.Interpreter.Subjects
             return true;
         }
 
-        protected virtual ExpressionElement Substitute(AppliesAtContext context)
-        {
-            var substitute = SubstituteParent(context)
-                .Select(element => element.Substitute(context)).ToArray();
-            return RecreateWithExpression(substitute);
-        }
-
         protected ExpressionElement RecreateWithExpression(ExpressionElement[] expression)
         {
             if (this.expression.SequenceEqual(expression))
@@ -113,7 +121,8 @@ namespace LambdastylePrototype.Interpreter.Subjects
         {
             if (expression.Any(element => element is Parent))
                 if (context.FindParent)
-                    return expression.Select(element => element is Parent ? element : new Any()).ToArray();
+                    return expression.Select(element => element is Parent || element is Any ? element : new Any())
+                        .ToArray();
                 else
                     return expression.Select(element => element is Parent ? new Not() : element).ToArray();
             else

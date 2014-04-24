@@ -10,12 +10,6 @@ namespace LambdastylePrototype.Interpreter.Subjects
     {
         public Not(params ExpressionElement[] expression) : base(expression) { }
 
-        public override AppliesAtResult AppliesAt(AppliesAtContext context)
-        {
-            var baseResult = base.AppliesAt(context);
-            return Result(!baseResult.Result);
-        }
-
         public override ExpressionElement ReduceAt(AppliesAtContext context)
         {
             if (expression.Any() && context.Position.LastTokenType().IsEnd())
@@ -24,6 +18,12 @@ namespace LambdastylePrototype.Interpreter.Subjects
                 return this;
             else
                 return new Not();
+        }
+
+        public override AppliesAtResult AppliesAt(AppliesAtContext context)
+        {
+            var baseResult = base.AppliesAt(context);
+            return Result(!baseResult.Result);
         }
     }
 }

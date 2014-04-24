@@ -10,7 +10,7 @@ namespace LambdastylePrototype.Interpreter.Subjects
     {
         public NotEquals(ExpressionElement left, ExpressionElement right) : base(left, right) { }
 
-        protected override ExpressionElement Substitute(AppliesAtContext context)
+        public override ExpressionElement SubstituteAt(AppliesAtContext context)
         {
             return new And(new Equals(expression[0], new Any()), new Not(new Equals(expression[0], expression[1])));
         }
