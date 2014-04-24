@@ -98,6 +98,7 @@
     <Compile Include="Interpreter\Subjects\Null.cs" />
     <Compile Include="Interpreter\Subjects\RegExp.cs" />
     <Compile Include="Interpreter\Subjects\Any.cs" />
+    <Compile Include="Interpreter\Subjects\ShortOr.cs" />
     <Compile Include="Interpreter\Subjects\Start.cs" />
     <Compile Include="WriteAsScope.cs" />
     <Compile Include="Processor.cs" />

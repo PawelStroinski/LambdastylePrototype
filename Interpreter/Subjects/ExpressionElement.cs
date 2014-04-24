@@ -106,12 +106,12 @@ namespace LambdastylePrototype.Interpreter.Subjects
 
         ExpressionElement[] SubstituteParent(AppliesAtContext context)
         {
-            return context.IsParent ? SubstituteParentWhenIsParent() : SubstituteParentWhenIsNotParent(context);
+            return context.IsParent ? SubstituteParentWhenIsParent(context) : SubstituteParentWhenIsNotParent(context);
         }
 
-        ExpressionElement[] SubstituteParentWhenIsParent()
+        ExpressionElement[] SubstituteParentWhenIsParent(AppliesAtContext context)
         {
-            if (expression.Length == 1 && expression.First() is Parent)
+            if (expression.Length == 1 && expression.First() is Parent && !context.Strict)
                 return new Any().Enclose().ToArray();
             else
                 return expression.Select(element => element is Parent ? new Start() : element).ToArray();

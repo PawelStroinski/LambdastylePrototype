@@ -46,7 +46,8 @@ namespace LambdastylePrototype.Interpreter.Subjects
                     positionLength = 1;
                     if (expressionIndex == expression.Length - 1)
                     {
-                        var tail = position.Any(step => step.TokenType == JsonToken.PropertyName);
+                        var tail = position.Any(step => step.TokenType == JsonToken.PropertyName)
+                            && !expression.All(element => element is Start);
                         return Result(true, tail: tail, positiveLog: positiveLog.ToArray());
                     }
                     expressionIndex++;
