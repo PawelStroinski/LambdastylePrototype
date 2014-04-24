@@ -36,7 +36,9 @@ namespace LambdastylePrototype.Interpreter.Predicates
                 var atStartArray = tokenType == JsonToken.StartArray;
                 if (writtenEndArray && atStartArray)
                     return false;
-                if (context.ApplyingTail || context.GlobalState.PredicateScope.Written())
+                if (context.ApplyingTail && !context.ApplyingItem)
+                    return false;
+                if (context.GlobalState.PredicateScope.Written())
                     return false;
             }
             return true;

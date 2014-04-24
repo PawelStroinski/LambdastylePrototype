@@ -39,6 +39,8 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
             var position = context.Position;
             if (!position.Any(step => step.TokenType == JsonToken.StartArray))
                 return false;
+            if (context.ApplyingItem)
+                return false;
             elementsFromRaw = elements.SkipWhile(element => !(element is Raw)).ToArray();
             var rawInnerValueAndRaw = elementsFromRaw.AreOfTypes(typeof(Raw), typeof(InnerValue), typeof(Raw));
             if (!rawInnerValueAndRaw)
