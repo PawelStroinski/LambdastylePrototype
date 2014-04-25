@@ -35,7 +35,7 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
 
         bool AppliesAtInner()
         {
-            if (context.ApplyingItem)
+            if (context.ApplyingItem || context.ApplyingOr)
                 return false;
             var parent = context.ApplyingParent
                 && (!context.ApplyingStart || context.GlobalState.PredicateScope.Written());

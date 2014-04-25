@@ -1,0 +1,22 @@
+[Open]
+[Open New]
+----------
+[Zoom In]
+[Zoom Out]
+[Original View]
+----------
+[Quality]
+[Pause]
+[Mute]
+----------
+[Find...]
+[Find Again]
+[Copy]
+[Copy Again]
+[Copy SVG]
+[View SVG]
+[View Source]
+[Save As]
+----------
+[Help]
+[About Adobe CVG Viewer...]

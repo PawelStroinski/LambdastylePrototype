@@ -55,12 +55,12 @@ namespace LambdastylePrototype.Interpreter
                     applyingStart: appliesAtResult.PositiveLog.Contains<Start>(),
                     applyingSpawn: context.Spawner != null,
                     allowNewLine: !children.Any());
+                var writeAs = context.WriteAsScope.GetWriteAs(context, appliesAtResult);
                 if (predicate.AppliesAt(predicateContext))
                 {
                     WritePreviousUntilSubjectOnce();
                     WriteSubjectlessSkippedUntilEnd();
                     var toStringResult = predicate.ToString(predicateContext);
-                    var writeAs = context.WriteAsScope.GetWriteAs(context, appliesAtResult);
                     context.Write(toStringResult.Result, writeAs, toStringResult.Rewind, toStringResult.SeekBy);
                 }
             }
