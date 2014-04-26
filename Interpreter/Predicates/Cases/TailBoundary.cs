@@ -32,7 +32,7 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
         bool AppliesAt()
         {
             var applyingTail = context.ApplyingTail || context.GlobalState.LastApplyingTail;
-            if (caseContext.AppliedCases.Contains<Tail>() && !applyingTail)
+            if (caseContext.AppliedCases.Contains<Tail>() && !applyingTail && !context.ApplyingSpawn)
             {
                 var tokenType = context.Position.Last().TokenType;
                 var used = context.GlobalState.TailBoundaryUsed;
