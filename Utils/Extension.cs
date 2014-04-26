@@ -12,15 +12,14 @@ namespace LambdastylePrototype
 {
     static class Extension
     {
+        static int debugIndentBy = 0;
+
         public static string ToDebugString(this IEnumerable<LogEntry> entries)
         {
-            if (entries.Any())
-                return string.Join(" ", entries.Select(entry => "<"
-                    + entry.Type.Name.ToString()
-                    + (entry.Tail ? "[TAIL]" : string.Empty)
-                    + ">")) + Environment.NewLine;
-            else
-                return string.Empty;
+            return string.Join(" ", entries.Select(entry => "<"
+                + entry.Type.Name.ToString()
+                + (entry.Tail ? "[TAIL]" : string.Empty)
+                + ">"));
         }
 
         public static string ToDebugString(this PositionStep[] position)
@@ -83,19 +82,30 @@ namespace LambdastylePrototype
             return position.Any() ? position.Last().TokenType : JsonToken.None;
         }
 
-        public static void WriteDebug(string value)
+        public static void WriteDebug(string value, int indentByChange)
         {
 #if !NCRUNCH
-            Console.Write(value);
-            NLog.LogManager.GetCurrentClassLogger().Debug(value);
+            if (indentByChange >= 0)
+                WriteDebug(value);
+            debugIndentBy += indentByChange;
+            if (indentByChange < 0)
+                WriteDebug(value);
 #endif
         }
 
-        public static void WriteDebugLine(string value)
+        public static void WriteDebug(string value)
         {
 #if !NCRUNCH
-            Console.WriteLine(value);
-            NLog.LogManager.GetCurrentClassLogger().Debug(value + Environment.NewLine);
+            if (!value.EndsWith(Environment.NewLine))
+                value += Environment.NewLine;
+            var indentation = new string(' ', debugIndentBy * 4);
+            var lines = value.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            var logger = NLog.LogManager.GetCurrentClassLogger();
+            foreach (var line in lines)
+            {
+                Console.WriteLine(indentation + line);
+                logger.Debug(indentation + line);
+            }
 #endif
         }
 
@@ -134,6 +144,7 @@ namespace LambdastylePrototype
             return types.Contains(typeof(T));
         }
 
+
         public static string EnforceComma(this string value)
         {
             return value.Contains(",") ? value : "," + value.IfEmpty(" ");
@@ -163,6 +174,16 @@ namespace LambdastylePrototype
         public static IEnumerable<T> SkipEndWhile<T>(this IEnumerable<T> sequence, Func<T, bool> condition)
         {
             return sequence.Reverse().SkipWhile(condition).Reverse();
+        }
+
+        public static bool SequenceEqualIgnoringItemIndex(this PositionStep[] first, PositionStep[] second)
+        {
+            return first.ResetItemIndex().SequenceEqual(second.ResetItemIndex());
+        }
+
+        public static PositionStep[] ResetItemIndex(this PositionStep[] position)
+        {
+            return position.Select(step => step.Copy(itemIndex: -1)).ToArray();
         }
     }
 }

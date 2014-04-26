@@ -43,7 +43,7 @@ namespace LambdastylePrototype.Interpreter
             if (apply)
             {
                 Extension.WriteDebug(context.Position.ToDebugString());
-                Extension.WriteDebugLine(appliesAtResult.PositiveLog.ToDebugString());
+                Extension.WriteDebug(appliesAtResult.PositiveLog.ToDebugString());
                 context.SentenceScope.Change(context);
                 var predicateContext = new PredicateContext(context.GlobalState, context.Position,
                     childApplies: ChildApplies(),
@@ -139,7 +139,7 @@ namespace LambdastylePrototype.Interpreter
                 if (reduced.JustAny())
                 {
                     Extension.WriteDebug(context.Position.ToDebugString());
-                    Extension.WriteDebugLine("[ParentFound]");
+                    Extension.WriteDebug("[ParentFound]");
                     context.ParentScope.ParentFound(this);
                     return true;
                 }
@@ -169,7 +169,7 @@ namespace LambdastylePrototype.Interpreter
                     return false;
                 else
                 {
-                    Extension.WriteDebugLine("[ChildApplies]");
+                    Extension.WriteDebug("[ChildApplies]");
                     return true;
                 }
             }
@@ -181,9 +181,9 @@ namespace LambdastylePrototype.Interpreter
         {
             if (children.Any() && context.SentenceScope.EndsAt(context, appliedSentence: appliedSentence))
             {
-                Extension.WriteDebugLine("[ApplyChildren]");
+                Extension.WriteDebug("[ApplyChildren]", indentByChange: 1);
                 context.Spawn(EnsureThatEachChildWithValueHasSubject(), this, CanCopyAsSpawner());
-                Extension.WriteDebugLine("[/ApplyChildren]");
+                Extension.WriteDebug("[/ApplyChildren]", indentByChange: -1);
                 if (context.GlobalState.WriteDeferredNewLine)
                 {
                     context.Write(Environment.NewLine, context.Style.Current, true, 0);
@@ -257,7 +257,7 @@ namespace LambdastylePrototype.Interpreter
         {
             var replacement = children
                 .Select(child => child.predicate.HasValue() && !child.HasSubject
-                    ? new Sentence(subject, child.predicate, child.children)
+                    ? new Sentence((Subject)subject.AsChildsSubject(), child.predicate, child.children)
                     : child)
                 .ToArray();
             return replacement;

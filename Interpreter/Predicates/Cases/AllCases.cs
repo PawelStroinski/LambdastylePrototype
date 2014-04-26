@@ -52,11 +52,11 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
 
         public override string ToString()
         {
-            var joined = string.Join(", ", appliedCases.Select(@case => @case.Name.ToString()));
+            var joined = string.Join(" + ", appliedCases.Select(@case => @case.Name.ToString()));
             if (joined == string.Empty)
                 return string.Empty;
             else
-                return "[" + joined + "]";
+                return "+ " + joined + " +";
         }
     }
 }

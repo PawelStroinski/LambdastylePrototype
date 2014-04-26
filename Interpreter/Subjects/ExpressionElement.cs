@@ -47,6 +47,12 @@ namespace LambdastylePrototype.Interpreter.Subjects
                 return AllAppliesAt(context);
         }
 
+        public virtual ExpressionElement AsChildsSubject()
+        {
+            var childsSubject = expression.Select(element => element.AsChildsSubject()).ToArray();
+            return RecreateWithExpression(childsSubject);
+        }
+
         public virtual bool JustAny()
         {
             return expression.Any() && expression.All(element => element.JustAny());

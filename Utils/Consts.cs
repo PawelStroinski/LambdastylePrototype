@@ -39,5 +39,7 @@ namespace LambdastylePrototype
         public static readonly string EndsWithStartObject = @"\{\s*$";
 
         public static readonly string PropertyName = StartsWithPropertyName + @"\s*$";
+
+        public static readonly string StartsWithColon = @"^\s*:";
     }
 }

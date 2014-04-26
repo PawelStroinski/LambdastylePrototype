@@ -155,7 +155,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
 
         void WriteDebug(ToStringResult toStringResult)
         {
-            Extension.WriteDebugLine(toStringResult.ToString() + "   " + cases.ToString() + Environment.NewLine);
+            Extension.WriteDebug(toStringResult.ToString() + "   " + cases.ToString());
         }
 
         bool HasRawPropertyName()

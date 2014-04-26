@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace LambdastylePrototype.Interpreter.Predicates.Cases
 {
@@ -23,13 +25,21 @@ namespace LambdastylePrototype.Interpreter.Predicates.Cases
 
         bool AppliesAt()
         {
-            return context.GlobalState.ForceSyntax.Value
-                && context.ApplyingStart
-                && context.GlobalState.WrittenPredicate.Contains(context.PredicateIdentity)
-                && !context.ApplyingTail
-                && !context.GlobalState.LastApplyingTail
-                && !context.Position.IsInArray()
-                && !context.Position.LastTokenType().IsEnd();
+            if (context.GlobalState.ForceSyntax.Value
+                    && context.ApplyingStart
+                    && context.GlobalState.WrittenPredicate.Contains(context.PredicateIdentity)
+                    && !context.ApplyingTail
+                    && !context.GlobalState.LastApplyingTail
+                    && !context.Position.IsInArray()
+                    && !context.Position.LastTokenType().IsEnd())
+                return true;
+            if (context.GlobalState.WrittenInThisObject
+                    && elements.AreOfTypes(typeof(OuterValue), typeof(Raw))
+                    && context.Position.HasPenultimate()
+                    && context.Position.Penultimate().TokenType == JsonToken.PropertyName
+                    && Regex.IsMatch(input: elements.Last().ToString(context).Result, pattern: Consts.StartsWithColon))
+                return true;
+            return false;
         }
 
         Proxy CreateProxy(PredicateElement proxied)

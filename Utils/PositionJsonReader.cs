@@ -113,11 +113,7 @@ namespace LambdastylePrototype.Utils
             if (position.Any() && position.Peek().TokenType == JsonToken.StartArray)
             {
                 var last = position.Pop();
-                position.Push(new PositionStep(
-                    tokenType: last.TokenType,
-                    value: last.Value,
-                    delimitersBefore: last.DelimitersBefore,
-                    delimitersAfter: last.DelimitersAfter,
+                position.Push(last.Copy(
                     itemIndex: reader.TokenType == JsonToken.EndArray ? -1 : (int)last.ItemIndex + 1));
             }
         }

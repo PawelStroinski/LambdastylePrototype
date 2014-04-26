@@ -26,6 +26,11 @@ namespace LambdastylePrototype.Interpreter.Subjects
             return AppliesAt(context, (_, __) => { });
         }
 
+        public override ExpressionElement AsChildsSubject()
+        {
+            return expression.OfType<Start>().Any() ? new Path(new Start()) : base.AsChildsSubject();
+        }
+
         AppliesAtResult AppliesAt(AppliesAtContext context, Action<ExpressionElement, AppliesAtContext> onProgress)
         {
             var positionLength = 1;
@@ -41,6 +46,10 @@ namespace LambdastylePrototype.Interpreter.Subjects
                 {
                     onProgress(expression[expressionIndex], context.Copy(currentPosition));
                     positiveLog.AddRange(PrefixPosition(log: result.PositiveLog, prefix: skippedPosition));
+                    if (positionLength < position.Length && expressionIndex < expression.Length - 1
+                            && position[positionLength - 1].TokenType == JsonToken.StartArray
+                            && expression[expressionIndex + 1] is Item)
+                        positionLength--;
                     skippedPosition = skippedPosition.Concat(position.Take(positionLength)).ToArray();
                     position = position.Skip(positionLength).ToArray();
                     positionLength = 1;

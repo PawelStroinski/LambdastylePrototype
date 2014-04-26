@@ -113,6 +113,7 @@
     <Compile Include="input5.json\5 append dots to every label not ending with dots\Style.cs" />
     <Compile Include="input5.json\5 convert back to XML 2\Style.cs" />
     <Compile Include="input5.json\5 convert back to XML\Style.cs" />
+    <Compile Include="input5.json\5 convert items to dictionary by id\Style.cs" />
     <Compile Include="input5.json\5 if id is present but not label copy it as label\Style.cs" />
     <Compile Include="input5.json\5 render as ASCII context menu 2\Style.cs" />
     <Compile Include="input5.json\5 render as ASCII context menu\Style.cs" />
@@ -217,6 +218,7 @@
     <Content Include="input5.json\5 append dots to every label not ending with dots\output.txt" />
     <Content Include="input5.json\5 convert back to XML 2\output.txt" />
     <Content Include="input5.json\5 convert back to XML\output.txt" />
+    <Content Include="input5.json\5 convert items to dictionary by id\output.txt" />
     <Content Include="input5.json\5 if id is present but not label copy it as label\output.txt" />
     <Content Include="input5.json\5 render as ASCII context menu 2\output.txt" />
     <Content Include="input5.json\5 render as ASCII context menu\output.txt" />

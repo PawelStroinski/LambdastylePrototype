@@ -46,5 +46,15 @@ namespace LambdastylePrototype
                 return hash;
             }
         }
+
+        public PositionStep Copy(int itemIndex)
+        {
+            return new PositionStep(
+                tokenType: TokenType,
+                value: Value,
+                delimitersBefore: DelimitersBefore,
+                delimitersAfter: DelimitersAfter,
+                itemIndex: itemIndex);
+        }
     }
 }

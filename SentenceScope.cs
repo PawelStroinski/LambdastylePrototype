@@ -11,6 +11,7 @@ namespace LambdastylePrototype
     class SentenceScope
     {
         readonly Dictionary<Sentence, PositionStep[]> startsAt;
+        readonly Dictionary<Sentence, PositionStep[]> endedAt = new Dictionary<Sentence, PositionStep[]>();
         ApplyContext context;
         JsonToken tokenType;
 
@@ -44,7 +45,19 @@ namespace LambdastylePrototype
         public bool EndsAt(ApplyContext context, bool appliedSentence)
         {
             if (appliedSentence)
-                return !Continues();
+            {
+                if (Continues())
+                    return false;
+                else
+                    if (!endedAt.ContainsKey(context.Style.Current)
+                        || endedAt[context.Style.Current].SequenceEqualIgnoringItemIndex(context.Position))
+                    {
+                        endedAt[context.Style.Current] = context.Position;
+                        return true;
+                    }
+                    else
+                        return false;
+            }
             else
             {
                 var sentenceScope = new SentenceScope(startsAt);
