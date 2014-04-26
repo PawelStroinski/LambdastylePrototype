@@ -115,6 +115,7 @@
     <Compile Include="input5.json\5 convert back to XML\Style.cs" />
     <Compile Include="input5.json\5 convert items to dictionary by id\Style.cs" />
     <Compile Include="input5.json\5 if id is present but not label copy it as label\Style.cs" />
+    <Compile Include="input5.json\5 remove keys with values containing two upper letters\Style.cs" />
     <Compile Include="input5.json\5 render as ASCII context menu 2\Style.cs" />
     <Compile Include="input5.json\5 render as ASCII context menu\Style.cs" />
     <Compile Include="input5.json\5 replace every null with curly braces\Style.cs" />
@@ -220,6 +221,7 @@
     <Content Include="input5.json\5 convert back to XML\output.txt" />
     <Content Include="input5.json\5 convert items to dictionary by id\output.txt" />
     <Content Include="input5.json\5 if id is present but not label copy it as label\output.txt" />
+    <Content Include="input5.json\5 remove keys with values containing two upper letters\output.txt" />
     <Content Include="input5.json\5 render as ASCII context menu 2\output.txt" />
     <Content Include="input5.json\5 render as ASCII context menu\output.txt" />
     <Content Include="input5.json\5 replace every null with curly braces\output.txt" />

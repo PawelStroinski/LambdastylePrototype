@@ -1,0 +1,55 @@
+{
+  "menu": {
+    "items": [
+      {
+        "id": "Open"
+      },
+      {
+      },
+      null,
+      {
+      },
+      {
+      },
+      {
+      },
+      null,
+      {
+        "id": "Quality"
+      },
+      {
+        "id": "Pause"
+      },
+      {
+        "id": "Mute"
+      },
+      null,
+      {
+        "id": "Find",
+        "label": "Find..."
+      },
+      {
+      },
+      {
+        "id": "Copy"
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      null,
+      {
+        "id": "Help"
+      },
+      {
+        "id": "About"
+      }
+    ]
+  }
+}
