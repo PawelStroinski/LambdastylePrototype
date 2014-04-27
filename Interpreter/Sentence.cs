@@ -54,6 +54,7 @@ namespace LambdastylePrototype.Interpreter
                     applyingOr: appliesAtResult.PositiveLog.Contains<Or>(),
                     applyingStart: appliesAtResult.PositiveLog.Contains<Start>(),
                     applyingSpawn: context.Spawner != null,
+                    regExpGroups: ConcatRegExpGroups(appliesAtResult),
                     allowNewLine: !children.Any());
                 var writeAs = context.WriteAsScope.GetWriteAs(context, appliesAtResult);
                 if (predicate.AppliesAt(predicateContext))
@@ -190,6 +191,13 @@ namespace LambdastylePrototype.Interpreter
                     context.GlobalState.WriteDeferredNewLine = false;
                 }
             }
+        }
+
+        string[] ConcatRegExpGroups(AppliesAtResult appliesAtResult)
+        {
+            return appliesAtResult.PositiveLog
+                .Where(entry => entry.RegExpGroups != null)
+                .SelectMany(entry => entry.RegExpGroups).ToArray();
         }
 
         void WritePreviousUntilSubjectOnce()

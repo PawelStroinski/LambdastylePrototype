@@ -17,7 +17,8 @@ namespace LambdastylePrototype.Interpreter.Subjects
                     return Result(false);
                 if (step.TokenType == JsonToken.StartArray)
                     return new AppliesAtResult(true, new LogEntry(GetType(), tail: false,
-                        position: context.Position.SkipEndWhile(step_ => !step.Equals(step_)).ToArray()));
+                        position: context.Position.SkipEndWhile(step_ => !step.Equals(step_)).ToArray(),
+                        regExpGroups: null));
             }
             return Result(false);
         }

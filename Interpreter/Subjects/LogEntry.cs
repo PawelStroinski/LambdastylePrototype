@@ -11,17 +11,19 @@ namespace LambdastylePrototype.Interpreter.Subjects
         public readonly Type Type;
         public readonly bool Tail;
         public readonly PositionStep[] Position;
+        public readonly string[] RegExpGroups;
 
         public LogEntry(Type type, bool tail)
-            : this(type: type, tail: tail, position: null)
+            : this(type: type, tail: tail, position: null, regExpGroups: null)
         {
         }
 
-        public LogEntry(Type type, bool tail, PositionStep[] position)
+        public LogEntry(Type type, bool tail, PositionStep[] position, string[] regExpGroups)
         {
             Type = type;
             Tail = tail;
             Position = position;
+            RegExpGroups = regExpGroups;
         }
 
         public LogEntry Copy(PositionStep[] position)
@@ -29,7 +31,8 @@ namespace LambdastylePrototype.Interpreter.Subjects
             return new LogEntry(
                 type: Type,
                 tail: Tail,
-                position: position);
+                position: position,
+                regExpGroups: RegExpGroups);
         }
     }
 }

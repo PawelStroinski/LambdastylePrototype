@@ -19,9 +19,17 @@ namespace LambdastylePrototype.Interpreter.Subjects
         public override AppliesAtResult AppliesAt(AppliesAtContext context)
         {
             var position = context.Position;
-            var result = position.Any(step => step.Value != null
-                && Regex.IsMatch(input: step.Value.ToString(), pattern: value));
-            return Result(result);
+            foreach (var step in position.Where(step => step.Value != null))
+            {
+                var result = Regex.Match(input: step.Value.ToString(), pattern: value);
+                if (result.Success)
+                {
+                    var groups = result.Groups.Cast<Group>().Skip(1).Select(group => group.Value).ToArray();
+                    return new AppliesAtResult(true, new LogEntry(GetType(), tail: false, position: null,
+                        regExpGroups: groups));
+                }
+            }
+            return Result(false);
         }
 
         public override string ToRegExp()
