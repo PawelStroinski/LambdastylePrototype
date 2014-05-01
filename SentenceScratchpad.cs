@@ -16,9 +16,9 @@ namespace LambdastylePrototype
             // "singleRun" -> #true
             new Sentence(new Subject(new Id("singleRun")), new Predicate(new OuterId(), new Raw("true")));
             // item="commonjs" ->
-            new Sentence(new Subject(new Equals(new Item(), new Value("commonjs"))), new Predicate());
+            new Sentence(new Subject(new Equals(new Item(), new Literal("commonjs"))), new Predicate());
             // "frameworks".item="commonjs" -> #"amd"
-            new Sentence(new Subject(new Equals(new Path(new Id("frameworks"), new Item()), new Value("commonjs"))),
+            new Sentence(new Subject(new Equals(new Path(new Id("frameworks"), new Item()), new Literal("commonjs"))),
                 new Predicate(new OuterId(), new Raw("\"amd\"")));
             // "key": "value"
             new Sentence(new Predicate("\"key\": \"value\""));
@@ -90,12 +90,12 @@ namespace LambdastylePrototype
             //  .* -> {#&},
             //  ]
             new Sentence(new Subject(new Id("widget")), new Predicate(new OuterId(), new Raw("[")),
-                new Sentence(new Subject(new Path(new Current(), new Any())),
+                new Sentence(new Subject(new Path(new Start(), new Any())),
                     new Predicate(new Raw("{"), new OuterId(), new OuterValue(), new Raw("},"))),
                 new Sentence(new Predicate("]")));
             //"debug"="on" ->
             //  * -> #&
-            new Sentence(new Subject(new Equals(new Id("debug"), new Value("on"))), new Predicate(),
+            new Sentence(new Subject(new Equals(new Id("debug"), new Literal("on"))), new Predicate(),
                 new Sentence(new Subject(new Any()), new Predicate(new OuterId(), new OuterValue())));
             //["id"&!"label"] -> #&,
             //  "label": "id" -> &
@@ -103,7 +103,8 @@ namespace LambdastylePrototype
                 new Predicate(new OuterId(), new OuterValue(), new Raw(",")),
                 new Sentence(new Subject(new Id("id")), new Predicate(new Raw("\"label\": "), new OuterValue())));
             // "label"!=*"..." -> #"|..."
-            new Sentence(new Subject(new Not(new Equals(new Id("label"), new Value(new Any(), new Literal("..."))))),
+            new Sentence(new Subject(new Not(new Equals(new Id("label"),
+                    new LiteralishSequence(new Any(), new Literal("..."))))),
                 new Predicate(new OuterId(), new Raw("\""), new InnerValue(), new Raw("...\"")));
             //<menu>
             //  <header>"header" -> |</header>
@@ -117,9 +118,9 @@ namespace LambdastylePrototype
                 new Predicate(new Raw("  <header>"), new InnerValue(), new Raw("</header>")));
             new Sentence(new Subject(new Not(new Equals(new Path(new Id("items"), new Item()), new Null()))),
                 new Predicate("  <item "),
-                new Sentence(new Subject(new Path(new Current(), new Id("id"))), new Predicate(new Raw("action=\""),
+                new Sentence(new Subject(new Path(new Start(), new Id("id"))), new Predicate(new Raw("action=\""),
                     new InnerValue(), new Raw("\" id=\""), new InnerValue(), new Raw("\">"))),
-                new Sentence(new Subject(new Or(new Path(new Current(), new Id("label")), new Path(new Current(),
+                new Sentence(new Subject(new Or(new Path(new Start(), new Id("label")), new Path(new Start(),
                     new Id("id")))), new Predicate(new InnerValue(), new Raw("</item>"))));
             //"items" -> #{
             //  .item ->
@@ -127,22 +128,22 @@ namespace LambdastylePrototype
             //    &,
             //  }
             new Sentence(new Subject(new Id("items")), new Predicate(new OuterId(), new Raw("{")),
-                new Sentence(new Subject(new Path(new Current(), new Item())), new Predicate(),
-                    new Sentence(new Subject(new Path(new Current(), new Id("id"))),
+                new Sentence(new Subject(new Path(new Start(), new Item())), new Predicate(),
+                    new Sentence(new Subject(new Path(new Start(), new Id("id"))),
                         new Predicate(new OuterValue(), new Raw(":"))),
                     new Sentence(new Predicate(new OuterValue(), new Raw(",")))),
                 new Sentence(new Predicate("}")));
             // *=/[A-Z]{2}/ ->
-            new Sentence(new Subject(new Equals(new Any(), new Value(new RegExp("[A-Z]{2}")))), new Predicate());
+            new Sentence(new Subject(new Equals(new Any(), new RegExp("[A-Z]{2}"))), new Predicate());
             //["id"="About"] ->
             //  ["id"="Mute"] -> &,
             //  &
-            new Sentence(new Subject(new Parent(new Equals(new Id("id"), new Value("About")))), new Predicate(),
-                new Sentence(new Subject(new Parent(new Equals(new Id("id"), new Value("Mute")))),
+            new Sentence(new Subject(new Parent(new Equals(new Id("id"), new Literal("About")))), new Predicate(),
+                new Sentence(new Subject(new Parent(new Equals(new Id("id"), new Literal("Mute")))),
                     new Predicate(new OuterValue(), new Raw(","))),
                 new Sentence(new Predicate(new OuterValue())));
             //"label"=\^(\w*) (\w*)$\ -> #"\1\|\2"
-            new Sentence(new Subject(new Equals(new Id("label"), new Value(new RegExp("^(\\w*) (\\w*)$")))),
+            new Sentence(new Subject(new Equals(new Id("label"), new RegExp("^(\\w*) (\\w*)$"))),
                 new Predicate(new OuterId(), new Raw("\""), new RegExpGroup(1), new Raw("|"), new RegExpGroup(2),
                     new Raw("\"")));
         }

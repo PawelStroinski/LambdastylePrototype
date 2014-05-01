@@ -15,7 +15,8 @@ namespace Test.input1.json._1_1_replace_commonjs_with_amd_only_in_frameworks
         void Build(Builder builder)
         {
             builder.Add(
-                new Sentence(new Subject(new Equals(new Path(new Id("frameworks"), new Item()), new Value("commonjs"))),
+                new Sentence(new Subject(new Equals(new Path(new Id("frameworks"), new Item()),
+                        new Literal("commonjs"))),
                     new Predicate(new OuterId(), new Raw("\"amd\""))),
                 Consts.CopyAny);
         }

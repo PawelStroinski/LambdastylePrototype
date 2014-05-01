@@ -90,7 +90,6 @@
     <Compile Include="Interpreter\Subjects\Literalish.cs" />
     <Compile Include="Interpreter\Subjects\AppliesAtContext.cs" />
     <Compile Include="Interpreter\Subjects\AppliesAtResult.cs" />
-    <Compile Include="Interpreter\Subjects\Current.cs" />
     <Compile Include="Interpreter\Subjects\LiteralishSequence.cs" />
     <Compile Include="Interpreter\Subjects\LogEntry.cs" />
     <Compile Include="Interpreter\Subjects\Not.cs" />
@@ -109,7 +108,6 @@
     <Compile Include="Seeker.cs" />
     <Compile Include="SentenceScratchpad.cs" />
     <Compile Include="SubjectScratchpad.cs" />
-    <Compile Include="Interpreter\Subjects\Value.cs" />
     <Compile Include="Interpreter\Subjects\Equals.cs" />
     <Compile Include="Interpreter\Subjects\Id.cs" />
     <Compile Include="Interpreter\Subjects\Item.cs" />

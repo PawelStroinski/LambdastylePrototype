@@ -15,7 +15,7 @@ namespace Test.input1.json._1_1_remove_every_array_containing_commonjs
         void Build(Builder builder)
         {
             builder.Add(
-                new Sentence(new Subject(new Parent(new Equals(new Item(), new Value("commonjs")))), new Predicate()),
+                new Sentence(new Subject(new Parent(new Equals(new Item(), new Literal("commonjs")))), new Predicate()),
                 Consts.CopyAny);
         }
     }
