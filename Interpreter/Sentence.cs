@@ -72,7 +72,8 @@ namespace LambdastylePrototype.Interpreter
 
         public void ApplyBOF(ApplyContext context)
         {
-            if (predicate.HasOuterId() || predicate.HasOuterValue())
+            var hasOuter = predicate.HasOuterId() || predicate.HasOuterValue();
+            if (HasSubject && hasOuter)
                 context.GlobalState.ForceSyntax = !context.GlobalState.ForceSyntax.HasValue;
             if (HasSubject && subject.JustAny() && predicate.HasOuterValue())
                 context.GlobalState.ForceSyntax = false;

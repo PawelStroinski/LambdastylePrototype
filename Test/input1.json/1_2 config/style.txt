@@ -1,0 +1,7 @@
+<config>
+  <plugins>
+    "plugins".item -> <item>|</item>
+  </plugins>
+  <basePath>"basePath" -> |</basePath>
+</config>
+* ->

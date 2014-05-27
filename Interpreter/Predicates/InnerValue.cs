@@ -11,7 +11,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
     {
         public override bool AppliesAt(PredicateContext context)
         {
-            var tokenType = context.Position.Last().TokenType;
+            var tokenType = context.Position.LastTokenType();
             return tokenType.IsValue();
         }
     }

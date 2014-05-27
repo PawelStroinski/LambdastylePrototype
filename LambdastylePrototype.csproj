@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <NoWarn>3021</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>W:\basicdotnet\json.net\Src\Newtonsoft.Json\bin\Debug\Net45\Newtonsoft.Json.dll</HintPath>
@@ -59,6 +63,13 @@
       <Link>Utils\StreamReaderSeeker.cs</Link>
     </Compile>
     <Compile Include="ApplyContext.cs" />
+    <Compile Include="Parser\Builder.cs" />
+    <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\LambdastyleTry\antlr-generated\LambdastyleTryLexer.cs" />
+    <Compile Include="Parser\LambdastyleTry\antlr-generated\LambdastyleTryParser.cs" />
+    <Compile Include="Parser\SentenceDraft.cs" />
+    <Compile Include="Parser\OpenSentence.cs" />
+    <Compile Include="Parser\Walker.cs" />
     <Compile Include="GlobalState.cs" />
     <Compile Include="Interpreter\MarkerSentence.cs" />
     <Compile Include="Interpreter\Predicates\Cases\CaseContext.cs" />

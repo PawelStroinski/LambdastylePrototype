@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Antlr.Runtime.Tree;
 using LambdastylePrototype.Interpreter.Predicates;
 using LambdastylePrototype.Interpreter.Subjects;
 using Newtonsoft.Json;
@@ -184,6 +185,16 @@ namespace LambdastylePrototype
         public static PositionStep[] ResetItemIndex(this PositionStep[] position)
         {
             return position.Select(step => step.Copy(itemIndex: -1)).ToArray();
+        }
+
+        public static CommonTree[] GetChildren(this CommonTree tree)
+        {
+            return tree.Children == null ? new CommonTree[0] : tree.Children.Cast<CommonTree>().ToArray();
+        }
+
+        public static string WithoutFirstAndLastChar(this string value)
+        {
+            return value.Substring(1, value.Length - 2);
         }
     }
 }

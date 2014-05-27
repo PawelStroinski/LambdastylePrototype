@@ -6,7 +6,9 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using KellermanSoftware.CompareNetObjects;
 using LambdastylePrototype;
+using LambdastylePrototype.Parser;
 using LambdastylePrototype.Interpreter;
 using NUnit.Framework;
 
@@ -14,8 +16,8 @@ namespace Test
 {
     public class Runner
     {
-        [TestCaseSource("GetStyles")]
-        public void Run(Type style)
+        [TestCaseSource("GetStylesForProcessor")]
+        public void Processor(Type style)
         {
             var folders = NamespaceFolders(style.Namespace);
             var inputFile = InputFileFullPath(folders);
@@ -30,6 +32,27 @@ namespace Test
             }
             Assert.AreEqual(File.ReadAllText(expectedOutputFile), File.ReadAllText(actualOutputFile),
                 actualOutputFile);
+        }
+
+        [TestCaseSource("GetStylesForParser")]
+        public void Parser(Type style)
+        {
+            var folders = NamespaceFolders(style.Namespace);
+            var builtStyle = BuiltStyle(style);
+            var styleFile = StyleFileFullPath(folders);
+            if (File.Exists(styleFile))
+            {
+                var parser = new Parser();
+                var compareLogic = new CompareLogic();
+                Sentence[] actualStyle;
+                using (var styleFileStream = new FileStream(styleFile, FileMode.Open))
+                    actualStyle = parser.Parse(styleFileStream);
+                compareLogic.Config.ComparePrivateFields = true;
+                compareLogic.Config.MembersToIgnore.Add("context");
+                var comparison = compareLogic.Compare(builtStyle, actualStyle);
+                if (!comparison.AreEqual)
+                    Assert.Fail("\nParser: " + comparison.DifferencesString);
+            }
         }
 
         [Test]
@@ -47,12 +70,25 @@ namespace Test
             Assert.IsTrue(File.Exists(inputFile), "was " + inputFile);
             var outputFile = OutputFileFullPath(foldersFirst);
             Assert.IsTrue(File.Exists(outputFile), "was " + outputFile);
+            var styleFile = StyleFileFullPath(foldersFirst);
+            Assert.IsTrue(File.Exists(styleFile), "was " + styleFile);
             var builtStyle = BuiltStyle(styles[0]);
             Assert.AreEqual(2, builtStyle.Length);
-            Assert.IsNotEmpty(GetStyles());
+            Assert.IsNotEmpty(GetStylesForProcessor());
+            Assert.IsNotEmpty(GetStylesForParser());
         }
 
-        List<ITestCaseData> GetStyles()
+        List<ITestCaseData> GetStylesForProcessor()
+        {
+            return GetStyles(testNameStart: string.Empty);
+        }
+
+        List<ITestCaseData> GetStylesForParser()
+        {
+            return GetStyles(testNameStart: "Parser: ");
+        }
+
+        List<ITestCaseData> GetStyles(string testNameStart)
         {
             var styles = GetStylesInternal();
             return styles
@@ -60,7 +96,7 @@ namespace Test
                 {
                     var folders = NamespaceFolders(style.Namespace);
                     var testCaseData = new TestCaseData(style);
-                    testCaseData.SetName(folders.Item2);
+                    testCaseData.SetName(testNameStart + folders.Item2);
                     testCaseData.SetCategory(folders.Item2);
                     testCaseData.SetDescription(Path.Combine(folders.Item1, folders.Item2) + " ");
                     return testCaseData;
@@ -99,6 +135,11 @@ namespace Test
         string OutputFileFullPath(Tuple<string, string> folders)
         {
             return Path.Combine(ParentDirectory(), folders.Item1, folders.Item2, "output.txt");
+        }
+
+        string StyleFileFullPath(Tuple<string, string> folders)
+        {
+            return Path.Combine(ParentDirectory(), folders.Item1, folders.Item2, "style.txt");
         }
 
         Sentence[] BuiltStyle(Type style)

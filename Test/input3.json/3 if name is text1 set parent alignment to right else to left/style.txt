@@ -1,0 +1,2 @@
+["name"="text1"]."alignment" -> #"right"
+["name"!="text1"]."alignment" -> #"left"

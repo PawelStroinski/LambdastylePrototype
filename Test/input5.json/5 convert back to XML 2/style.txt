@@ -1,0 +1,9 @@
+<menu>
+  <header>"header" -> |</header>
+  "items".item!=null -> <item 
+    ."id" -> action="|" id="|">
+    ."label" -> |</item>
+    [."id" & !."label"]."id" -> |</item>
+  "items".item=null -> <separator/>
+</menu>
+* ->

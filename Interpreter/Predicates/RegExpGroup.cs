@@ -18,7 +18,7 @@ namespace LambdastylePrototype.Interpreter.Predicates
         public override ToStringResult ToString(PredicateContext context)
         {
             var groupNumber = this.groupNumber - 1;
-            if (groupNumber >= 0 && groupNumber < context.RegExpGroups.Length)
+            if (context.RegExpGroups != null && groupNumber >= 0 && groupNumber < context.RegExpGroups.Length)
                 return Result(context.RegExpGroups[groupNumber]);
             else
                 return Result(string.Empty);

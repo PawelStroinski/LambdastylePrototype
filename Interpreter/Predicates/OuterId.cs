@@ -11,6 +11,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
     {
         public override bool AppliesAt(PredicateContext context)
         {
+            if (!context.Position.Any())
+                return false;
             var position = context.Position;
             var tokenType = position.Last().TokenType;
             if (tokenType == JsonToken.EndObject)

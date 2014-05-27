@@ -1,0 +1,2 @@
+["servlet-name"="cofaxTools"]."init-param" -> #{|
+  ["servlet-name"="cofaxEmail"]."init-param" -> |}

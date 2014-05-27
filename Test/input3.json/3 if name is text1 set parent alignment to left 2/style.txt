@@ -1,0 +1,4 @@
+["name"="text1"] -> #{
+  ."alignment" -> #"left"
+  .* -> #&
+  }

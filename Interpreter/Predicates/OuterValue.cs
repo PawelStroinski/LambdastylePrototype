@@ -11,6 +11,8 @@ namespace LambdastylePrototype.Interpreter.Predicates
     {
         public override bool AppliesAt(PredicateContext context)
         {
+            if (!context.Position.Any())
+                return false;
             var tokenType = context.Position.Last().TokenType;
             var writtenEndArray = context.GlobalState.WrittenEndArray.Contains(context.PredicateIdentity)
                 && !context.ApplyingItem && !context.ApplyingTail && !context.GlobalState.LastApplyingTail

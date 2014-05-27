@@ -1,0 +1,2 @@
+"value"="Open" -> #"Export"
+"onclick"="OpenDoc()" -> #"ExportDoc()"

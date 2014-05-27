@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="KellermanSoftware.Compare-NET-Objects">
+      <HintPath>..\..\packages\CompareNETObjects.2.03.0.0\lib\net45\KellermanSoftware.Compare-NET-Objects.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -125,6 +128,7 @@
     <Compile Include="input5.json\5 similar to if id is present but not label copy it as label 2\Style.cs" />
     <Compile Include="input5.json\5 similar to if id is present but not label copy it as label\Style.cs" />
     <Compile Include="input5.json\5 similar to replace space with pipe in two word labels\Style.cs" />
+    <Compile Include="input5.json\5 character escape sequences\Style.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Builder.cs" />
     <Compile Include="Runner.cs" />
@@ -142,39 +146,63 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="input1.json\1 singlerun true\output.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="input1.json\1 singlerun true\style.txt" />
+    <Content Include="input1.json\1 singlerun true\output.txt" />
     <Content Include="input1.json\1_1 add custom to reporters and output only array\output.txt" />
+    <Content Include="input1.json\1_1 add custom to reporters and output only array\style.txt" />
     <Content Include="input1.json\1_1 add custom to reporters\output.txt" />
+    <Content Include="input1.json\1_1 add custom to reporters\style.txt" />
     <Content Include="input1.json\1_1 add key at the end of file 2\output.txt" />
+    <Content Include="input1.json\1_1 add key at the end of file 2\style.txt" />
     <Content Include="input1.json\1_1 add key at the end of file\output.txt" />
+    <Content Include="input1.json\1_1 add key at the end of file\style.txt" />
     <Content Include="input1.json\1_1 custom key and colors key\output.txt" />
+    <Content Include="input1.json\1_1 custom key and colors key\style.txt" />
     <Content Include="input1.json\1_1 only keys with value 500\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="input1.json\1_1 only keys with value 500\style.txt" />
     <Content Include="input1.json\1_1 output plugins separated by comma 2\output.txt" />
+    <Content Include="input1.json\1_1 output plugins separated by comma 2\style.txt" />
     <Content Include="input1.json\1_1 output plugins separated by comma\output.txt" />
+    <Content Include="input1.json\1_1 output plugins separated by comma\style.txt" />
     <Content Include="input1.json\1_1 output plugins with key\output.txt" />
+    <Content Include="input1.json\1_1 output plugins with key\style.txt" />
     <Content Include="input1.json\1_1 output plugins without key\output.txt" />
+    <Content Include="input1.json\1_1 output plugins without key\style.txt" />
     <Content Include="input1.json\1_1 output reporters and plugins as two lists\output.txt" />
+    <Content Include="input1.json\1_1 output reporters and plugins as two lists\style.txt" />
     <Content Include="input1.json\1_1 pack elements in arrays\output.txt" />
+    <Content Include="input1.json\1_1 pack elements in arrays\style.txt" />
     <Content Include="input1.json\1_1 remove commonjs from all arrays\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="input1.json\1_1 remove commonjs from all arrays\style.txt" />
     <Content Include="input1.json\1_1 remove every array containing commonjs\output.txt" />
+    <Content Include="input1.json\1_1 remove every array containing commonjs\style.txt" />
     <Content Include="input1.json\1_1 replace commonjs with amd only in frameworks\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="input1.json\1_1 replace commonjs with amd only in frameworks\style.txt" />
     <Content Include="input1.json\1_1 reportes and plugins under common key 2\output.txt" />
+    <Content Include="input1.json\1_1 reportes and plugins under common key 2\style.txt" />
     <Content Include="input1.json\1_1 reportes and plugins under common key\output.txt" />
+    <Content Include="input1.json\1_1 reportes and plugins under common key\style.txt" />
     <Content Include="input1.json\1_2 config\output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="input1.json\1_2 config\style.txt" />
     <Content Include="input2.json\2 add Export menu item\output.txt" />
+    <Content Include="input2.json\2 add Export menu item\style.txt" />
     <Content Include="input2.json\2 change id to file2\output.txt" />
+    <Content Include="input2.json\2 change id to file2\style.txt" />
     <Content Include="input2.json\2 move popup as menu sibling 2\output.txt" />
+    <Content Include="input2.json\2 move popup as menu sibling 2\style.txt" />
     <Content Include="input2.json\2 move popup as menu sibling\output.txt" />
+    <Content Include="input2.json\2 move popup as menu sibling\style.txt" />
+    <Content Include="input2.json\2 move popup into popupParent 2\style.txt" />
+    <Content Include="input2.json\2 move popup into popupParent 3\style.txt" />
+    <Content Include="input2.json\2 move popup into popupParent\style.txt" />
     <Content Include="input2.json\2 prepare for move popup as menu sibling 2\output.txt" />
     <Content Include="input2.json\2 prepare for move popup as menu sibling 3\output.txt" />
     <Content Include="input2.json\2 prepare for move popup as menu sibling 4\output.txt" />
@@ -184,9 +212,15 @@
     <Content Include="input2.json\2 move popup into popupParent 3\output.txt" />
     <Content Include="input2.json\2 move popup into popupParent\output.txt" />
     <Content Include="input2.json\2 remove the Close menu item\output.txt" />
+    <Content Include="input2.json\2 remove the Close menu item\style.txt" />
     <Content Include="input2.json\2 rename menuitem to menuitems 2\output.txt" />
+    <Content Include="input2.json\2 rename menuitem to menuitems 2\style.txt" />
     <Content Include="input2.json\2 rename menuitem to menuitems\output.txt" />
+    <Content Include="input2.json\2 rename menuitem to menuitems\style.txt" />
+    <Content Include="input2.json\2 rename value in menu only\style.txt" />
     <Content Include="input2.json\2 rename value in menuitem item only\output.txt" />
+    <Content Include="input2.json\2 rename value in menuitem item only\style.txt" />
+    <Content Include="input2.json\2 replace Open menu item with Export\style.txt" />
     <Content Include="input2.json\2 similar to move popup as menu sibling 2\output.txt" />
     <Content Include="input2.json\2 similar to move popup as menu sibling 3\output.txt" />
     <Content Include="input2.json\2 similar to move popup as menu sibling 4\output.txt" />
@@ -201,40 +235,69 @@
     <Content Include="input2.json\2 replace Open menu item with Export\output.txt" />
     <Content Include="input2.json\2 similar to convert widget to an array\output.txt" />
     <Content Include="input3.json\3 convert widget to an array\output.txt" />
+    <Content Include="input3.json\3 convert widget to an array\style.txt" />
     <Content Include="input3.json\3 copy image as a widget sibling\output.txt" />
+    <Content Include="input3.json\3 copy image as a widget sibling\style.txt" />
     <Content Include="input3.json\3 copy image as image2\output.txt" />
+    <Content Include="input3.json\3 copy image as image2\style.txt" />
     <Content Include="input3.json\3 copy title from window to image\output.txt" />
+    <Content Include="input3.json\3 copy title from window to image\style.txt" />
     <Content Include="input3.json\3 if name is text1 set parent alignment to left 2\output.txt" />
+    <Content Include="input3.json\3 if name is text1 set parent alignment to left 2\style.txt" />
     <Content Include="input3.json\3 if name is text1 set parent alignment to left\output.txt" />
+    <Content Include="input3.json\3 if name is text1 set parent alignment to left\style.txt" />
     <Content Include="input3.json\3 if name is text1 set parent alignment to right else to left\output.txt" />
+    <Content Include="input3.json\3 if name is text1 set parent alignment to right else to left\style.txt" />
     <Content Include="input3.json\3 output copy only if debug on 2\output.txt" />
     <Content Include="input3.json\3 output copy only if debug on\output.txt" />
+    <Content Include="input3.json\3 output copy only if debug on\style.txt" />
     <Content Include="input3.json\3 ParentScope bugs\output.txt" />
     <Content Include="input3.json\3 remove each dictionary with alignment\output.txt" />
+    <Content Include="input3.json\3 remove each dictionary with alignment\style.txt" />
     <Content Include="input3.json\3 replace name sun1 with sun2\output.txt" />
+    <Content Include="input3.json\3 replace name sun1 with sun2\style.txt" />
     <Content Include="input3.json\3 similar to convert widget to an array 2\output.txt" />
     <Content Include="input3.json\3 similar to convert widget to an array 3\output.txt" />
     <Content Include="input3.json\3 similar to convert widget to an array\output.txt" />
     <Content Include="input3.json\3 swap offsets in text\output.txt" />
+    <Content Include="input3.json\3 swap offsets in text\style.txt" />
     <Content Include="input4.json\4 change first servlet class\output.txt" />
+    <Content Include="input4.json\4 change first servlet class\style.txt" />
     <Content Include="input4.json\4 copy params from cofaxEmail to cofaxTools\output.txt" />
+    <Content Include="input4.json\4 copy params from cofaxEmail to cofaxTools\style.txt" />
     <Content Include="input4.json\4 remove every key with value ending with id\output.txt" />
+    <Content Include="input4.json\4 remove every key with value ending with id\style.txt" />
     <Content Include="input4.json\4 swap first and second servlet\output.txt" />
+    <Content Include="input4.json\4 swap first and second servlet\style.txt" />
     <Content Include="input5.json\5 append dots to every label not ending with dots\output.txt" />
+    <Content Include="input5.json\5 append dots to every label not ending with dots\style.txt" />
     <Content Include="input5.json\5 convert back to XML 2\output.txt" />
+    <Content Include="input5.json\5 convert back to XML 2\style.txt" />
     <Content Include="input5.json\5 convert back to XML\output.txt" />
+    <Content Include="input5.json\5 convert back to XML\style.txt" />
     <Content Include="input5.json\5 convert items to dictionary by id\output.txt" />
+    <Content Include="input5.json\5 convert items to dictionary by id\style.txt" />
     <Content Include="input5.json\5 copy every label as description\output.txt" />
+    <Content Include="input5.json\5 copy every label as description\style.txt" />
     <Content Include="input5.json\5 if id is present but not label copy it as label\output.txt" />
+    <Content Include="input5.json\5 if id is present but not label copy it as label\style.txt" />
     <Content Include="input5.json\5 move Mute item before About item\output.txt" />
+    <Content Include="input5.json\5 move Mute item before About item\style.txt" />
     <Content Include="input5.json\5 remove keys with values containing two upper letters\output.txt" />
+    <Content Include="input5.json\5 remove keys with values containing two upper letters\style.txt" />
     <Content Include="input5.json\5 render as ASCII context menu 2\output.txt" />
+    <Content Include="input5.json\5 render as ASCII context menu 2\style.txt" />
     <Content Include="input5.json\5 render as ASCII context menu\output.txt" />
+    <Content Include="input5.json\5 render as ASCII context menu\style.txt" />
     <Content Include="input5.json\5 replace every null with curly braces\output.txt" />
+    <Content Include="input5.json\5 replace every null with curly braces\style.txt" />
     <Content Include="input5.json\5 replace space with pipe in two word labels\output.txt" />
+    <Content Include="input5.json\5 replace space with pipe in two word labels\style.txt" />
     <Content Include="input5.json\5 similar to if id is present but not label copy it as label 2\output.txt" />
     <Content Include="input5.json\5 similar to if id is present but not label copy it as label\output.txt" />
     <Content Include="input5.json\5 similar to replace space with pipe in two word labels\output.txt" />
+    <Content Include="input5.json\5 character escape sequences\output.txt" />
+    <Content Include="input5.json\5 character escape sequences\style.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LambdastylePrototype.csproj">

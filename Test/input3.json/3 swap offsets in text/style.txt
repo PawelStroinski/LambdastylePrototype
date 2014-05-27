@@ -1,0 +1,4 @@
+"text"."hOffset" -> #
+  "text"."vOffset" -> &
+"text"."vOffset" -> #
+  "text"."hOffset" -> &
