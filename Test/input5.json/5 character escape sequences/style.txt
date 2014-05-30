@@ -1,4 +1,5 @@
 "\1foo\52barf\oo\|bar\&foo\#bar\'\"\\foo\0\a\bbar\f\n\rfoo\t\v"
 foo\
-\||#&\1foo\52barf\oo\|bar\&foo\#bar\'\"\\foo\0\a\bbar\f\n\rfoo\t\v
+|bar
+\||#\&#\|&\#|\1foo\52barf\oo\|bar\&foo\#bar\'\"\\foo\0\a\bbar\f\n\rfoo\t\v
 * ->

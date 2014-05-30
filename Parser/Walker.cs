@@ -11,20 +11,20 @@ namespace LambdastylePrototype.Parser
     class Walker
     {
         const int spacesPerTab = 8;
-        const string itemIndex = @"^item\s*\[\s*(\d+)\s*\]$";
-        const char pipe = '|';
-        const char ampersand = '&';
-        const char hash = '#';
-        const char backslash = '\\';
         readonly Builder builder;
-        readonly StringBuilder predicateRawBuffer = new StringBuilder();
+        readonly PredicateRawBuffer predicateRawBuffer;
+        readonly ElementWalkerContext elementWalkerContext;
+        readonly SubjectElementWalkerFactory subjectElementWalkerFactory = new SubjectElementWalkerFactory();
+        readonly PredicateElementWalkerFactory predicateElementWalkerFactory = new PredicateElementWalkerFactory();
         bool addCopyAny = true;
         Stack<OpenSentence> open = new Stack<OpenSentence>();
-        bool escapeNextPredicateElement;
 
         public Walker(Builder builder)
         {
             this.builder = builder;
+            this.predicateRawBuffer = new PredicateRawBuffer(builder);
+            this.elementWalkerContext = new ElementWalkerContext(builder: builder,
+                predicateRawBuffer: predicateRawBuffer, walkSubjectElements: WalkSubjectElements);
         }
 
         public void Walk(CommonTree tree)
@@ -124,156 +124,33 @@ namespace LambdastylePrototype.Parser
         void WalkPredicate(CommonTree[] predicate, CommonTree[] predicateContinuation)
         {
             builder.StartPredicate();
-            escapeNextPredicateElement = false;
+            predicateRawBuffer.EscapeNextPredicateElement = false;
             WalkPredicateElements(predicate);
             foreach (var continuationSentence in predicateContinuation)
             {
                 predicateRawBuffer.AppendLine();
                 WalkPredicateElements(continuationSentence.GetChildren());
             }
-            FlushRawToPredicate();
+            predicateRawBuffer.FlushRawToPredicate();
             builder.EndPredicate();
         }
 
         void WalkSubjectElements(CommonTree[] children)
         {
             foreach (var child in children)
-                WalkSubjectElement(child);
-        }
-
-        void WalkSubjectElement(CommonTree element)
-        {
-            switch (element.Type)
-            {
-                case LambdastyleTryParser.STRING_LITERAL:
-                    var relation = element.Parent.Type == LambdastyleTryParser.EQ
-                        || element.Parent.Type == LambdastyleTryParser.NEQ;
-                    var rightSideOfRelation = relation && element.ChildIndex == 1;
-                    var insideLiteralishSequence = element.Parent.Type == LambdastyleTryParser.LITERALISH_SEQUENCE;
-                    if (rightSideOfRelation || insideLiteralishSequence)
-                        builder.AddLiteralToSubject(element.Text.WithoutFirstAndLastChar());
-                    else
-                        builder.AddIdToSubject(element.Text.WithoutFirstAndLastChar());
-                    break;
-                case LambdastyleTryParser.REGEXP_LITERAL:
-                    builder.AddRegExpToSubject(element.Text.WithoutFirstAndLastChar());
-                    break;
-                case LambdastyleTryParser.NUMBER:
-                    builder.AddLiteralToSubject(long.Parse(element.Text));
-                    break;
-                case LambdastyleTryParser.STAR:
-                    builder.AddAnyToSubject();
-                    break;
-                case LambdastyleTryParser.ITEM:
-                    builder.AddItemToSubject();
-                    break;
-                case LambdastyleTryParser.ITEM_INDEX:
-                    var itemIndexResult = Regex.Match(input: element.Text, pattern: itemIndex);
-                    if (itemIndexResult.Success)
-                        builder.AddItemIndexToSubject(int.Parse(itemIndexResult.Groups[1].Value));
-                    else
-                        builder.AddItemToSubject();
-                    break;
-                case LambdastyleTryParser.START:
-                    builder.AddStartToSubject();
-                    break;
-                case LambdastyleTryParser.NULL:
-                    builder.AddNullToSubject();
-                    break;
-                case LambdastyleTryParser.EQ:
-                    builder.StartEqualsInSubject();
-                    WalkSubjectElements(element.GetChildren());
-                    builder.EndEqualsInSubject();
-                    break;
-                case LambdastyleTryParser.NEQ:
-                    builder.StartNotEqualsInSubject();
-                    WalkSubjectElements(element.GetChildren());
-                    builder.EndNotEqualsInSubject();
-                    break;
-                case LambdastyleTryParser.DOT:
-                    builder.StartPathInSubject();
-                    WalkSubjectElements(element.GetChildren());
-                    builder.EndPathInSubject();
-                    break;
-                case LambdastyleTryParser.LSB:
-                    builder.StartParentInSubject();
-                    WalkSubjectElements(element.GetChildren());
-                    builder.EndParentInSubject();
-                    break;
-                case LambdastyleTryParser.OR:
-                    builder.StartOrInSubject();
-                    WalkSubjectElements(element.GetChildren());
-                    builder.EndOrInSubject();
-                    break;
-                case LambdastyleTryParser.AND:
-                    builder.StartAndInSubject();
-                    WalkSubjectElements(element.GetChildren());
-                    builder.EndAndInSubject();
-                    break;
-                case LambdastyleTryParser.E:
-                    builder.StartNotInSubject();
-                    WalkSubjectElements(element.GetChildren());
-                    builder.EndNotInSubject();
-                    break;
-                case LambdastyleTryParser.OROR:
-                    builder.StartShortOrInSubject();
-                    WalkSubjectElements(element.GetChildren());
-                    builder.EndShortOrInSubject();
-                    break;
-                case LambdastyleTryParser.LITERALISH_SEQUENCE:
-                    builder.StartLiteralishSequenceInSubject();
-                    WalkSubjectElements(element.GetChildren());
-                    builder.EndLiteralishSequenceInSubject();
-                    break;
-                default:
-                    break;
-            }
+                WalkElement(child, subjectElementWalkerFactory);
         }
 
         void WalkPredicateElements(CommonTree[] predicate)
         {
             foreach (var child in predicate)
-                WalkPredicateElement(child);
+                WalkElement(child, predicateElementWalkerFactory);
         }
 
-        void WalkPredicateElement(CommonTree element)
+        void WalkElement(CommonTree element, ElementWalkerFactory factory)
         {
-            switch (element.Type)
-            {
-                case LambdastyleTryParser.OR:
-                    FlushRawToPredicate();
-                    if (escapeNextPredicateElement)
-                        builder.AddRawToPredicate(pipe.ToString());
-                    else
-                        builder.AddInnerValueToPredicate();
-                    break;
-                case LambdastyleTryParser.OROR:
-                    FlushRawToPredicate();
-                    if (escapeNextPredicateElement)
-                        builder.AddRawToPredicate(pipe.ToString());
-                    else
-                        builder.AddInnerValueToPredicate();
-                    builder.AddInnerValueToPredicate();
-                    break;
-                case LambdastyleTryParser.AND:
-                    FlushRawToPredicate();
-                    if (escapeNextPredicateElement)
-                        builder.AddRawToPredicate(ampersand.ToString());
-                    else
-                        builder.AddOuterValueToPredicate();
-                    break;
-                case LambdastyleTryParser.HASH:
-                    FlushRawToPredicate();
-                    if (escapeNextPredicateElement)
-                        builder.AddRawToPredicate(hash.ToString());
-                    else
-                        builder.AddOuterIdToPredicate();
-                    break;
-                default:
-                    predicateRawBuffer.Append(element.Text);
-                    break;
-            }
-            escapeNextPredicateElement = false;
+            var walker = factory.GetWalkerForElementType(element.Type);
+            walker.Walk(element, elementWalkerContext);
         }
 
         int GetIndentationInSpaces(CommonTree sentence)
@@ -314,107 +191,6 @@ namespace LambdastylePrototype.Parser
             builder.EndChildren();
             builder.EndSentence();
             open.Pop();
-        }
-
-        void FlushRawToPredicate()
-        {
-            if (predicateRawBuffer.Length > 0)
-            {
-                var raw = predicateRawBuffer.ToString();
-                var splet = raw.Split(pipe, ampersand, hash, backslash);
-                var position = 0;
-                var skipNextChar = false;
-                foreach (var item in splet)
-                {
-                    if (raw.Length <= position)
-                        break;
-                    var spletAt = raw[position];
-                    switch (spletAt)
-                    {
-                        case pipe:
-                            if (!skipNextChar)
-                                builder.AddInnerValueToPredicate();
-                            skipNextChar = false;
-                            position++;
-                            break;
-                        case ampersand:
-                            if (!skipNextChar)
-                                builder.AddOuterValueToPredicate();
-                            skipNextChar = false;
-                            position++;
-                            break;
-                        case hash:
-                            if (!skipNextChar)
-                                builder.AddOuterIdToPredicate();
-                            skipNextChar = false;
-                            position++;
-                            break;
-                        case backslash:
-                            if (!skipNextChar)
-                            {
-                                if (raw.Length > position + 1)
-                                {
-                                    var nextChar = raw[position + 1];
-                                    switch (nextChar)
-                                    {
-                                        case '0':
-                                            builder.AddRawToPredicate("\0");
-                                            break;
-                                        case 'a':
-                                            builder.AddRawToPredicate("\a");
-                                            break;
-                                        case 'b':
-                                            builder.AddRawToPredicate("\b");
-                                            break;
-                                        case 'f':
-                                            builder.AddRawToPredicate("\f");
-                                            break;
-                                        case 'n':
-                                            builder.AddRawToPredicate("\n");
-                                            break;
-                                        case 'r':
-                                            builder.AddRawToPredicate("\r");
-                                            break;
-                                        case 't':
-                                            builder.AddRawToPredicate("\t");
-                                            break;
-                                        case 'v':
-                                            builder.AddRawToPredicate("\v");
-                                            break;
-                                        default:
-                                            if (Char.IsDigit(nextChar))
-                                                builder.AddRegExpGroupToPredicate(int.Parse(nextChar.ToString()));
-                                            else
-                                                builder.AddRawToPredicate(nextChar.ToString());
-                                            break;
-                                    }
-                                    skipNextChar = true;
-                                }
-                                else
-                                    escapeNextPredicateElement = true;
-                            }
-                            else
-                                skipNextChar = false;
-                            position++;
-                            break;
-                        default:
-                            break;
-                    }
-                    if (item != string.Empty)
-                    {
-                        if (skipNextChar)
-                        {
-                            if (item.Length > 1)
-                                builder.AddRawToPredicate(item.Substring(1));
-                        }
-                        else
-                            builder.AddRawToPredicate(item);
-                        position += item.Length;
-                        skipNextChar = false;
-                    }
-                }
-                predicateRawBuffer.Clear();
-            }
         }
 
         bool HasNoRaw(CommonTree sentence)

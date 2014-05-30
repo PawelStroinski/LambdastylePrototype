@@ -44,10 +44,21 @@ namespace Test.input5.json._5_character_escape_sequences
                 new Raw("\t"),
                 new Raw("\v"),
             };
-            var prefix = new PredicateElement[] { new Raw("|"), new InnerValue(), new OuterId(), new OuterValue() };
+            var prefix = new PredicateElement[] {
+                new Raw("|"),
+                new InnerValue(),
+                new OuterId(),
+                new Raw("&"),
+                new OuterId(),
+                new Raw("|"),
+                new OuterValue(),
+                new Raw("#"),
+                new InnerValue()
+            };
             builder.Add(
                 new Sentence(new Predicate(quote.Concat(common).Concat(quote).ToArray())),
                 new Sentence(new Predicate(new Raw("foo"))),
+                new Sentence(new Predicate(new InnerValue(), new Raw("bar"))),
                 new Sentence(new Predicate(prefix.Concat(common).ToArray())));
         }
     }

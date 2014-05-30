@@ -64,9 +64,13 @@
     </Compile>
     <Compile Include="ApplyContext.cs" />
     <Compile Include="Parser\Builder.cs" />
+    <Compile Include="Parser\ElementWalker.cs" />
+    <Compile Include="Parser\ElementWalkerContext.cs" />
+    <Compile Include="Parser\ElementWalkerFactory.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\LambdastyleTry\antlr-generated\LambdastyleTryLexer.cs" />
     <Compile Include="Parser\LambdastyleTry\antlr-generated\LambdastyleTryParser.cs" />
+    <Compile Include="Parser\PredicateRawBuffer.cs" />
     <Compile Include="Parser\SentenceDraft.cs" />
     <Compile Include="Parser\OpenSentence.cs" />
     <Compile Include="Parser\Walker.cs" />
