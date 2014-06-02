@@ -11,6 +11,7 @@ using LambdastylePrototype;
 using LambdastylePrototype.Parser;
 using LambdastylePrototype.Interpreter;
 using NUnit.Framework;
+using StreamUtils;
 
 namespace Test
 {

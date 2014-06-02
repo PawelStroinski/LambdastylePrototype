@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using LambdastylePrototype.Interpreter;
 using LambdastylePrototype.Utils;
 using Newtonsoft.Json;
+using StreamUtils;
 
 namespace LambdastylePrototype
 {
