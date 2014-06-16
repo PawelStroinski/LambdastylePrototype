@@ -43,7 +43,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\basicdotnet\Newtonsoft.Json\Src\Newtonsoft.Json\bin\Debug\Net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>externals\Newtonsoft.Json\Src\Newtonsoft.Json\bin\Release\Net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=3.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -151,6 +151,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PreBuildEvent>If Not Exist "$(ProjectDir)externals\Newtonsoft.Json\Src\Newtonsoft.Json\bin\Release\Net45\Newtonsoft.Json.dll" (
+  call "$(DevEnvDir)..\Tools\vsvars32.bat"
+  msbuild "$(ProjectDir)externals\Newtonsoft.Json\Src\Newtonsoft.Json\Newtonsoft.Json.csproj" /p:Configuration=Release
+)</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PreBuildEvent>call "$(DevEnvDir)..\Tools\vsvars32.bat"
+msbuild "$(ProjectDir)externals\Newtonsoft.Json\Src\Newtonsoft.Json\Newtonsoft.Json.csproj" /p:Configuration=Release</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
