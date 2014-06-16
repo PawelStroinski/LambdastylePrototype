@@ -30,9 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EditableStream, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EditableStream, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\EditableStream.0.2\lib\net45\EditableStream.dll</HintPath>
+      <HintPath>..\..\packages\EditableStream.0.3\lib\net45\EditableStream.dll</HintPath>
     </Reference>
     <Reference Include="KellermanSoftware.Compare-NET-Objects, Version=3.0.0.0, Culture=neutral, PublicKeyToken=d970ace04cc85217, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

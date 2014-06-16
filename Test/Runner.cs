@@ -57,6 +57,22 @@ namespace Test
         }
 
         [Test]
+        public void Facade()
+        {
+            var style = GetStylesInternal().First();
+            var folders = NamespaceFolders(style.Namespace);
+            var inputFile = InputFileFullPath(folders);
+            var expectedOutputFile = OutputFileFullPath(folders);
+            var styleFile = StyleFileFullPath(folders);
+            var input = File.ReadAllText(inputFile);
+            var expectedOutput = File.ReadAllText(expectedOutputFile);
+            var styleText = File.ReadAllText(styleFile);
+            var facade = new Facade();
+            var actualOutput = facade.Execute(input, styleText);
+            Assert.AreEqual(expectedOutput, actualOutput);
+        }
+
+        [Test]
         public void RunnerItselfItWorks()
         {
             var styles = GetStylesInternal();

@@ -37,9 +37,9 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="EditableStream, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EditableStream, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EditableStream.0.2\lib\net45\EditableStream.dll</HintPath>
+      <HintPath>..\packages\EditableStream.0.3\lib\net45\EditableStream.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplyContext.cs" />
+    <Compile Include="Facade.cs" />
     <Compile Include="Parser\Builder.cs" />
     <Compile Include="Parser\ElementWalker.cs" />
     <Compile Include="Parser\ElementWalkerContext.cs" />

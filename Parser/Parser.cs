@@ -12,11 +12,6 @@ namespace LambdastylePrototype.Parser
 {
     class Parser
     {
-        public Sentence[] Parse(string style)
-        {
-            return Parse(new MemoryStream(Encoding.UTF8.GetBytes(style)));
-        }
-
         public Sentence[] Parse(Stream style)
         {
             var styleReturn = ParseInternal(style);
