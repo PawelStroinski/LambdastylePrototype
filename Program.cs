@@ -7,6 +7,7 @@ using LambdastylePrototype.Interpreter;
 using LambdastylePrototype.Interpreter.Predicates;
 using LambdastylePrototype.Interpreter.Subjects;
 using Newtonsoft.Json;
+using StreamUtils;
 
 namespace LambdastylePrototype
 {
