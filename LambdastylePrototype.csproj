@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="ApplyContext.cs" />
     <Compile Include="Facade.cs" />
+    <Compile Include="FacadeException.cs" />
     <Compile Include="Parser\Builder.cs" />
     <Compile Include="Parser\ElementWalker.cs" />
     <Compile Include="Parser\ElementWalkerContext.cs" />

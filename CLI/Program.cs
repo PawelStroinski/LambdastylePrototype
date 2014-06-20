@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LambdastylePrototype;
-using StreamUtils;
 
 namespace CLI
 {
@@ -17,56 +16,27 @@ namespace CLI
             {
                 CarefreeMain(args);
             }
-            catch (LambdastylePrototype.Parser.ParserException exception)
-            {
-                PrintException("Error in style file:", exception, stackTrace: false);
-            }
-            catch (Newtonsoft.Json.JsonException exception)
-            {
-                PrintException("Error in input JSON file:", exception, stackTrace: false);
-            }
-            catch (IOException exception)
-            {
-                PrintException("Error:", exception, stackTrace: false);
-            }
             catch (Exception exception)
             {
-                PrintException("Error:", exception, stackTrace: true);
+                PrintException(exception);
             }
         }
 
         static void CarefreeMain(string[] args)
         {
-            var options = new Options();
-            if (CommandLine.Parser.Default.ParseArguments(args, options))
-            {
-                var facade = new Facade();
-                using (var input = new FileStream(options.InputPath, FileMode.Open, FileAccess.Read))
-                using (var style = new FileStream(options.StylePath, FileMode.Open, FileAccess.Read))
-                using (var output = new EditableFileStream(options.OutputPath, FileMode.Create))
-                    facade.Execute(input, style, output);
-            }
+            var opt = new Options();
+            var facade = new Facade();
+            if (CommandLine.Parser.Default.ParseArguments(args, opt))
+                facade.ProcessFile(inputPath: opt.InputPath, stylePath: opt.StylePath, outputPath: opt.OutputPath);
         }
 
-        static void PrintException(string header, Exception exception, bool stackTrace)
+        static void PrintException(Exception exception)
         {
-            const int maxStackTraceLength = 700;
             var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
             try
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine();
-                Console.WriteLine(header);
-                Console.WriteLine(exception.Message);
-                if (stackTrace)
-                {
-                    Console.WriteLine();
-                    if (exception.StackTrace.Length > maxStackTraceLength)
-                        Console.WriteLine(exception.StackTrace.Substring(0, maxStackTraceLength) + "...");
-                    else
-                        Console.WriteLine(exception.StackTrace);
-                }
-                Console.WriteLine();
+                Console.Write(exception);
             }
             finally
             {

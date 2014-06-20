@@ -68,7 +68,7 @@ namespace Test
             var expectedOutput = File.ReadAllText(expectedOutputFile);
             var styleText = File.ReadAllText(styleFile);
             var facade = new Facade();
-            var actualOutput = facade.Execute(input, styleText);
+            var actualOutput = facade.ProcessString(input: input, style: styleText);
             Assert.AreEqual(expectedOutput, actualOutput);
         }
 
