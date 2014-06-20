@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7B2302D4-D60F-40D1-BA6F-A970D3BAF9F7}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LambdastylePrototype</RootNamespace>
     <AssemblyName>LambdastylePrototype</AssemblyName>
@@ -32,6 +32,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
@@ -71,6 +74,7 @@
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\LambdastyleTry\antlr-generated\LambdastyleTryLexer.cs" />
     <Compile Include="Parser\LambdastyleTry\antlr-generated\LambdastyleTryParser.cs" />
+    <Compile Include="Parser\ParserException.cs" />
     <Compile Include="Parser\PredicateRawBuffer.cs" />
     <Compile Include="Parser\SentenceDraft.cs" />
     <Compile Include="Parser\OpenSentence.cs" />
@@ -136,7 +140,6 @@
     <Compile Include="Interpreter\Predicates\Predicate.cs" />
     <Compile Include="Interpreter\Sentence.cs" />
     <Compile Include="Interpreter\Subjects\Subject.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PositionStep.cs" />
     <Compile Include="Utils\Consts.cs" />
@@ -144,7 +147,6 @@
     <Compile Include="Utils\PositionJsonReader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
