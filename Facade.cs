@@ -8,7 +8,7 @@ using StreamUtils;
 
 namespace LambdastylePrototype
 {
-    public class Facade
+    public class Facade : IFacade
     {
         public string ProcessString(string input, string style)
         {
