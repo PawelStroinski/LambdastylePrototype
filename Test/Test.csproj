@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoExporter.cs" />
+    <Compile Include="FacadeExceptionTest.cs" />
     <Compile Include="input1.json\1 singlerun true\Style.cs" />
     <Compile Include="input1.json\1_1 add custom to reporters and output only array\Style.cs" />
     <Compile Include="input1.json\1_1 add custom to reporters\Style.cs" />

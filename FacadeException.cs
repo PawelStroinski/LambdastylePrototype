@@ -20,7 +20,7 @@ namespace LambdastylePrototype
             var builder = new StringBuilder();
             builder.AppendLine(Message);
             builder.AppendLine(InnerException.Message);
-            if (stackTrace)
+            if (stackTrace && InnerException.StackTrace != null)
             {
                 builder.AppendLine();
                 if (InnerException.StackTrace.Length > maxStackTraceLength)
