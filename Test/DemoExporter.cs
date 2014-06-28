@@ -123,6 +123,13 @@ namespace Test
             var styleFile = RunnerUtils.StyleFileFullPath(folders);
             var styleBody = File.ReadAllText(styleFile);
             style["styleBody"] = styleBody;
+            var firstDemo = demo.Count == 1 && styles.Count == 1;
+            if (firstDemo)
+            {
+                var outputFile = RunnerUtils.OutputFileFullPath(folders);
+                var output = File.ReadAllText(outputFile);
+                style["output"] = output;
+            }
         }
 
         void StartInput(Tuple<string, string> folders)
