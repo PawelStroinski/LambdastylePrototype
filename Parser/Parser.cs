@@ -39,7 +39,7 @@ namespace LambdastylePrototype.Parser
         {
             var message = trace.ToString();
             if (!string.IsNullOrEmpty(message))
-                throw new ParserException(message);
+                throw new ParserException(message.Trim());
         }
     }
 }
