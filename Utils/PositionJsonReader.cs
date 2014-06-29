@@ -130,13 +130,16 @@ namespace LambdastylePrototype.Utils
 
         void AppendDelimitersAfter()
         {
-            var last = position.Pop();
-            position.Push(new PositionStep(
-                tokenType: last.TokenType,
-                value: last.Value,
-                delimitersBefore: last.DelimitersBefore,
-                delimitersAfter: last.DelimitersAfter + reader.DelimitersAfter,
-                itemIndex: last.ItemIndex));
+            if (position.Any())
+            {
+                var last = position.Pop();
+                position.Push(new PositionStep(
+                    tokenType: last.TokenType,
+                    value: last.Value,
+                    delimitersBefore: last.DelimitersBefore,
+                    delimitersAfter: last.DelimitersAfter + reader.DelimitersAfter,
+                    itemIndex: last.ItemIndex));
+            }
         }
     }
 }

@@ -107,7 +107,7 @@ namespace LambdastylePrototype.Interpreter
                     context.Write(endToken, this, false, 0);
                 }
                 else
-                    if (context.Position.Last().DelimitersAfter != string.Empty)
+                    if (context.Position.Any() && context.Position.Last().DelimitersAfter != string.Empty)
                         context.Write(context.Position.Last().DelimitersAfter, this, true, 0);
         }
 

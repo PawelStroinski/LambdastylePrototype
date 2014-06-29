@@ -73,6 +73,20 @@ namespace Test
         }
 
         [Test]
+        public void EmptyInputShoudGiveEmptyOutput()
+        {
+            var facade = new Facade();
+            using (var input = new MemoryStream())
+            using (var style = new MemoryStream())
+            using (var output = new EditableMemoryStream())
+            {
+                facade.ProcessStream(input: input, style: style, output: output);
+                using (var outputReader = new StreamReader(output))
+                    Assert.IsEmpty(outputReader.ReadToEnd());
+            }
+        }
+
+        [Test]
         public void RunnerItselfItWorks()
         {
             var styles = GetStylesInternal();
