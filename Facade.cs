@@ -73,10 +73,12 @@ namespace LambdastylePrototype
             {
                 throw new SystemIOFacadeException(exception);
             }
+#if !DEBUG
             catch (Exception exception)
             {
                 throw new OtherFacadeException(exception);
             }
+#endif
         }
     }
 }
