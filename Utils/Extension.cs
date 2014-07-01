@@ -104,7 +104,9 @@ namespace LambdastylePrototype
             var logger = NLog.LogManager.GetCurrentClassLogger();
             foreach (var line in lines)
             {
+#if DEBUG
                 Console.WriteLine(indentation + line);
+#endif
                 logger.Debug(indentation + line);
             }
 #endif
