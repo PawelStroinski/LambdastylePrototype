@@ -155,21 +155,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PreBuildEvent>If Not Exist "$(ProjectDir)externals\Newtonsoft.Json\Src\Newtonsoft.Json\bin\Release\Net45\Newtonsoft.Json.dll" (
-  call "$(DevEnvDir)..\Tools\vsvars32.bat"
-  msbuild "$(ProjectDir)externals\Newtonsoft.Json\Src\Newtonsoft.Json\Newtonsoft.Json.csproj" /p:Configuration=Release
-)</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PreBuildEvent>call "$(DevEnvDir)..\Tools\vsvars32.bat"
-msbuild "$(ProjectDir)externals\Newtonsoft.Json\Src\Newtonsoft.Json\Newtonsoft.Json.csproj" /p:Configuration=Release</PreBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
+    <MSBuild Projects="$(ProjectDir)externals\Newtonsoft.Json\Src\Newtonsoft.Json\Newtonsoft.Json.csproj" Properties="Configuration=Release" SkipNonexistentProjects="true" Condition=" '$(Configuration)' == 'Release' Or !Exists('$(ProjectDir)externals\Newtonsoft.Json\Src\Newtonsoft.Json\bin\Release\Net45\Newtonsoft.Json.PS.dll') " />
   </Target>
   <Target Name="AfterBuild">
   </Target>
-  -->
 </Project>
