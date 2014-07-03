@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id>LambdastylePrototype</id>
+        <version>0.1</version>
+        <authors>Paweł Stroiński</authors>
+        <owners>Paweł Stroiński</owners>
+        <licenseUrl>https://github.com/PawelStroinski/LambdastylePrototype/blob/master/COPYING.md</licenseUrl>
+        <projectUrl>https://github.com/PawelStroinski/LambdastylePrototype</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Lambdastyle: A minimal JSON-to-any transformation language. As Lambdastyle is currently only a prototype, please expect that some things will not work. Also Lambdastyle can change and is open to suggestions. Live demo: http://lambdastyle.com.</description>
+        <releaseNotes></releaseNotes>
+        <copyright>Copyright 2014</copyright>
+        <tags>json style stylesheet transform transforming query processor convert converter</tags>
+        <dependencies>
+            <dependency id="Antlr" version="3.5.0.2" />
+            <dependency id="EditableStream" version="0.3" />
+            <dependency id="NLog" version="3.0.0.0" />
+            <dependency id="StreamReaderSeeker" version="0.2" />
+        </dependencies>
+        <references>
+            <reference file="LambdastylePrototype.dll" />
+        </references>
+    </metadata>
+</package>

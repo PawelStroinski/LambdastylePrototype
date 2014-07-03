@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "name": "lambdastyle-prototype",
+  "description": "Lambdastyle: A minimal JSON-to-any transformation language",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PawelStroinski/LambdastylePrototype"
+  },
+  "homepage": "http://lambdastyle.com",
+  "keywords": [
+    "json",
+    "style",
+    "stylesheet",
+    "transform",
+    "transforming",
+    "query",
+    "processor",
+    "convert",
+    "converter"
+  ],
+  "author": "Paweł Stroiński",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PawelStroinski/LambdastylePrototype/issues"
+  },
+  "dependencies": {
+    "edge": "~0.9.0"
+  }
+}
